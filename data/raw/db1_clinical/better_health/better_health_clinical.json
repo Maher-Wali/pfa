@@ -1,0 +1,962 @@
+[
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Depression is a constant feeling of sadness and loss of interest, which stops you doing your normal activities. Different types of depression exist, with symptoms ranging from relatively minor to severe. Generally, depression does not result from a single event, but from a mix of events and factors. If you feel depressed, see your doctor. Don’t delay. Seeking support early can help stop symptoms becoming worse.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Depression is common Symptoms of depression Causes of depression Seek support for symptoms of depression Types of depression Where to get help While we all feel sad, moody or low from time to time, some people experience these feelings intensely, for long periods of time (weeks, months or even years) and sometimes without any apparent reason. Depression is more than just a low mood – it's a serious condition that has an impact on both physical and mental health.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "In any one year, around one million people in Australia experience depression. One in six women and one in eight men will experience depression at some time in their life. The good news is, depression is treatable and effective treatments are available. The sooner a person with depression seeks support, the sooner they can recover.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "symptoms",
+    "content": "Depression affects how people think, feel and act. Depression makes it more difficult to manage from day to day and interferes with study, work and relationships. A person may be depressed if for more than two weeks they have felt sad, down or miserable most of the time or have lost interest or pleasure in most of their usual activities, and have also experienced several of the signs and symptoms across at least three of the categories in the list below. It’s important to note, everyone experiences some of these symptoms from time to time and it may not necessarily mean a person is depressed. Equally, not every person who is experiencing depression will have all of these symptoms.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "causes",
+    "content": "A person with depression may have thoughts such as: ‘I’m a failure.’ ‘It’s my fault.’ ‘Nothing good ever happens to me.’ ‘I’m worthless.’ ‘There is nothing good in my life.’ ‘Things will never change.’ ‘Life’s not worth living.’ ‘People would be better off without me.’",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "symptoms",
+    "content": "A person with depression may: withdraw from close family and friends stop going out stop their usual enjoyable activities not get things done at work or school rely on alcohol and sedatives.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "symptoms",
+    "content": "A person with depression may experience: being tired all the time feeling sick and ‘run down’ frequent headaches, stomach or muscle pains a churning gut sleep problems loss or change of appetite significant weight loss or gain.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "causes",
+    "content": "While the exact cause of depression isn’t known, a number of things can be associated with its development. Generally, depression does not result from a single event, but from a combination of biological, psychological, social and lifestyle factors.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "causes",
+    "content": "Personal factors that can lead to a risk of depression include: family history – depression can run in families and some people will be at an increased genetic risk. However, this doesn’t mean that a person will automatically experience depression if a parent or close relative has had the condition. personality – some people may be more at risk because of their personality, particularly if they tend to worry a lot, have low self-esteem, are perfectionists, are sensitive to personal criticism, or are self-critical and negative serious medical conditions – these can trigger depression in two ways. Serious conditions can bring about depression directly or can contribute to depression through the associated stress and worry, especially if it involves long-term management of a condition or chronic pain drug and alcohol use – can both lead to and result from depression. Many people with depression also have drug and alcohol problems.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Research suggests that continuing difficulties, such as long-term unemployment, living in an abusive or uncaring relationship, long-term isolation or loneliness or prolonged exposure to stress at work can increase the risk of depression. Significant adverse life events, such as losing a job, going through a separation or divorce, or being diagnosed with a serious illness, may also trigger depression, particularly among people who are already at risk because of genetic, developmental or other personal factors.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Although there has been a lot of research in this complex area, there is still much that we do not know. Depression is not simply the result of a chemical imbalance, for example because a person has too much or not enough of a particular brain chemical. However, disturbances in normal chemical messaging processes between nerve cells in the brain are believed to contribute to depression. Some factors that can lead to faulty mood regulation in the brain include: genetic vulnerability severe life stressors taking some medications, drugs and alcohol some medical conditions. Most modern antidepressants have an effect on the brain’s chemical transmitters, in particular serotonin and noradrenaline, which relay messages between brain cells. This is thought to be how medications work for depression. Other medical treatments such as transcranial magnetic stimulation (TMS) and electroconvulsive therapy (ECT) may sometimes be recommended for people with severe depression who have not recovered with lifestyle change, social support, psychological therapy and medication. While these treatments also have an impact on the brain’s chemical messaging process between nerve cells, the precise ways in which these treatments work is still being researched.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "symptoms",
+    "content": "Depression is often not recognised and can go on for months or even years if left untreated. It’s important to seek support as early as possible, as the sooner a person gets treatment, the sooner they can recover. Untreated depression can have many negative effects on a person’s life, including serious relationship and family problems, difficulty finding and holding down a job, and drug and alcohol problems. There is no one proven way that people recover from depression. However, there is a range of effective treatments and health professionals who can help people on the road to recovery. There are also many things that people with depression can do for themselves to help them recover and stay well. The important thing is to find the right treatment and the right health professional for a person’s needs.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Major depression, or major depressive disorder is the technical term used by health professionals and researchers to describe the most common type of depression. Other terms sometimes used include unipolar depression or clinical depression. Depression can be described as mild, moderate or severe.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Melancholia is an older term for depression and is still sometimes used to describe a more severe form of depression with a strong biological basis, where many of the physical symptoms of depression are particularly evident. For example, one of the major changes is that the person can be observed to move more slowly, or to be experiencing significant changes to their sleep pattern and appetite. A person with melancholia is also more likely to have a depressed mood that is characterised by complete loss of pleasure in everything or almost everything.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "The symptoms of dysthymia (sometimes called Persistent Depressive Disorder) are similar to those of major depression, but are less severe and more persistent. A person has to have this milder depression for more than two years to be diagnosed with dysthymia.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Sometimes, people with a depressive condition can lose touch with reality. This can involve hallucinations (seeing or hearing things that are not there) or delusions (false beliefs that are not shared by others), such as believing they are bad or evil, or that they are being watched or followed or that everyone is against them. This is known as psychotic depression.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Women are at an increased risk of depression during pregnancy (known as the antenatal or prenatal period) and in the year following childbirth (known as the postnatal period). This time frame (the period covered by pregnancy and the first year after the baby’s birth) may also be referred to as the perinatal period. The causes of depression at this time can be complex and are often the result of a combination of factors. In the days immediately following birth, many women experience the ‘baby blues’, which is a common condition related to hormonal changes, affecting up to 80 per cent of women who have given birth. The ‘baby blues’, or the general stress of adjusting to pregnancy or a new baby, are common experiences, but are different from depression. Depression is longer lasting and can affect not only the mother, but her relationship with her baby, the child’s development, the mother’s relationship with her partner and with other members of the family. Up to one in 10 women will experience depression during pregnancy. This increases to 16 per cent in the first three months after having a baby.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Bipolar disorder used to be known as ‘manic depression’ because the person experiences periods of depression and periods of mania with periods of normal mood in between. The symptoms of mania are opposite to the symptoms of depression and can vary in intensity. They include: feeling great having plenty of energy racing thoughts little need for sleep talking fast having difficulty focusing on tasks feeling frustrated and irritable. This is not just a fleeting experience. Sometimes, the person loses touch with reality and experiences hallucinations or delusions, particularly about their ideas, abilities or importance. A family history of bipolar disorder can increase a person’s risk of experiencing bipolar disorder. Because bipolar disorder includes periods of depression, it is not uncommon for a person with bipolar disorder to be misdiagnosed as having major depression until they have a manic or hypomanic episode. Bipolar disorder can also sometimes be confused with other mental health conditions such as schizophrenia. The treatment for bipolar disorder is often different to that for major depression. It is therefore important to check for this condition whenever a person is being assessed for depression.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Cyclothymic disorder is an uncommon condition which is often described as a milder form of bipolar disorder. The person experiences chronic fluctuating moods over at least two years, involving periods of hypomania (a mild to moderate level of mania) and periods of depressive symptoms, with very short periods (no more than two months) of normality between. The symptoms last for a shorter time, are less severe, and are not as regular, so they don’t fit the criteria of bipolar disorder or major depression.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "SAD is a mood disorder that has a seasonal pattern. The cause is unclear, but may be related to the variation in light exposure in different seasons. SAD is characterised by mood disturbances (either periods of depression or mania) that begin and end in a particular season. Depression in winter only is the most common way in which people experience SAD. SAD is usually diagnosed after the person has had the same symptoms during winter for two or more years. People with SAD are more likely to experience lack of energy, sleep too much, overeat, gain weight and crave carbohydrates. SAD is rare in Australia, and more likely to be found in countries with short days and longer periods of darkness, such as the cold climate in the Northern Hemisphere.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "treatment",
+    "content": "Your GP (doctor) Your local community health centre beyondblue External Link Tel. 1300 22 4636 Lifeline External Link Tel 13 11 14 Kids Helpline External Link Tel 1800 55 1800 SuicideLine External Link Victoria Tel 1300 651 251 SANE Australia External Link Helpline Tel. 1800 187 263 Australian Psychological Society Find a psychologist service External Link Tel. 1800 333 497 (outside Melbourne) or (03) 8662 3300 (in Melbourne) Mind Australia External Link Tel. 1300 AT MIND ( 1300 286 463 ) What is depression? External Link , ABC Health and Wellbeing, Australian Broadcasting Corporation. Depression explained External Link , Black Dog Institute, Australia. Depression: signs and symptoms External Link , beyondblue. Harrison JE, Pointer S, Elnour AA 2009, A review of suicide statistics in Australia External Link , Australian Institute of Health and Welfare, Canberra. Kegel M, Dam H, Ali F, et al. 2009, ‘ The prevalence of seasonal affective disorder (SAD) in Greenland is related to latitude External Link ’, Nordic Journal of Psychiatry, vol. 63, no. 4, pp. 331–335. Depression External Link , ReachOut.com, Inspire Foundation, Sydney. Depression External Link , The Australian Psychological Society. Types of depression External Link , beyondblue, Australia. Seasonal affective disorder (SAD) External Link , Mayo Clinic, USA. Depression basics External Link , National Institute of Mental Health, National Institutes of Health (NIH), Department of Health and Human Services, USA. National Survey of Mental Health and Wellbeing: Summary of Results External Link , 2007, 2008, Australian Bureau of Statistics cat. no. 4326.0, Canberra. This page has been produced in consultation with and approved by: This page has been produced in consultation with and approved by:",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "Abdominal pain in children Children may feel stomach pain for a range of reasons and may need treatment. Aboriginal health services The following services provide specialised healthcare for Aboriginal and Torres Strait Islander people in Victoria. Adoption Adoption can give a secure family life to children who, for various reasons, can’t live with their birth family. Agoraphobia A person with agoraphobia is afraid to leave familiar environments, because they are afraid of having a panic attack. Alcohol and drugs - dependence and addiction Asking for help when you first suspect you have an alcohol or drug problem is important. If you think you have an addiction, speak to your local doctor or phone DirectLine. Children may feel stomach pain for a range of reasons and may need treatment. The following services provide specialised healthcare for Aboriginal and Torres Strait Islander people in Victoria. Adoption can give a secure family life to children who, for various reasons, can’t live with their birth family. A person with agoraphobia is afraid to leave familiar environments, because they are afraid of having a panic attack. Asking for help when you first suspect you have an alcohol or drug problem is important. If you think you have an addiction, speak to your local doctor or phone DirectLine.",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Depression",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/depression",
+    "section": "other",
+    "content": "External Link beyondblue External Link Black Dog Institute External Link Headspace External Link Life: Living is for everyone External Link Lifeline This page has been produced in consultation with and approved by:",
+    "icd11_code": "6A70",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "other",
+    "content": "PTSD develops in some people after they experience or witness an event that threatens their life or safety, or that of others around them. Symptoms include vivid memories, feeling constantly on edge and avoiding reminders of the event. It is common for people to have some of the symptoms of PTSD in the first few days after the traumatic event. Most will recover by themselves or with the support of family and friends. Others may need professional help.",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "other",
+    "content": "Symptoms of PTSD PTSD in children and teenagers Impact of PTSD on relationships and day-to-day life Risky alcohol and drug use with PTSD When to seek help for PTSD Support is important for recovery Treatment for PTSD Treatment for children and teenagers with PTSD Information in your language Where to get help Post-traumatic stress disorder (PTSD) is a set of reactions that can develop in people who have experienced or witnessed a traumatic event that threatens their life or safety (or of others around them). This could be a car or other serious accident, physical or sexual assault , war-related events or torture, or a natural disaster such as bushfire or flood . In the first days and weeks after a traumatic event, people often experience heightened arousal, alertness, looking for danger and being on guard. These reactions often alternate with numbness and detachment. It also brings constant memories of the event and feelings it may happen again. It also evokes strong feelings of fear, sadness, guilt, anger, or grief . Generally these reactions and feelings will resolve on their own over the next few weeks, however if the reactions and distress continue, it may mean that the person has is at risk for developing PTSD or another mental health condition. Anyone can develop PTSD following a traumatic event, but people are at greater risk if: the event involved physical or sexual assault they experienced intense helplessness the event involved something they never thought would happen to them they have had other traumatic experiences involving helplessness or danger including physical or sexual abuse , car accidents, criminal events, natural disasters or conflict they have suffered from PTSD in the past.",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "symptoms",
+    "content": "A person with PTSD has four main types of difficulties: Re-living the traumatic event through unwanted and recurring memories, flashbacks or vivid nightmares. There may be intense emotional or physical reactions when reminded of the event including sweating, heart palpitations , anxiety or panic . Avoiding reminders of the event, such as thoughts, feelings, people, places, activities or situations that bring back memories of the event. They may feel numb, empty or detached. Negative changes in feelings and thoughts, such as feeling angry, afraid, guilty, flat or numb, developing beliefs such as “I’m bad” or “The world’s unsafe”, and feeling cut off from others. Being overly alert or ‘wound up’ indicated by sleeping difficulties , irritability, lack of concentration, becoming easily startled and constantly being on the lookout for signs of danger. A health practitioner may diagnose PTSD if a person has symptoms in each of these four areas for a month or more, which lead to significant distress or impacts on their ability to work and study, their relationships and day-to-day life. People with PTSD can also have what are termed ‘dissociative experiences’, which are frequently described as: “It was as though I wasn’t even there.” “Time was standing still.” “I felt like I was watching things happen from above.”",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "other",
+    "content": "Older children and teenagers experience similar problems to adults when they develop PTSD. Younger children can express distress in a different way. For example, they may re-live the traumatic event through repetitive play rather than having unwanted memories of the event during the day. Many children have frightening dreams without recognisable content rather than nightmares that replay the traumatic event. Children may also lose interest in play, become socially withdrawn, or have extreme temper tantrums. About one third of children who experience a traumatic event will develop PTSD. Other problems that can develop alongside PTSD include anxiety or depression , defiant behaviour, attention deficit hyperactivity disorder , and in teenagers and young adults, suicidal thoughts and alcohol or drug use.",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "other",
+    "content": "PTSD can affect a person’s ability to work, perform day-to-day activities or relate to their family and friends. A person with PTSD can often seem uninterested or distant as they try not to think or feel in order to block out painful memories. They may stop them from participating in family life or ignore offers of help. This can lead to loved ones feeling shut out. It is important to remember that these behaviours are part of the problem. People with PTSD need the support of family and friends but may not understand what is happening to them or think that they need help. When PTSD goes on for some time, it is not unusual for people to experience other mental health problems at the same time. In fact, up to 80 per cent of people who have long-standing PTSD develop additional problems - most commonly depression, anxiety, and alcohol or other substance misuse . These may have developed directly in response to the traumatic event or as a result of the effects of having PTSD.",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "causes",
+    "content": "People commonly use alcohol or other drugs to blunt the emotional pain that they are experiencing. Alcohol and drugs may help block out painful memories in the short term, but they can get in the way of a successful recovery and cause other serious problems.",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "treatment",
+    "content": "A person who has experienced a traumatic event should seek professional help if they: don’t feel any better after two weeks feel highly anxious or distressed have reactions to the traumatic event that are interfering with home, work and/or relationships are thinking of harming themselves or someone else. Some of the signs that a problem may be developing are: being constantly on edge or irritable having difficulty performing tasks at home or at work being unable to respond emotionally to others being unusually busy to avoid issues taking risks or not caring what happens to oneself using alcohol, drugs or gambling to cope having severe sleeping difficulties.",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "other",
+    "content": "Many people experience some of the symptoms of PTSD in the first two weeks after a traumatic event, but most recover with the help of family and friends. For this reason, for a diagnosis of PTSD is not made until a month after the event. Treatment does not usually start for at least two or more weeks after a traumatic experience. However if the event is very distressing and emotions and reactions are intense, it is advisable to seek help as early as possible to understand what is happening and help recovery to start. It is important during the first few days and weeks after a traumatic event to get whatever help is needed. This may include accessing information, people and resources that can help you to recover. Support from family and friends may be all that is needed. Otherwise, a doctor is the best place to start to get further help.",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "treatment",
+    "content": "If you are still experiencing problems after two weeks, a doctor or mental health professional may discuss starting treatment. Effective treatments are available. Most involve psychological treatment such as counselling to understand what is happening and to develop ways of managing reactions, but medication can also be helpful. Generally, it’s best to start with psychological treatment rather than use medication as the first and only solution to the problem. The cornerstone of treatment for PTSD involves confronting the traumatic memory and working through thoughts and beliefs associated with the experience as part of a safe relationship with a trained person. Trauma-focussed treatments can: reduce PTSD symptoms lessen anxiety and depression improve a person’s quality of life be effective for people who have experienced prolonged or repeated traumatic events, though treatment may be required for a longer period.",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "treatment",
+    "content": "For children and teenagers who are struggling to recover after a traumatic event, the recommended treatment is trauma-focussed cognitive behavioural therapy (CBT). This treatment involves: learning about the type of traumatic event experienced (e.g. how common it is) and common reactions to trauma teaching how to relax and manage anxiety helping to create a coherent story of the traumatic event, and correct any unhelpful beliefs about the event such as self-blame gradual exposure to trauma-related objects or situations that are feared or avoided helping to get back into everyday activities.",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "other",
+    "content": "Çrregullimi i stresit post-traumatik (Post-traumatic stress disorder - Albanian) اضطراب ما بعد الصدمة (Post-traumatic stress disorder - Arabic) 创伤后应激障碍 (Post-traumatic stress disorder - Chinese Simplified) 創傷後壓力症 (Post-traumatic stress disorder - Chinese Traditional) اختلال استرس پس از سانحه (Post-traumatic stress disorder - Dari) Διαταραχή μετατραυματικού στρες (Post-traumatic stress disorder - Greek) पोस्ट-ट्रॉमैटिक स्ट्रेस डिसऑर्डर (अभिघातजन्य तनाव विकार) (Post-traumatic stress disorder - Hindi) Disturbo post-traumatico da stress (Post-traumatic stress disorder - Italian) ਸਦਮੇ ਤੋਂ ਬਾਅਦ ਦਾ ਤਣਾਅ ਵਿਕਾਰ (Post-traumatic stress disorder - Punjabi) Ugonjwa wa mfadhaiko baada ya kiwewe (Post-traumatic stress disorder - Swahili) Rối loạn căng thẳng sau chấn thương (Post-traumatic stress disorder - Vietnamese)",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "treatment",
+    "content": "Your GP (doctor) Your mental health specialist, such as a psychiatrist , psychologist , counsellor or social worker Your local community health centre Australian Psychological Society Referral Service External Link Tel. 1800 333 497 Phoenix Australia Centre for Post-traumatic Mental Health External Link Tel. (03) 9035 5599 Centre for Grief and Bereavement External Link Tel. 1800 642 066 General telephone counselling services can provide advice: Lifeline External Link Tel. 13 11 14 Griefline External Link Tel. 1300 845 745 Beyond Blue External Link Tel. 1300 22 4636 NURSE-ON-CALL Tel. 1300 60 60 24 – for expert health information and advice (24 hours, 7 days) Australian Guidelines for the Treatment of Acute Stress Disorder and Posttraumatic Stress Disorder External Link , 2013, Australian Centre for Posttraumatic Mental Health. This page has been produced in consultation with and approved by: This page has been produced in consultation with and approved by:",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "other",
+    "content": "Trauma dhe fëmijët – këshilla për prindërit (Trauma and children – tips for parents - Albanian) Ju mund ta ndihmoni fëmijën tuaj të rikuperohet nga përvojat tronditëse ose të frikshme. الصدمات النفسية والأطفال – نصائح للوالدين (Arabic) يمكنك مساعدة طفلك على التعافي من التجارب المؤلمة أو المخيفة. Agoraphobia A person with agoraphobia is afraid to leave familiar environments, because they are afraid of having a panic attack. Anorexia nervosa A common misconception is that anorexia nervosa only affects young women, but it affects all genders of all ages. Antipsychotic medications Antipsychotic medications work by altering brain chemistry to help reduce psychotic symptoms like hallucinations, delusions and disordered thinking Ju mund ta ndihmoni fëmijën tuaj të rikuperohet nga përvojat tronditëse ose të frikshme. يمكنك مساعدة طفلك على التعافي من التجارب المؤلمة أو المخيفة. A person with agoraphobia is afraid to leave familiar environments, because they are afraid of having a panic attack. A common misconception is that anorexia nervosa only affects young women, but it affects all genders of all ages. Antipsychotic medications work by altering brain chemistry to help reduce psychotic symptoms like hallucinations, delusions and disordered thinking",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "PTSD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/post-traumatic-stress-disorder-ptsd",
+    "section": "other",
+    "content": "External Link Phoenix Australia External Link Phoenix Australia - Recovery External Link Trauma Information Pages External Link US Dept of Veterans Affairs, National Center for PTSD This page has been produced in consultation with and approved by:",
+    "icd11_code": "6B40",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Bipolar Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/bipolar-disorder",
+    "section": "other",
+    "content": "Bipolar disorder is a mental health condition. It involves cycles of extreme low and high mood. The periods of low mood are referred to as ‘depressive episodes. The periods of high mood are referred to as ‘manic’ or ‘hypomanic’ episodes. (Hypomania is less severe than mania.) The exact cause of bipolar disorder is unknown. Contributing factors may include genetics, brain chemicals, environmental factors, physical illnesses and stress. Treatment can include medication, psychological therapies and community support programs.",
+    "icd11_code": "6A60",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Bipolar Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/bipolar-disorder",
+    "section": "other",
+    "content": "Types of bipolar disorder Bipolar disorder – mania Bipolar disorder – depression Bipolar disorder – psychosis Causes of bipolar disorder Treatment for bipolar disorder Where to get help Bipolar disorder, (previously known as manic depression) is a mental health condition. It involves cycles of extreme low and high mood. A person with bipolar disorder may cycle between feeling euphoric and extremely energetic (‘manic’), and feeling very low (‘depression’). The cycle of manic and depressive symptoms is different for everyone. Some people may only experience one episode of mania or hypomania, whereas others might have more frequent mood challenges. Treatment with medication may stop the symptoms, or make them shorter or less intense. The exact cause of bipolar disorder is unknown. Contributing factors may include brain chemicals, environmental factors, physical illness and stress. Research suggests that around 80 per cent of the causes are genetic. Symptoms of bipolar disorder generally begin in early adulthood. For most people the disorder is a lifelong diagnosis. However, with appropriate treatment and support: bipolar disorder symptoms can be well managed people with bipolar disorder can maintain a good quality of life. It is estimated that approximately 2.2% of Australians live with a form of bipolar disorder. One in 50 adult Australians experience bipolar disorder each year.",
+    "icd11_code": "6A60",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Bipolar Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/bipolar-disorder",
+    "section": "other",
+    "content": "People with bipolar I disorder typically experience: one or more manic episodes (extreme highs) lasting at least one week, as well as depressive episodes With bipolar I disorder, episodes of mania are severe enough to interfere with day-to-day life. Depressive episodes are often more frequent and longer-lasting than mania.",
+    "icd11_code": "6A60",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Bipolar Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/bipolar-disorder",
+    "section": "other",
+    "content": "People with bipolar II disorder typically experience both hypomanic and depressive episodes. A person with hypomania will experience similar symptoms to someone with mania, but less intensely. Hypomania associated with bipolar II lasts only a few days (rather at least one week of mania, as with bipolar I). Although bipolar II disorder has less severe symptoms than bipolar I disorder, it can be chronic (ongoing). Depressive episodes are often more frequent and longer-lasting than hypomania.",
+    "icd11_code": "6A60",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Bipolar Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/bipolar-disorder",
+    "section": "other",
+    "content": "Cyclothymic disorder is characterised by persistent and unpredictable changes in mood. The highs and lows are much less extreme than for bipolar I and II disorder, with a number of symptoms of hypomanic and depressive episodes, but not enough to meet criteria for either.",
+    "icd11_code": "6A60",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Bipolar Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/bipolar-disorder",
+    "section": "other",
+    "content": "Common symptoms of mania associated with bipolar disorder include: feeling extremely euphoric ('high') or energetic going without sleep thinking and speaking quickly reckless behaviour, such as overspending participating in unsafe sexual activity aggression irritability grandiose, unrealistic plans. The symptoms of hypomania are the same as those for mania, but less severe and of shorter duration (lasting 4 days or longer). During manic or hypomanic episodes, symptoms are present for most of the day, nearly every day.",
+    "icd11_code": "6A60",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Bipolar Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/bipolar-disorder",
+    "section": "other",
+    "content": "Common symptoms of depression associated with bipolar disorder include: withdrawal from people and activities feelings of sadness and hopelessness lack of appetite and weight loss feeling anxious or guilty without reason difficulty concentrating suicidal thoughts and behaviour.",
+    "icd11_code": "6A60",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Bipolar Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/bipolar-disorder",
+    "section": "causes",
+    "content": "The exact cause of bipolar disorder is not known. Contributing factors may include: genetics brain chemicals environmental factors physical illness substance use stress. Research suggests that around 80 per cent of the causes are genetic, and people can have a strong genetic predisposition to bipolar disorder. This means that for those people, because of the coding in their genes, certain triggers may cause symptoms of bipolar disorder to occur. Triggers may include stressors such as abuse, loss, or trauma. Sometimes bipolar disorder develops without a trigger. One theory is that the illness might be linked to the brain chemicals (neurotransmitters) serotonin and norepinephrine. These chemicals help regulate mood. It is thought that, for a person with a genetic predisposition to bipolar disorder, these chemicals may easily be thrown out of balance. While the onset of bipolar disorder may be linked to stressful life events, it is unlikely that stress causes bipolar disorder. People who live with bipolar disorder often find that managing and reducing stress in their lives helps to reduce their chance of triggering a relapse.",
+    "icd11_code": "6A60",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Bipolar Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/bipolar-disorder",
+    "section": "treatment",
+    "content": "Bipolar disorder requires long-term treatment and management. Treatment options may include: mood-stabilising medications antidepressant medications anti-psychotic medications psychological therapies hospitalisation – for appropriate treatment during acute episodes education – to help people understand and manage their condition and be more self-sufficient community support programs – to provide rehabilitation, accommodation and employment support self-help groups for emotional support and understanding.",
+    "icd11_code": "6A60",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Bipolar Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/bipolar-disorder",
+    "section": "treatment",
+    "content": "Your GP (doctor) Psychiatrist SANE External Link Help Centre Tel. 1800 18 7263 Monday to Friday, 10 am – 10 pm SANE peer support moderated forums External Link Beyond Blue Support Service External Link Tel. 1300 22 4636 Bipolar disorder External Link , SANE Australia. Bipolar disorder External Link , Beyond Blue. Bipolar disorder – Australian Psychological Society External Link Causes of bipolar disorder External Link – Black Dog Institute Mental illness and suicide prevention: position statement External Link , 2018, Suicide Prevention Australia and Sane Australia. What is bipolar disorder External Link ?– Black Dog Institute This page has been produced in consultation with and approved by: This page has been produced in consultation with and approved by:",
+    "icd11_code": "6A60",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "other",
+    "content": "Schizophrenia is a complex brain disorder, which affects between 150,000 and 200,000 Australians. Sufferers do not have ‘split personalities’ and they are not intellectually disabled. The cause of the illness is not yet known, but research has yielded several important clues. Researchers are actively investigating different aspects of this disease. Antipsychotic medications treat the psychotic symptoms, but do not cure the disease.",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "other",
+    "content": "What is schizophrenia? Symptoms of schizophrenia Hallucinations, delusions and thought disorder Social isolation – a major problem Schizophrenia is not a split personality Current treatments for schizophrenia Carers, guardianship and rights Current research Where to get help",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "overview",
+    "content": "Schizophrenia is a complex brain disorder, which affects about one in a 100 or between 150,000 and 200,000 Australians. The illness is characterised by disruptions to thinking and emotions, and a distorted perception of reality. It usually begins in late adolescence or early adulthood and does not spare any race, culture, class or sex. About 20 to 30 per cent of people with schizophrenia experience only a few brief episodes. For others, it is a chronic condition. Ten per cent of people with schizophrenia commit suicide .",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "symptoms",
+    "content": "Symptoms include: hallucinations delusions thought disorder social withdrawal lack of motivation ‘blunted’ emotions inappropriate responses impaired thinking and memory lack of insight. Not all people affected by schizophrenia have all these symptoms. Some symptoms appear only for short periods or ‘episodes’.",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "other",
+    "content": "Hallucinations and delusions are psychotic symptoms. Hallucinations can involve hearing, seeing, tasting, feeling or smelling something that does not exist, but which the sufferer believes is real. Similarly, delusions are unfounded beliefs, for example, of persecution, guilt or grandeur that seem utterly real to the person experiencing them. Thought disorder manifests as disconnected, illogical speech.",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "other",
+    "content": "While these psychotic symptoms are more alarming, other symptoms reinforce the alienation of people with schizophrenia. They are often unable to participate in normal social events or conversations, and lack sufficient motivation for simple activities like bathing or cooking. In addition, sufferers lack the insight to recognise how their inappropriate behaviour appears to others.",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "other",
+    "content": "There are many myths about schizophrenia. Sufferers do not have ‘split personalities’ and they are not intellectually disabled. While aggression may occur among a minority of patients during an untreated acute episode, it is uncommon and not like that portrayed in the media of serial killers or ‘psychopaths’.",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "treatment",
+    "content": "Medication, hospital care and rehabilitation are the best forms of treatment. Admission to hospital is only necessary during crises; normal living can resume once symptoms subside. Effective antipsychotic medications enable many people with schizophrenia to lead full and productive lives. Antipsychotic drugs help stabilise some symptoms, but do not cure the disease and are frequently associated with side effects. Most people need to stay on medication to prevent relapse.",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "other",
+    "content": "Some people with schizophrenia may be unable to manage their own affairs and their carers may take out a power of attorney. In some situations, applications may be made to the Guardianship List of the Victorian Civil and Administrative Tribunal (VCAT) External Link for a Guardianship Order concerning finances, medical treatment, accommodation and other related issues. If there are concerns about the appropriateness of treatment, you can contact: the Mental Health and WellbeingCommission (MHWC) External Link Independent Mental Health Advocacy External Link the Office of the Public Advocate External Link the Equal Opportunity Office External Link .",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "other",
+    "content": "Schizophrenia is highly complex. The exact cause of the illness is not yet known, although research to date has yielded several valuable ‘leads’. Several lines of research are currently being pursued at the Florey Institute of Neuroscience and Mental Health. Some of these include: Molecular research aims to develop new antipsychotic medications. A protein that appears altered in people with schizophrenia has been identified – this may be relevant to the development of future drug treatments. Structural changes have been found in the hippocampus (a brain region involved in memory and thinking) after the onset of psychotic symptoms. This suggests that brain changes are actively occurring during the period of transition to illness. This may help researchers find ways to prevent or reduce the impact of schizophrenia. Clinical studies have shown reduced cognitive (thought) processes are associated with reductions in volume of the right hippocampus; these deficits increase during the illness. Research looking at the protective effect of oestrogen in schizophrenia may help with delaying the onset of illness and treating negative symptoms. Information about the behavioural, thought, hearing and structural brain abnormalities related to auditory hallucinations, or ‘hearing voices’, has provided new insights into the nature of auditory hallucinations. Researchers are developing techniques to help people cope with ‘the voices’. Clinical research has led to the development of resources for professionals to support families where children are living with mentally ill parents. Clinical researchers are collecting data as part of an international study of families in which there is a clearly inherited pattern of the illness. This may help them to learn more about genetic links in the illness.",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "treatment",
+    "content": "Your GP (doctor) Psychiatrist Mind Australia External Link Tel. 1300 286 463 The Mental Illness Fellowship of Australia External Link Tel. (08) 8272 1018 SANE Australia Helpline External Link Tel. 1800 187 263 This page has been produced in consultation with and approved by: This page has been produced in consultation with and approved by:",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Schizophrenia",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/schizophrenia",
+    "section": "other",
+    "content": "Anorexia nervosa A common misconception is that anorexia nervosa only affects young women, but it affects all genders of all ages. Antipsychotic medications Antipsychotic medications work by altering brain chemistry to help reduce psychotic symptoms like hallucinations, delusions and disordered thinking Anxiety disorders Anxiety disorders are common mental health problems that affect many people. Binge eating disorder (BED) Binge eating disorder (BED) is a serious mental health condition and the most common eating disorder in Australia. You can recover from binge eating disorder with the right help. Bipolar disorder Bipolar disorder is a type of psychosis, which means the person?s perception of reality is altered. It is characterised by extreme mood swings A common misconception is that anorexia nervosa only affects young women, but it affects all genders of all ages. Antipsychotic medications work by altering brain chemistry to help reduce psychotic symptoms like hallucinations, delusions and disordered thinking Anxiety disorders are common mental health problems that affect many people. Binge eating disorder (BED) is a serious mental health condition and the most common eating disorder in Australia. You can recover from binge eating disorder with the right help. Bipolar disorder is a type of psychosis, which means the person?s perception of reality is altered. It is characterised by extreme mood swings",
+    "icd11_code": "6A20",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "other",
+    "content": "A child with ADHD has three main symptoms – inattention, impulsivity and overactivity. Not all children with these symptoms have ADHD. No single test can diagnose ADHD. Assessment by a doctor or psychologist involves putting together lots of pieces of information to make a diagnosis. A child with ADHD needs support and understanding from their family, carers and teachers. Medication, positive parenting strategies, school support and counselling may help children with ADHD and their families.",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "other",
+    "content": "ADHD is a developmental disorder Diagnosis of ADHD Better access to ADHD care Types of ADHD Causes of ADHD Caring for a child with ADHD Managing ADHD Attention deficit hyperactivity disorder - adults Where to get help Children under 18 years can now access a short-term one‑off emergency prescription for ADHD medication through the Victorian Virtual Emergency Department. Find out more Attention deficit hyperactivity disorder (ADHD) is a condition that affects a young child’s behaviour and learning. Children with ADHD often have difficulty concentrating (are easily distracted), and may also be impulsive and overactive. ADHD is not the child’s or the parents’ fault. Many children with ADHD say they do not understand why they sometimes feel out of control or very lonely. The exact cause of ADHD is not known.",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "other",
+    "content": "ADHD is a 'neurodevelopmental' disorder (brain development disorder), which can affect a number of areas of brain function. It not a sign of low intelligence. With understanding, care and medical treatment people with ADHD can be successfully supported to overcome these difficulties. Children with ADHD experience difficulties with: inattention – having difficulty concentrating, forgetting instructions, moving from one task to another without completing anything impulsivity – such as talking over the top of others, having a ‘short fuse’, being accident prone overactivity – constant restlessness and fidgeting emotional regulation social navigation sleep. All young children have a limited attention span and sometimes do things without thinking, but only a few of these children have ADHD.",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "diagnosis",
+    "content": "If you are concerned about your child, see your GP (doctor) . They can refer your child to a doctor who specialises in child and youth health (a paediatrician), a child psychologist or a child psychiatrist , who can assess your child. There is no single test for ADHD. A specialist can only diagnose ADHD after making a detailed assessment. They need to collect a range of information about the child – especially from parents or carers and the child's school. For ADHD to be diagnosed, the symptoms of ADHD must be obvious in most areas of the child’s life. The assessment can include a history of the child’s behaviours, any trauma or illness they have experienced, and their relationships and family. Doctors and psychologists use a variety of tools, scales and criteria when diagnosing ADHD.",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "diagnosis",
+    "content": "A child with symptoms of inattention may, on a regular basis: not give close attention to details, or make seemingly careless mistakes in school work or other activities have difficulty sustaining attention in tasks or play activities not seem to listen when spoken to directly not follow through on instructions not finish school work, chores or other duties (but not because they are being wilful or do not understand instructions) have difficulty organising tasks and activities avoid, dislike or be unwilling to do tasks that need continuing mental effort (such as school work or homework) lose things needed for tasks or activities (such as toys, school assignments, pencils, books or tools) be easily distracted be forgetful in daily activities. A child with six or more of these symptoms of inattention for at least six months (to a degree that interferes with their everyday life and is inconsistent with the usual developmental level of a child their age) may be diagnosed with the inattention aspect of ADHD.",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "diagnosis",
+    "content": "A child with symptoms of hyperactivity may often: fidget with their hands or feet or squirm in their seat leave their seat in the classroom or in other situations in which remaining seated is expected run about or climb excessively in inappropriate situations have difficulty playing or taking part in leisure activities quietly be ‘on the go’ or act as if ‘driven by a motor’ talk more than average. A child with symptoms of impulsivity may often: answer before questions have been completed have difficulty waiting in turn interrupt or intrude on others (for example, interrupting conversations or games). A child with six or more of these symptoms for at least six months (to a degree that interferes with their everyday life and is inconsistent with the usual developmental level of a child their age) may be diagnosed with the hyperactivity-impulsivity aspect of ADHD.",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "diagnosis",
+    "content": "Other criteria for diagnosing ADHD may include: some hyperactive-impulsive or inattentive symptoms that caused impairment before the child reached the age of seven years impairment from the symptoms in two or more settings, such as at school and at home symptoms that cannot be explained by another disorder (such as mood disorder, anxiety disorder, trauma, dissociative disorder or a personality disorder).",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "other",
+    "content": "From September 2026, an initial 150 general practitioners (GPs) will be able to undertake training to expand their scope of practice, so they can safely diagnose, treat and prescribe medication for ADHD in adults and children 6 years and over. These changes are part of statewide reforms to reduce costs and wait times to access ADHD care. Children can now access a short-term one‑off emergency prescription for ADHD medication through the Victorian Virtual Emergency Department (Virtual ED). This service is free and available for children under 18 years of age who: have an existing ADHD diagnosis urgently need a repeat prescription to access medication can’t access the medication through their regular treating doctor. Children and families will consult a specialist doctor via video call. The doctor will verify their current medication and dosage, then send a prescription to their local pharmacy or to the family’s preferred electronic device, for example via SMS to a smart phone. Ongoing ADHD care remains the responsibility of the patient’s regular treating doctor. This service will also be available to adults from September 2026. See the Victorian Virtual Emergency Department External Link website for details.",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "other",
+    "content": "Using the above criteria, a health professional can determine the type of ADHD a child has. Types of ADHD include: ADHD combined type – if the child meets the criteria for both inattention and hyperactivity-impulsivity for the past six months ADHD predominantly inattentive type – if the child meets the criteria for inattention, but not the criteria for hyperactivity-impulsivity, for the past six months ADHD predominantly hyperactive-impulsive type – if the child meets the criteria for hyperactivity-impulsivity, but not the criteria for inattention, in the past six months.",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "causes",
+    "content": "The exact cause of ADHD is not known. The leading theory is that ADHD is a neurodevelopmental disorder. Contributing factors affecting brain development include: genetics – some research suggests possible gene changes may be present environment –during pregnancy and life exposures life experiences - lack of early attachment – if a baby does not bond with their parent or caregiver, or has traumatic experiences related to the attachment, this can contribute to their inattention and hyperactivity.",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "other",
+    "content": "Caring for a child with ADHD can be challenging. There is a range of different ways you can help your child learn and develop, and reduce stress in the family. Make sure everyone who cares for the child uses a consistent approach and works as a team to support each other. Try to have breaks often, as it is valuable to get some respite from the demands of caring for a child with ADHD. It may help if you: Develop consistent routines at home and at school. Keep rules clear and simple, and give reminders calmly. Get physically close to the child and make sure you have the child’s full attention when you talk. Give your child only one or two instructions at a time. Ask them to repeat the instruction to be sure that they have understood. Praise your child when they are behaving appropriately, and acknowledge their achievements. Be clear about discipline for behaviour you find unacceptable. For example, use ‘time out’ (between the ages of 18 months and six years) or logical consequences (for older children). More information on ways to help children with ADHD External Link is available through the Royal Children's Hospital Melbourne.",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "other",
+    "content": "There are a number of ways to help reduce your child's ADHD symptoms. These include a number of therapies : medication – ADHD medications are most commonly stimulant medications. They can reduce hyperactivity and impulsivity and improve a child's ability to focus, work, and learn psychotherapies – such as behaviour therapy and cognitive behaviour therapy counselling – for your child and other family members. Parents and carers of children with ADHD may find that they benefit from: parenting skills training that helps them learn how to encourage and reward positive behaviours in their child learning some stress management techniques joining a support group External Link .",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "ADHD",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/attention-deficit-hyperactivity-disorder-adhd",
+    "section": "treatment",
+    "content": "Your child's GP or paediatrician Victorian Virtual Emergency Department - for urgent short-term ADHD top-up prescriptions from September 2026 Your maternal and child health nurse Maternal and child health line Tel. 13 22 29 Community health centre ADHD Foundation Australia External Link Tel. 13 39 39 19 ADHD Australia External Link International statistical classification of diseases and related health problems, 11th revision (ICD-11), version for 2018, World Health Organization, Geneva, Switzerland. About ADHD External Link , ADHD Australia. This page has been produced in consultation with and approved by: This page has been produced in consultation with and approved by:",
+    "icd11_code": "6A05",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Borderline Personality Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/borderline-personality-disorder",
+    "section": "other",
+    "content": "Borderline personality disorder (BPD) is a mental health condition. People with BPD often have strong, overwhelming emotions and difficulty managing relationships. BPD may cause a person to display extreme behaviours, such as self-harm. BPD often occurs with other mental health issues such as mood disorders, eating disorders and alcohol or drug abuse. With the right treatment and supports, people living with BPD can reduce or eliminate symptoms of BPD.",
+    "icd11_code": "6D11",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Borderline Personality Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/borderline-personality-disorder",
+    "section": "other",
+    "content": "Symptoms of borderline personality disorder (BPD) ‘Extreme’ behaviour and BPD Causes of BPD Treatment can reduce BPD symptoms Where to get help Borderline personality disorder (BPD) is a type of mental health condition. People with BPD experience distressing emotional states, difficulty with relationships , and self-harming behaviour. About 1–4% of the population will develop BPD at some time in their lives. Women are more likely than men to be diagnosed with BPD.",
+    "icd11_code": "6D11",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Borderline Personality Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/borderline-personality-disorder",
+    "section": "symptoms",
+    "content": "People with BPD experience strong, negative emotions can that can be difficult to manage. They also have difficulty relating to other people and the world around them. Difficulties that people with BPD may experience include: near-constant, overwhelming emotional pain feelings of emptiness idealising or devaluing other people fear of abandonment impulsive or risky behaviours – such as spending sprees or engaging in unsafe sex or substance abuse intense outbursts of anger difficulties with self-image and self-esteem self-harm and suicidal ideation.",
+    "icd11_code": "6D11",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Borderline Personality Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/borderline-personality-disorder",
+    "section": "other",
+    "content": "People living with BPD may show behaviour that seems extreme, such as intense changes in mood and repeated self-harm. There may be a variety of reasons for such behaviour. Many of these behaviours occur in an attempt to deal with strong, negative emotions and thought patterns. Many people living with BPD struggle to regulate their emotions and thought patterns, and may turn to ways of coping that often have negative consequences in the long-term. Extreme behaviours in relationships are often efforts to manage anxiety about relationships, and to avoid real or imagined abandonment. They are often dismissed as 'attention-seeking' or manipulation. However, these behaviours are symptoms of the disorder and require professional help. Family and other carers of people with BPD also need education and support.",
+    "icd11_code": "6D11",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Borderline Personality Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/borderline-personality-disorder",
+    "section": "causes",
+    "content": "The causes of BPD are not fully understood, but may involve a combination of: trauma and environmental factors – for example, the person may have experienced trauma or loss. Traumatic experiences in early life are very common in people living with BPD. biological factors – for example, structural and functional changes in the brain genetic factors – for example, where a close family member, such as a parent or sibling, also lives with BPD",
+    "icd11_code": "6D11",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Borderline Personality Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/borderline-personality-disorder",
+    "section": "symptoms",
+    "content": "Treatment can help people manage, reduce or even eliminate symptoms of BPD. Treatment is often long-term and is best when provided by mental health professionals who are trained in treatments for BPD.",
+    "icd11_code": "6D11",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Borderline Personality Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/borderline-personality-disorder",
+    "section": "treatment",
+    "content": "Currently, the most effective treatments for BPD are: psychotherapy – a mental health professional talks with the person about their symptoms, and they discuss ways to cope with them. Evidence-based psychological therapies for people living with BPD include dialectical behavioural therapy, schema therapy, mentalisation-based therapy, psychodynamic therapy, and cognitive analytic therapy. medication – there is no medication that specifically treats symptoms of BPD, but medication may help reduce associated symptoms such as depression. Treatment can usually be provided in the community. However, if a person living with BPD is at risk of harming themselves or others, they might need to stay in hospital in the short-term. It’s also important for people living with BPD to look after their physical health through a trusted GP. Many people also benefit from accessing peer support services and support groups.",
+    "icd11_code": "6D11",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Borderline Personality Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/borderline-personality-disorder",
+    "section": "treatment",
+    "content": "BPD often occurs with: suicidality post-traumatic stress disorder mood disorders (for example, bipolar disorder and depression ) eating disorders alcohol or drug abuse. Treatment and supports should be personalised to the individual. Sometimes this might mean prioritising one area over another. For example, if a person is experiencing a depressive episode and is suicidal, it is important to focus on keeping that person safe before focusing on underlying concerns.",
+    "icd11_code": "6D11",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Borderline Personality Disorder",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/borderline-personality-disorder",
+    "section": "treatment",
+    "content": "Your GP (doctor) SANE External Link Help Centre Tel. 1800 18 7263 Monday to Friday, 10 am – 10 pm SANE peer support moderated forums External Link Beyond Blue Support Service External Link Tel. 1300 22 4636 Lifeline External Link Tel. 13 11 14 Kids Helpline External Link Tel. 1800 55 1800 Project Air Strategy External Link Borderline personality disorder External Link , SANE Australia. Introduction to personality disorders External Link , MentalHelp.Net. Borderline personality disorder implementation plan External Link , 2017, South Australian Government, Borderline personality disorder External Link , healthdirect. Borderline personality disorder External Link , 2017, National Institute of Mental Health. This page has been produced in consultation with and approved by: This page has been produced in consultation with and approved by:",
+    "icd11_code": "6D11",
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "other",
+    "content": "What is self-harm? Getting support for self-harming behaviour Seeking help for suicidal thoughts How do I know if someone is self-harming? Supporting someone who self-harms Self-harming behaviour is treatable Finding alternatives to self-harm Who is at risk of self-harm? Why do people self-harm? What are the risks of self-harm? Where to get help",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "overview",
+    "content": "Self-harm is a term that has historically been used to cover a broad range of behaviours. It refers to deliberately causing pain or damage to your own body, and can be suicidal or non-suicidal in intent. Self-injury is a type of self-harm, and refers to deliberately causing pain or damage to your own body without suicidal intent. Self-injury is more common in young people. Some people who self-harm may also have suicidal thoughts. Self-harm can take on different forms and its frequency can vary from person to person – some may do it once, while others can do it for many years. It can include: cutting, burning, biting or scratching the skin picking at wounds or scabs so they don’t heal pulling out hair, punching or hitting the body taking harmful substances (such as poisons, or over-the-counter or prescription medications). Self-harm is normally a sign that a person is feeling intense emotional pain and distress. There are many support options for self-harming behaviour, whether you are seeking support for yourself or someone you care about.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "other",
+    "content": "If you are self-harming and you are worried, try to talk to someone you trust – like a friend, family member, doctor, teacher or school counsellor. It can be hard to build up the courage to open up to someone, but remember, they care about your wellbeing. It may take time for them to understand, but it doesn’t mean they aren’t there for you. If you would rather talk to someone you don’t know, there are many options. You can: See a doctor , counsellor or psychologist . If you have a mental health condition, your GP can work with you to draft up a mental health treatment plan, which can include counselling sessions at a low cost. Contact eheadspace External Link to talk to a counsellor. You can do this online or over the phone (Tel. 1800 650 890 – normal call charges apply on mobile). It’s confidential, so you don’t have to give your name, and it’s available to young people aged 12–25 and their families and friends. Visit a headspace centre External Link – there are centres all over Australia where young people (12–25 years) can get health advice, information and support – usually free or at a low cost. Call Kids Helpline External Link (Tel 1800 55 1800 ) – Kids Helpline is for young people aged between five and 25. You can talk to a counsellor about anything at any time. Call Beyond Blue External Link to talk to a counsellor at any time (Tel. 1300 22 4636 ). Beyond Blue also provides youth-friendly information on self-harm External Link . Visit ReachOut External Link for youth-friendly information on self-harm, and online programs to help young people who may have depression and anxiety.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "treatment",
+    "content": "Sometimes the distress you feel can be so overwhelming that you may have thoughts about ending your life. If you are thinking about suicide, don’t be afraid to ask for support – talk to someone you trust and feel comfortable with, such as a family member, friend, teacher, doctor or other health professional. If you or someone you know is badly hurt or is at serious risk of harm, contact emergency services. Dial triple zero (000) or visit your nearest emergency department. You can also contact your doctor or mental health crisis service. You can also call: Lifeline External Link (Tel. 13 11 14 ) SuicideLine External Link (Tel. 1300 651 251 ). Suicide Call Back Service External Link Tel. 1300 659 467 Kids Helpline External Link Tel. 1800 55 1800 .",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "other",
+    "content": "It can be difficult to recognise whether someone is self-harming as many people who self-harm keep it a secret. Trust your instincts, especially if you think they are distressed or in trouble. Some signs may include: new marks on the body (such as bruises, cuts or burns) withdrawal from friends, family, school and work a drop in performance at school, work or activities changes in mood, sleep and eating patterns avoidance – not attending activities they once enjoyed or avoiding occasions where their injuries will be exposed (such as the beach or pool) wearing unsuitable clothing to cover up wounds making excuses for injuries or behaviour being secretive – hiding sharp or dangerous objects.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "other",
+    "content": "People who self-harm need care, understanding and support in order to recover. Stigma from others can be damaging and may stop them from getting the support they need. According to a 2012 report by Orygen (Looking the other way: young people and self-harm), it is thought up to half the people who self-harm never seek help. If you think someone you know might be self-harming, it is important to try to talk to them about it, and encourage them to seek professional help. Don’t try to force them to stop, as it can make matters worse. Talking to people who self-harm about their behaviour can be safe and very helpful if done in a supportive way.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "other",
+    "content": "It can be difficult to approach someone who is self-harming. If you cannot do it on your own, ask someone else for help. ReachOut External Link and eheadspace External Link have some helpful advice on how to start a conversation with someone who self-harms. Try the following suggestions: Ask them how things are going or how they are feeling. Let them know you are there if they feel down or stressed. Tell them you are worried about them, and why. Ask if they are thinking about suicide. If they are, or you think they might be, call your local hospital or mental health service. Or call a helpline such as Lifeline External Link (Tel. 13 11 14 ) or SuicideLine External Link (Tel. 1300 651 251 ). Stay calm, listen carefully and don’t judge them. If they seem upset or angry it may just mean they are feeling ashamed or worried about what you might think. Encourage them to seek support from a person they trust –such as a GP, teacher or counsellor. If the person who is self-harming is not ready to talk about it, try another time or suggest they speak to someone who makes them feel comfortable. Other ways to lower their distress may include: distraction – go for a walk, play a game, watch a movie or listen to their favourite music diversion – find a substitute action that causes no injury (such as punching a pillow or squeezing an ice cube) deep breathing. It can be helpful to draft up a safety plan External Link or learn mental health first aid so you know what to do in a crisis. Encourage the person to seek support for themselves, or offer to help them make contact with one or more of the suggested supports.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "other",
+    "content": "If your child, friend or other family member is self-harming, or you think they might be, seeking support from a mental health professional is important for you too. Talk to someone you trust about what’s going on and how you feel. However, upsetting it can be to see a loved one in trouble, remember that self-harming behaviour is treatable and not everyone who self-harms is suicidal.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "treatment",
+    "content": "Self-harming is a serious behaviour – it’s a sign someone is feeling significant distress and they’re not doing it to seek attention. Usually they are deeply ashamed and go to great lengths to hide it from others. They may suffer in silence and really need support to open up about how they are feeling. Although self-harming behaviour can be treated, many people don’t seek support because they: think people will not understand do not trust their information will be kept private do not believe anyone will be able to help are afraid people (including health professionals) will react negatively to their self-harming behaviour – perhaps because they have in the past are ashamed, guilty or angry about their self-harming behaviour believe they should be able to cope on their own. No one has to cope alone; self-harming behaviour is treatable. Support can include working on recognising triggers, learning how to manage difficult emotions and help with self-care (such as caring for wounds and learning other coping strategies). For anyone who self-harms, just realising it is a not a long-term solution to problems is a step in the right direction. Once they make a decision to seek support, it’s important that they take it slowly and are not too hard on themselves. It can take time to break the cycle of self-harm and there may be setbacks along the way.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "other",
+    "content": "It can be difficult to break away from self-harm. Treatment will include learning to find other ways to manage intense feelings. By distracting or diverting the behaviour, feelings and urges may become less intense and decrease over time. The person who is self-harming may like to develop their own ways to distract themselves, or use some of these ideas: wear a rubber band around your wrist and snap it when you feel distressed eat an ice-cube – the sensation can take your mind off intense feelings hold an ice-cube in your hand keep a journal and jot down your thoughts exercise – it releases endorphins and can help lift your mood be mindful – do some colouring, try meditation, relaxation or do a craft activity like knitting or painting draw on your body in the areas where you normally hurt punch a pillow make your environment safe – get someone you trust to take away any harmful objects and keep you away from any places where you are likely to harm keep a distraction box – store some things that bring you comfort in a box or bag (such as photos, a favourite toy, chewing gum, fiddle toys, craft). Keep it somewhere handy and explore it when you feel like self-harming.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "causes",
+    "content": "People of all ages self-harm, but young people are more at risk. According to the 2015 Australian Child and Adolescent Survey of Mental Health and Wellbeing, around one in ten Australian teens have self-harmed. It is more common among girls than boys, and usually starts around the ages of 12 to 14 years, just after the onset of puberty. Those who are at increased risk of self-harm include young people: aged 15–19 with a mental health condition or personality disorder from Aboriginal or Torres Strait Islander backgrounds in immigration detention or juvenile justice facilities in out-of-home care who live in rural and remote areas who identify as lesbian, gay, bisexual, trans and gender diverse, intersex, queer and asexual (LGBTIQA+). Aboriginal and Torres Strait Islander young people (aged 15–24) are five times more likely to self-harm than non-Indigenous young people.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "other",
+    "content": "There are many reasons why people self-harm. Even for one person the motivation can vary. Some people do it as a way of expressing their distress, taking back control or escaping from situations they find troubling. Others may find it makes them ‘feel’ something when they are numb and devoid of all feelings. Some people find self-harm gives them a sense of relief. Whatever the reason, self-harm is normally a sign that a person is feeling intense emotional pain and distress. For young people, many stressful things (stressors) happen all at once. Not only are they dealing with changes to their bodies, they are trying to juggle demands they didn’t have when they were younger (such as study, work, relationships, being more independent and having more responsibility). Stressors that may increase the risk of self-harm include: family breakdown or conflict relationship difficulties knowing others who self-harm having a family history of self-harm being bullied school or work problems alcohol and drug abuse past trauma, neglect or abuse. Personal factors that may increase someone’s risk of self-harm include: a previous history of self-harm experiencing aggression or violence mental health conditions low self-esteem poor body image and self-hatred physical illness or disability impulsivity – acting without thinking poor coping skills difficulties with problem solving.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "causes",
+    "content": "Although self-harm may bring relief in the short-term, it doesn’t help the person address the reasons they are doing it in the first place. Unless the problems that are causing the self-harming behaviour are addressed, people will continue to use it as a way to cope. Unfortunately, self-harm can be dangerous – it can lead to serious injury and even accidental death. It can also lead to a higher risk of developing physical and mental health issues, substance misuse and unemployment. Although most people who self-harm don’t want to die, their behaviour can become more frequent and addictive as they seek out methods to deal with overwhelming emotions. Some people who self-harm have feelings of shame, self-loathing and helplessness and may have suicidal thoughts. Many people who attempt suicide have a history of self-harm.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "treatment",
+    "content": "Your GP (doctor) Counsellor – such as a school or student counsellor Psychologist Headspace External Link eheadspace External Link Tel. 1800 650 890 Lifeline External Link Tel. 13 11 14 SuicideLine External Link Tel. 1300 651 251 Kids Helpline External Link Tel. 1800 55 1800 ReachOut External Link Beyond Blue External Link Tel. 1300 22 4636 youthbeyondblue External Link Tel. 1300 22 4636 Mental Health Foundation of Australia External Link Tel. (03) 9826 1422 Robinson J, McCutcheon L, Browne V, Witt K 2016, Looking the other way – Young people and self-harm External Link , Orygen, The National Centre of Excellence in Youth Mental Health, Melbourne, Australia. MythBuster – Self-harm: Sorting fact from fiction External Link , 2015, Orygen, The National Centre of Excellence in Youth Mental Health. Martin G, Swannell SV, Hazell PL, Harrison JE, Taylor AW 2010, ‘ Self-injury in Australia: A community survey External Link ’, Medical Journal of Australia, vol. 193, no. 9, pp. 506–510. Daraganova G 2016, ‘ Chapter 6: Self-harm and suicidal behaviour of young people aged 14–15 years old External Link ’ in Growing up in Australia: the longitudinal study of Australian children annual statistical report 2016, Australian Institute of Family Studies. Lawrence D, Johnson S, Hafekost J, et al. 2015, The mental health of children and adolescents: Report on the second ‘Australian child and adolescent survey of mental health and wellbeing External Link ’, Department of Health, Australian Government. This page has been produced in consultation with and approved by: This page has been produced in consultation with and approved by:",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  },
+  {
+    "condition": "Self-Harm",
+    "aliases": [],
+    "source": "Better Health Channel",
+    "source_url": "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/self-harm",
+    "section": "other",
+    "content": "Aboriginal health services The following services provide specialised healthcare for Aboriginal and Torres Strait Islander people in Victoria. Agoraphobia A person with agoraphobia is afraid to leave familiar environments, because they are afraid of having a panic attack. Alexander technique The Alexander technique stresses that movement should be economical and needs only the minimum amount of energy and effort. Amy Corcoran, lived experience worker, Melbourne Know that you are not alone, push through the anxiety of sharing to get help. Know it will shift and change, and that these feelings are not forever. Anger - how it affects people Well-managed anger can be a useful emotion that motivates you to make positive changes. The following services provide specialised healthcare for Aboriginal and Torres Strait Islander people in Victoria. A person with agoraphobia is afraid to leave familiar environments, because they are afraid of having a panic attack. The Alexander technique stresses that movement should be economical and needs only the minimum amount of energy and effort. Know that you are not alone, push through the anxiety of sharing to get help. Know it will shift and change, and that these feelings are not forever. Well-managed anger can be a useful emotion that motivates you to make positive changes.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-16"
+  }
+]

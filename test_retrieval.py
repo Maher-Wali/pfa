@@ -73,26 +73,50 @@ def build_llm(host: str, model: str | None):
             print("  Make sure LM Studio is running with a model loaded.")
             sys.exit(1)
 
-    def call_llm(prompt: str) -> str:
+    RAG_SYSTEM = (
+        "You are a mental-health information assistant. "
+        "Your answers must be grounded EXCLUSIVELY in the context passages provided. "
+        "Rules:\n"
+        "1. Only describe techniques, exercises, symptoms, or treatments that are "
+        "explicitly stated in the context. Do NOT draw on general knowledge.\n"
+        "2. Do NOT invent exercise names, technique steps, or source citations that "
+        "are not present word-for-word in the context.\n"
+        "3. If the context contains relevant information, answer directly and concisely "
+        "using that information.\n"
+        "4. If the context does not cover the question, say: 'My sources don't include "
+        "specific information on [topic]. The available context covers [nearest topic] — "
+        "would that help?' Do not attempt an answer from memory."
+    )
+
+    BARE_SYSTEM = (
+        "You are a mental-health information assistant. "
+        "Answer accurately and concisely."
+    )
+
+    def call_llm(prompt: str, system: str = BARE_SYSTEM,
+                 temperature: float = 0.6) -> str:
         response = client.chat.completions.create(
             model=model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.6,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=temperature,
             max_tokens=512,
         )
         return response.choices[0].message.content.strip()
 
-    return call_llm, model
+    # The RAG pipeline calls llm_func(prompt) with a single argument.
+    # Lower temperature for RAG: grounded responses need less creativity.
+    def rag_llm(prompt: str) -> str:
+        return call_llm(prompt, system=RAG_SYSTEM, temperature=0.2)
+
+    return call_llm, rag_llm, model
 
 
 def bare_llm_call(llm_func, query: str) -> str:
     """Call the LLM with no retrieval context — plain Q&A prompt."""
-    prompt = (
-        "You are a mental-health information assistant. "
-        "Answer the following question as accurately and concisely as possible.\n\n"
-        f"Question: {query}\n\nAnswer:"
-    )
-    return llm_func(prompt)
+    return llm_func(f"Question: {query}\n\nAnswer:")
 
 
 # ---------------------------------------------------------------------------
@@ -120,16 +144,24 @@ def print_comparison(
     rag_answer: str,
     rag_time: float,
     route: str,
+    context_passages: list[str] | None = None,
 ):
     print(f"\n{SEPARATOR}")
-    print(f"QUERY: {query}")
-    print(f"ROUTE: {route}")
+    print(f"QUERY : {query}")
+    print(f"ROUTE : {route}")
     print(SEPARATOR)
+
+    if context_passages:
+        print(f"\n[RETRIEVED CONTEXT]  ({len(context_passages)} passages)")
+        for i, p in enumerate(context_passages, 1):
+            # Show just the label + first 120 chars so it doesn't flood output
+            preview = p[:120].replace("\n", " ")
+            print(f"  {i}. {preview}…")
 
     print(f"\n[BARE LLM]  ({bare_time:.1f}s)")
     print(_wrap(bare_answer))
 
-    print(f"\n[RAG]  ({rag_time:.1f}s)")
+    print(f"\n[RAG]       ({rag_time:.1f}s)")
     print(_wrap(rag_answer))
     print()
 
@@ -147,6 +179,8 @@ def main():
                         help="Passages to include in RAG context")
     parser.add_argument("--queries", default=None,
                         help="Path to JSON file with list of query strings")
+    parser.add_argument("--debug", action="store_true",
+                        help="Show retrieved passages before each RAG answer")
     args = parser.parse_args()
 
     # -- Queries --
@@ -157,16 +191,16 @@ def main():
 
     # -- LLM --
     print("\nConnecting to LM Studio…")
-    llm_func, model_id = build_llm(args.host, args.model)
+    bare_llm, rag_llm, model_id = build_llm(args.host, args.model)
     print(f"  Model: {model_id}")
     print(f"  Host:  {args.host}")
 
     # -- RAG pipeline --
     print("\nLoading RAG pipeline (this takes ~30s the first time)…")
-    from retrieval.rag_pipeline import MentalHealthRAG
+    from retrieval.rag_pipeline import MentalHealthRAG, _format_passages
     from retrieval.query_router import route_query
 
-    rag = MentalHealthRAG()
+    rag = MentalHealthRAG(debug=args.debug)
     print("  Pipeline ready.\n")
 
     # -- Run queries --
@@ -175,17 +209,18 @@ def main():
 
         # Bare LLM
         t0 = time.time()
-        bare_ans = bare_llm_call(llm_func, query)
+        bare_ans = bare_llm_call(bare_llm, query)
         bare_t = time.time() - t0
 
         # RAG (fresh history each query so they're independent)
         rag.clear_history()
         t0 = time.time()
-        rag_ans = rag.generate_response(query, llm_func, top_k_docs=args.top_k)
+        rag_ans = rag.generate_response(query, rag_llm, top_k_docs=args.top_k)
         rag_t = time.time() - t0
 
         route = route_query(query)
-        print_comparison(query, bare_ans, bare_t, rag_ans, rag_t, route)
+        passages = rag._last_passages if args.debug else None
+        print_comparison(query, bare_ans, bare_t, rag_ans, rag_t, route, passages)
 
     print(f"\n{SEPARATOR}")
     print("Done.")

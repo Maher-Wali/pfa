@@ -9,7 +9,7 @@
 #   3. Run hybrid (BM25 + dense) retrieval on the selected collection(s).
 #   4. Fuse all retrieved lists with Reciprocal Rank Fusion.
 #   5. Rerank the fused list with a CrossEncoder.
-#   6. Filter passages for query-relevant sentences.
+#   6. Format the top-k passages into labelled context.
 #   7. Build a context-grounded prompt and call the LLM.
 #   8. Store the exchange in chat history for the next turn.
 
@@ -81,34 +81,29 @@ Output ONLY valid JSON:
 # Passage filter  (same logic as medai — keeps only query-relevant sentences)
 # ---------------------------------------------------------------------------
 
-def _filter_passages(
-    docs: List[Document],
-    query: str,
-    max_len: int = 300,
-) -> List[str]:
-    query_tokens = set(re.findall(r"\w+", query.lower()))
-    passages: List[str] = []
+def _format_passages(docs: List[Document], max_len: int = 500) -> List[str]:
+    """
+    Format reranked documents into labelled context passages.
 
+    The CrossEncoder has already selected and ranked the most relevant docs,
+    so no further sentence-level filtering is needed — that only discards
+    useful content. Each passage is truncated to max_len characters and
+    labelled with the most informative metadata field.
+    """
+    passages = []
     for doc in docs:
         text = doc.page_content.replace("\n", " ").strip()
-        sentences = re.split(r"(?<=[.!?])\s+", text)
-
-        relevant = [
-            s for s in sentences
-            if len(set(re.findall(r"\w+", s.lower())) & query_tokens) >= 2
-        ]
-
-        if relevant:
-            excerpt = " ".join(relevant)[:max_len]
-            # Label the passage with the most informative metadata field
-            label = (
-                doc.metadata.get("condition")
-                or doc.metadata.get("technique_name")
-                or doc.metadata.get("source")
-                or "Doc"
-            )
-            passages.append(f"[{label}] {excerpt}")
-
+        if len(text) > max_len:
+            # Truncate at a sentence boundary where possible
+            cut = text[:max_len].rfind(". ")
+            text = text[: cut + 1] if cut > max_len // 2 else text[:max_len]
+        label = (
+            doc.metadata.get("condition")
+            or doc.metadata.get("technique_name")
+            or doc.metadata.get("source")
+            or "Doc"
+        )
+        passages.append(f"[{label}] {text}")
     return passages
 
 
@@ -167,6 +162,7 @@ class MentalHealthRAG:
 
         self.reranker = RerankedRRF(model_name=reranker_model)
         self.chat_history: List[Tuple[str, str]] = []
+        self._last_passages: List[str] = []
 
     # ------------------------------------------------------------------
     # Chat history
@@ -246,27 +242,20 @@ class MentalHealthRAG:
         # --- 4. CrossEncoder rerank ---
         top_docs = self.reranker.rerank(user_query, fused, top_k=top_k_docs * 2)
 
-        # --- 5. Filter to relevant sentences ---
-        passages = _filter_passages(top_docs, user_query)
+        # --- 5. Format passages for context ---
+        passages = _format_passages(top_docs)
+        self._last_passages = passages[:top_k_docs]   # exposed for debug/testing
 
-        if not passages:
-            return "I don't have enough information in the knowledge base to answer this question."
-
-        context = "\n".join(passages[:top_k_docs])
+        context = "\n".join(self._last_passages)
 
         # --- 6. Prompt LLM ---
+        # Plain text only — no chat template tokens.  The caller's llm_func
+        # is responsible for wrapping this in whatever format the model needs
+        # (e.g. system/user messages via the OpenAI API).
         prompt = (
-            "<|im_start|>system\n"
-            "You are a mental-health information assistant. "
-            "Answer ONLY using the provided context. "
-            "If the context does not contain the answer, say "
-            "\"I cannot find this information in the provided context.\" "
-            "Be concise and do not repeat the instructions.<|im_end|>\n"
-            "<|im_start|>user\n"
             f"Context:\n{context}\n\n"
             f"Question:\n{user_query}\n\n"
-            "Answer:<|im_end|>\n"
-            "<|im_start|>assistant\n"
+            "Answer:"
         )
 
         answer = llm_func(prompt)
