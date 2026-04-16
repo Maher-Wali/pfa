@@ -28,15 +28,11 @@ from retrieval.query_router import route_query, RouteTarget
 
 
 # ---------------------------------------------------------------------------
-# Default paths — relative to the project root (C:/pfa)
+# Default Pinecone index names
 # ---------------------------------------------------------------------------
 
-_ROOT = Path(__file__).resolve().parents[1]
-_CLINICAL_DIR = str(_ROOT / "data" / "vectordb" / "clinical")
-_THERAPY_DIR = str(_ROOT / "data" / "vectordb" / "therapy")
-
-_CLINICAL_COLLECTION = "mental_health_clinical"
-_THERAPY_COLLECTION = "mental_health_therapy"
+_CLINICAL_INDEX = "mental-health-clinical"
+_THERAPY_INDEX = "mental-health-therapy"
 
 
 # ---------------------------------------------------------------------------
@@ -118,16 +114,14 @@ def _filter_passages(
 
 class MentalHealthRAG:
     """
-    History-aware RAG pipeline over two ChromaDB collections:
-      • mental_health_clinical  — disorders, symptoms, diagnosis
-      • mental_health_therapy   — coping techniques, exercises, skills
+    History-aware RAG pipeline over two Pinecone indexes:
+      • mental-health-clinical  — disorders, symptoms, diagnosis
+      • mental-health-therapy   — coping techniques, exercises, skills
 
     Parameters
     ----------
-    clinical_db_dir / therapy_db_dir:
-        Paths to the ChromaDB persist directories.  Defaults point to
-        ``data/vectordb/clinical`` and ``data/vectordb/therapy`` relative
-        to the project root.
+    clinical_index / therapy_index:
+        Pinecone index names.
     reranker_model:
         HuggingFace model ID for the CrossEncoder reranker.
     bm25_weight / dense_weight:
@@ -138,8 +132,8 @@ class MentalHealthRAG:
 
     def __init__(
         self,
-        clinical_db_dir: str = _CLINICAL_DIR,
-        therapy_db_dir: str = _THERAPY_DIR,
+        clinical_index: str = _CLINICAL_INDEX,
+        therapy_index: str = _THERAPY_INDEX,
         reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
         bm25_weight: float = 0.65,
         dense_weight: float = 0.35,
@@ -149,8 +143,7 @@ class MentalHealthRAG:
 
         print("Initialising clinical retriever…")
         self.clinical = HybridRetriever(
-            persist_directory=clinical_db_dir,
-            collection_name=_CLINICAL_COLLECTION,
+            index_name=clinical_index,
             bm25_weight=bm25_weight,
             dense_weight=dense_weight,
             debug=debug,
@@ -158,8 +151,7 @@ class MentalHealthRAG:
 
         print("Initialising therapy retriever…")
         self.therapy = HybridRetriever(
-            persist_directory=therapy_db_dir,
-            collection_name=_THERAPY_COLLECTION,
+            index_name=therapy_index,
             bm25_weight=bm25_weight,
             dense_weight=dense_weight,
             debug=debug,

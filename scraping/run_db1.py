@@ -21,6 +21,7 @@ from db1_clinical.who_mhgap               import WHOMhGAPScraper
 from db1_clinical.mind_uk                  import MindUKScraper
 from db1_clinical.mental_health_foundation import MentalHealthFoundationScraper
 from db1_clinical.beyond_blue              import BeyondBlueScraper
+from db1_clinical.mayo_clinic              import MayoClinicScraper
 
 log = logging.getLogger("run_db1")
 
@@ -32,6 +33,7 @@ SCRAPERS = [
     ("Mind UK",                    MindUKScraper),
     ("Mental Health Foundation",   MentalHealthFoundationScraper),
     ("Beyond Blue",                BeyondBlueScraper),
+    ("Mayo Clinic",                MayoClinicScraper),
 ]
 
 

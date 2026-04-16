@@ -1,16 +1,16 @@
 # retrieval/hybrid_retriever.py
 #
-# Hybrid BM25 + dense retriever over a single ChromaDB collection.
-# Ported from medai with no logic changes — it is already collection-agnostic.
+# Hybrid BM25 + dense retriever over a single Pinecone index.
+# BM25 runs locally in-memory; dense search uses Pinecone's cosine index.
 
 import re
 import os
-import chromadb
 import numpy as np
 from typing import List
 from langchain_core.documents import Document
 from rank_bm25 import BM25Okapi
 from sentence_transformers import SentenceTransformer
+from pinecone import Pinecone
 
 # Avoid OpenMP conflicts when torch and llama.cpp are both loaded
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
@@ -33,20 +33,20 @@ class HybridRetriever:
 
     def __init__(
         self,
-        persist_directory: str,
-        collection_name: str,
+        index_name: str,
         bm25_weight: float = 0.65,
         dense_weight: float = 0.35,
         embedding_model_name: str = "BAAI/bge-base-en-v1.5",
         debug: bool = False,
     ):
+        self.index_name = index_name
         self.bm25_weight = bm25_weight
         self.dense_weight = dense_weight
         self.embedding_model_name = embedding_model_name
         self.debug = debug
 
-        self.client = chromadb.PersistentClient(path=persist_directory)
-        self.collection = self.client.get_collection(collection_name)
+        pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
+        self.index = pc.Index(index_name)
 
         print(f"Loading embedding model: {embedding_model_name}")
         self.embedding_model = SentenceTransformer(embedding_model_name)
@@ -59,25 +59,46 @@ class HybridRetriever:
     # ------------------------------------------------------------------
 
     def _load_documents(self):
-        data = self.collection.get(include=["documents", "metadatas", "embeddings"])
+        """
+        Fetch all vectors from the Pinecone index to build the local
+        BM25 index and document store.
 
+        Uses pagination via list() + fetch() to retrieve all records.
+        """
         self.docs: List[Document] = []
         self.normalized_texts: List[str] = []
+        self.doc_ids: List[str] = []
 
-        for doc_text, meta, emb in zip(
-            data["documents"], data["metadatas"], data["embeddings"]
-        ):
-            if emb is not None and len(emb) > 0:
-                self.docs.append(Document(page_content=doc_text, metadata=meta))
-                self.normalized_texts.append(_normalize_for_bm25(doc_text))
+        # Paginate through all vector IDs in the index
+        all_ids = []
+        for id_batch in self.index.list():
+            all_ids.extend(id_batch)
+
+        if not all_ids:
+            raise ValueError(
+                f"No vectors found in index '{self.index_name}'."
+            )
+
+        # Fetch vectors in batches of 100 (Pinecone fetch limit)
+        for i in range(0, len(all_ids), 100):
+            batch_ids = all_ids[i : i + 100]
+            fetched = self.index.fetch(ids=batch_ids)
+
+            for vid, vec_data in fetched.vectors.items():
+                meta = vec_data.metadata or {}
+                text = meta.pop("text", "")
+                if text:
+                    self.docs.append(Document(page_content=text, metadata=meta))
+                    self.normalized_texts.append(_normalize_for_bm25(text))
+                    self.doc_ids.append(vid)
 
         if not self.docs:
             raise ValueError(
-                f"No documents with embeddings found in collection "
-                f"'{self.collection.name}'."
+                f"No documents with text metadata found in index "
+                f"'{self.index_name}'."
             )
 
-        print(f"Loaded {len(self.docs)} documents from '{self.collection.name}'")
+        print(f"Loaded {len(self.docs)} documents from '{self.index_name}'")
 
     def _init_bm25(self):
         tokenized = [t.split() for t in self.normalized_texts]
@@ -99,25 +120,20 @@ class HybridRetriever:
             normalize_embeddings=True,
         )[0]
 
-        results = self.collection.query(
-            query_embeddings=[query_emb.tolist()],
-            n_results=len(self.docs),
-            include=["distances"],
+        # Query Pinecone for cosine similarity scores
+        results = self.index.query(
+            vector=query_emb.tolist(),
+            top_k=len(self.docs),
+            include_metadata=False,
         )
 
-        distances = np.array(results["distances"][0], dtype=float)
-
-        # Paranoia: ChromaDB may return fewer results than requested
-        if len(distances) != len(self.docs):
-            if self.debug:
-                print(
-                    f"Warning: dense results ({len(distances)}) != "
-                    f"doc count ({len(self.docs)})"
-                )
-            min_len = min(len(distances), len(self.docs))
-            distances = distances[:min_len]
-
-        return 1.0 / (1.0 + distances)
+        # Build a score array aligned with self.docs order
+        score_map = {m.id: m.score for m in results.matches}
+        scores = np.array(
+            [score_map.get(did, 0.0) for did in self.doc_ids],
+            dtype=float,
+        )
+        return scores
 
     # ------------------------------------------------------------------
     # Public API

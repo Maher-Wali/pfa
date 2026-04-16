@@ -64,6 +64,16 @@ class BaseScraper:
                 resp.raise_for_status()
                 self._wait()
                 return BeautifulSoup(resp.text, "lxml")
+            except requests.HTTPError as exc:
+                # 404 means the page definitively does not exist — no point retrying
+                if exc.response is not None and exc.response.status_code == 404:
+                    self.log.debug("404 — skipping: %s", url)
+                    return None
+                self.log.warning(
+                    "Attempt %d/%d failed for %s: %s", attempt + 1, retries, url, exc
+                )
+                if attempt < retries - 1:
+                    time.sleep(5 * (attempt + 1))  # exponential back-off
             except requests.RequestException as exc:
                 self.log.warning(
                     "Attempt %d/%d failed for %s: %s", attempt + 1, retries, url, exc

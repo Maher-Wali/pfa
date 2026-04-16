@@ -36,6 +36,9 @@ import sys
 import argparse
 import os
 from pathlib import Path
+from dotenv import load_dotenv                                                                                                                                    
+  
+load_dotenv()
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -55,13 +58,13 @@ ENRICHMENT_PROMPT = """\
 You are given a therapy technique article. Extract structured information \
 and return ONLY valid JSON with these fields:
 
-{
+{{
   "steps": [list of strings — ordered steps to perform the technique, or null if not applicable],
   "when_to_use": "one sentence describing when this technique is appropriate",
   "target_conditions": [list of mental health conditions this technique addresses],
   "difficulty": "low" | "medium" | "high",
   "estimated_time": "e.g. '10-15 minutes' or null if unclear"
-}
+}}
 
 Be concise. Use null for fields that cannot be determined from the text.
 
