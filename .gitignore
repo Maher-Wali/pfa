@@ -19,7 +19,7 @@ data/processed/
 
 # Scraped raw data — regenerate with scraping/run_db1.py + run_db2.py
 # Remove this line if you want to commit the raw JSONs for reproducibility
-data/raw/
+# data/raw/
 
 # Environment / secrets
 .env
