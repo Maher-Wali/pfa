@@ -1,0 +1,254 @@
+RAW DATA SUMMARY
+================================================================================
+Generated: 2026-04-15
+Project  : Mental Health Expert LLM — Multi-Corpus RAG Pipeline
+================================================================================
+
+
+1. OVERVIEW
+-----------
+Two raw data corpora were collected via web scrapers. No Kaggle or third-party
+datasets are used at this stage — all data is sourced directly from authoritative
+mental health organisations.
+
+  DB1 — Clinical Knowledge Corpus :  292 records  (6 active sources)
+  DB2 — Therapy Techniques Corpus :   81 records  (8 active sources)
+  TOTAL                            :  373 records
+
+
+================================================================================
+2. DB1 — CLINICAL KNOWLEDGE CORPUS
+================================================================================
+Purpose : Factual clinical reference — conditions, symptoms, causes, diagnoses,
+          treatments. Retrieved during RAG to ground the model's answers in
+          evidence-based clinical content.
+
+Schema  : { condition, aliases, source, source_url, section,
+            content, icd11_code, last_scraped }
+
+File    : data/raw/db1_clinical/<source>/<source>_clinical.json
+
+SOURCES
+-------
+  NHS (nhs.uk)                        53 records
+    - UK National Health Service condition guides
+    - 24 conditions, up to 10 section sub-pages each
+    - Sections: overview, symptoms, causes, diagnosis, treatment,
+                self_help, living_with, when_to_seek_help
+    - License: Open Government Licence v3.0
+
+  NICE (nice.org.uk)                  36 records
+    - UK National Institute for Health and Care Excellence guidelines
+    - 15 clinical guidelines (patient-facing "information for the public" pages)
+    - Split by h2/h3 headings; sections classified by keyword
+    - License: NICE content licence (non-commercial permitted)
+
+  NIMH (nimh.nih.gov)                 97 records
+    - US National Institute of Mental Health topic pages
+    - 17 topics, heading-split into individual section records
+    - Broadest single source — covers ADHD, autism, eating disorders,
+      psychosis, suicide prevention and more
+    - License: US Government public domain
+
+  WHO mhGAP (who.int)                 62 records
+    - World Health Organization Mental Health Gap Action Programme
+    - Fact sheets + programme overview pages
+    - Global/international perspective; ICD-11 aligned
+    - License: WHO public content
+
+  Mental Health Foundation (mhf.org.uk)  20 records
+    - UK charity condition and topic guides
+    - 28 targets scraped; 20 returned sufficient content
+    - License: Standard web terms — non-commercial educational use
+
+  Beyond Blue (beyondblue.org.au)     24 records
+    - Australian mental health charity
+    - 24 targets; Australian clinical framing
+    - License: Standard web terms — non-commercial educational use
+
+INACTIVE / FAILED SOURCES
+--------------------------
+  Mind UK (mind.org.uk)            0 records  [BLOCKED — Cloudflare 403]
+    - All requests return HTTP 403 despite full Chromium browser fingerprint
+    - Content overlaps heavily with NHS; not critical to replace immediately
+
+  HelpGuide (helpguide.org)        0 records  [BLOCKED — Cloudflare 403]
+    - Same issue; removed from runner
+
+  CCI (cci.health.wa.gov.au)       0 records  [TIMEOUT]
+    - Site consistently times out; dropped
+
+CONDITION COVERAGE (51 unique conditions across DB1)
+-----------------------------------------------------
+ADHD, Alcohol and Mental Health, Anger, Anorexia Nervosa, Anxiety,
+Anxiety Disorders, Autism Spectrum Disorder, Autism in Adults,
+Bipolar Disorder, Body Image, Borderline Personality Disorder,
+Bulimia Nervosa, Common Mental Health Problems, Dementia, Depression,
+Depression in Adults, Eating Disorders, Exercise and Mental Health,
+Generalised Anxiety Disorder, Grief and Loss, Loneliness,
+Men and Mental Health, Mental Disorders Overview, Mindfulness, OCD,
+PTSD, Panic Attacks, Panic Disorder, Perinatal Mental Health, Phobias,
+Physical Activity and Mental Health, Postnatal Depression, Psychosis,
+Psychosis and Schizophrenia, Schizophrenia, Seasonal Affective Disorder,
+Self-Harm, Sleep and Mental Health, Social Anxiety, Social Anxiety Disorder,
+Stress, Suicide, Suicide Prevention, Young People and Mental Health
+(+ several sub-variants and thematic entries)
+
+SECTION DISTRIBUTION
+--------------------
+  overview          102 records   (35%)
+  other             102 records   (35%)  ← unclassified headings; cleaned at pipeline
+  treatment          34 records   (12%)
+  symptoms           17 records    (6%)
+  causes             11 records    (4%)
+  diagnosis          10 records    (3%)
+  living_with         9 records    (3%)
+  self_help           6 records    (2%)
+  when_to_seek_help   1 record     (<1%)
+
+NOTE: The "other" bucket is large because NIMH and WHO pages use headings that
+don't map to the standard section keywords. These will be re-classified during
+the pipeline enrichment pass.
+
+
+================================================================================
+3. DB2 — THERAPY TECHNIQUES CORPUS
+================================================================================
+Purpose : Evidence-based therapeutic techniques for the recommendation layer.
+          Retrieved when the query router identifies a therapy/coping intent.
+          Structured fields (steps, worked_example, when_to_use, etc.) are
+          populated by an LLM extraction pass during ingestion, not by scrapers.
+
+Schema  : { technique_name, aliases, modality, target_conditions,
+            target_problem, steps, worked_example, when_to_use,
+            estimated_time, difficulty, raw_content, source,
+            source_url, last_scraped }
+
+File    : data/raw/db2_therapy/<source>/<source>_therapy.json
+
+SOURCES
+-------
+  Simply Psychology (simplypsychology.org)   16 records
+    - Academic-style technique articles
+    - Covers CBT, DBT, ACT, mindfulness, relaxation, positive psychology
+    - Dual URL strategy (clean slug + .html fallback) applied
+
+  Anxiety Canada (anxietycanada.com)         19 records
+    - Canadian anxiety charity; CBT and ACT focused
+    - Practical, step-by-step technique guides
+
+  ACT Mindfully (actmindfully.com.au)         8 records
+    - Russ Harris practitioner PDFs (public resources page)
+    - High-quality ACT worksheets extracted via pdfplumber
+
+  Positive Psychology (positivepsychology.com) 11 records
+    - Positive psychology interventions and techniques
+    - Covers gratitude, strengths, savoring, PPT overview
+
+  GetSelfHelp (getselfhelp.co.uk)            12 records
+    - UK CBT self-help resource; worksheet-style content
+    - Covers thought records, safety planning, cognitive restructuring
+
+  Therapist Aid (therapistaid.com)            8 records
+    - US therapy worksheet site; CBT, DBT, mindfulness
+
+  NHS IAPT / NHS Inform (nhsinform.scot)      5 records
+    - NHS Scotland self-help guide PDFs
+    - Extracted via pdfplumber
+
+  Self-Compassion.org (self-compassion.org)   2 records
+    - Kristin Neff's MSC exercises
+    - Most exercise page URLs have changed; only 2 of ~8 targets returned content
+    - Fix pending: URL audit needed
+
+INACTIVE / FAILED SOURCES
+--------------------------
+  DBT Self Help (dbtselfhelp.com)     0 records  [JS-RENDERED]
+    - Blog index is rendered by Divi/JS; static HTML contains no article links
+    - Fallback link harvesting also returned 0 — confirms JS dependency
+    - Fix options: Playwright, or expand DBT targets in Simply Psychology
+
+  CCI Therapy (cci.health.wa.gov.au)  0 records  [TIMEOUT]
+    - Same timeout issue as DB1; dropped
+
+MODALITY DISTRIBUTION
+---------------------
+  CBT (Cognitive Behavioural Therapy)    38 records   (47%)
+  ACT (Acceptance & Commitment)          11 records   (14%)
+  PPT (Positive Psychology Therapy)       9 records   (11%)
+  MBSR (Mindfulness-Based)               6 records    (7%)
+  relaxation                             5 records    (6%)
+  behavioral                             5 records    (6%)
+  MSC (Mindful Self-Compassion)          5 records    (6%)
+  DBT (Dialectical Behaviour Therapy)    1 record     (1%)  ← significant gap
+  interpersonal                          1 record     (1%)  ← significant gap
+
+UNIQUE TECHNIQUE COUNT: 75
+
+KNOWN GAPS
+----------
+  - DBT: only 1 record. Should have ~15-20 covering DEAR MAN, GIVE, FAST,
+    TIP skill, ACCEPTS, Wise Mind, Radical Acceptance, Chain Analysis, etc.
+  - Interpersonal: 1 record. IPT and assertiveness training underrepresented.
+  - Schema Therapy, CFT (Compassion-Focused), EMDR: 0 records.
+    These are out of scope for MVP but worth noting.
+
+
+================================================================================
+4. DATA QUALITY NOTES
+================================================================================
+- Content was scraped as raw prose; no structured field extraction yet.
+  Steps, worked_example, when_to_use etc. are all null — pipeline pass pending.
+- Encoding artefacts present in a small number of condition names from
+  Mental Health Foundation (em-dashes mangled). Will be cleaned at pipeline.
+- Duplicate condition entries exist across sources (e.g. "Depression" from
+  NHS, NIMH, WHO, MHF, Beyond Blue). This is intentional — multi-source
+  coverage improves retrieval diversity. Deduplication happens at chunk level
+  via embedding similarity, not at record level.
+- The "other" section label (102 records) needs reclassification.
+  Will be resolved by a heading keyword pass during ingestion.
+- icd11_code is null for some conditions (Self-Harm, Stress, Loneliness,
+  Sleep Problems, Paranoia) — these don't have discrete ICD-11 disorder codes.
+
+
+================================================================================
+5. PENDING FIXES (before pipeline)
+================================================================================
+  [DB1] Mind UK (0 records)
+    → Replace with Rethink Mental Illness (rethink.org) — simpler stack,
+      no Cloudflare, comparable UK charity content. Est. +30-50 records.
+
+  [DB2] DBT Self Help (0 records)
+    → Expand DBT targets in Simply Psychology TARGETS list OR add Playwright
+      scraper. DBT coverage at 1 record is the largest quality gap.
+
+  [DB2] Self-Compassion.org (2 records)
+    → Manual URL audit needed. Est. 6-10 additional records if URLs found.
+
+
+================================================================================
+6. FILE STRUCTURE
+================================================================================
+  data/
+    raw/
+      db1_clinical/
+        nhs/              nhs_clinical.json               (53 records)
+        nice/             nice_clinical.json               (36 records)
+        nimh/             nimh_clinical.json               (97 records)
+        who_mhgap/        who_mhgap_clinical.json          (62 records)
+        mental_health_foundation/  mental_health_foundation_clinical.json  (20)
+        beyond_blue/      beyond_blue_clinical.json        (24 records)
+        mind_uk/          mind_uk_clinical.json             (0 records — blocked)
+        helpguide/        helpguide_clinical.json           (0 records — blocked)
+        cci/              cci_clinical.json                 (0 records — timeout)
+      db2_therapy/
+        simply_psychology/  simply_psychology_therapy.json  (16 records)
+        anxiety_canada/     anxiety_canada_therapy.json     (19 records)
+        act_mindfully/      act_mindfully_therapy.json       (8 records)
+        positive_psychology/ positive_psychology_therapy.json (11 records)
+        getselfhelp/        getselfhelp_therapy.json        (12 records)
+        therapist_aid/      therapist_aid_therapy.json       (8 records)
+        iapt/               iapt_therapy.json                (5 records)
+        self_compassion/    self_compassion_therapy.json     (2 records)
+        dbt_selfhelp/       dbt_selfhelp_therapy.json        (0 records — JS)
+        cci_therapy/        cci_therapy.json                 (0 records — timeout)

@@ -1,0 +1,35 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Packaging artefacts
+*.egg-info/
+dist/
+build/
+
+# ChromaDB vector stores — large binary files, regenerate with pipeline/build_vectors.py
+data/vectordb/
+
+# Processed chunks — regenerate with pipeline/prepare_db1.py + prepare_db2.py
+data/processed/
+
+# Scraped raw data — regenerate with scraping/run_db1.py + run_db2.py
+# Remove this line if you want to commit the raw JSONs for reproducibility
+data/raw/
+
+# Environment / secrets
+.env
+*.env
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-04-15T00:00:00.000Z" agent="Claude" version="21.0.0" type="device">
+  <diagram name="Mental Health LLM Architecture" id="mental-health-llm-arch">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TITLE -->
+        <mxCell id="title" value="Mental Health Expert LLM — Inference Architecture"
+          style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="200" y="10" width="560" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ===== MAIN FLOW ===== -->
+
+        <!-- 1. User Message -->
+        <mxCell id="node-user" value="User Message"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;"
+          vertex="1" parent="1">
+          <mxGeometry x="400" y="65" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: User Message -> Safety Classifier -->
+        <mxCell id="edge-user-safety" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-user" target="node-safety" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 2. Safety Classifier (diamond) -->
+        <mxCell id="node-safety" value="Safety Classifier"
+          style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;"
+          vertex="1" parent="1">
+          <mxGeometry x="380" y="175" width="200" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- 3. Safety Response (medium/high branch) -->
+        <mxCell id="node-safety-response" value="Safety Response&#xa;+ Escalation Resources"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="670" y="190" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Safety Classifier -> Safety Response -->
+        <mxCell id="edge-safety-to-response" value="medium / high"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="node-safety" target="node-safety-response" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Safety Classifier -> Query Router -->
+        <mxCell id="edge-safety-to-router" value="none / low"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
+          edge="1" source="node-safety" target="node-router" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 4. Query Router -->
+        <mxCell id="node-router" value="Query Router"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=13;"
+          vertex="1" parent="1">
+          <mxGeometry x="400" y="330" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Query Router -> Clinical DB -->
+        <mxCell id="edge-router-to-clinical" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-router" target="node-clinical" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Query Router -> Therapy DB -->
+        <mxCell id="edge-router-to-therapy" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-router" target="node-therapy" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 5. Clinical Knowledge DB (cylinder) -->
+        <mxCell id="node-clinical" value="Clinical Knowledge DB"
+          style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="210" y="470" width="180" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- 6. Therapy Techniques DB (cylinder) -->
+        <mxCell id="node-therapy" value="Therapy Techniques DB"
+          style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="570" y="470" width="180" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Clinical DB -> Reranker -->
+        <mxCell id="edge-clinical-to-reranker" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-clinical" target="node-reranker" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Therapy DB -> Reranker -->
+        <mxCell id="edge-therapy-to-reranker" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-therapy" target="node-reranker" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 7. Reranker -->
+        <mxCell id="node-reranker" value="Reranker"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=13;"
+          vertex="1" parent="1">
+          <mxGeometry x="400" y="625" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Reranker -> LLM -->
+        <mxCell id="edge-reranker-to-llm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-reranker" target="node-llm" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 8. LLM -->
+        <mxCell id="node-llm" value="LLM"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=14;fontColor=#333333;"
+          vertex="1" parent="1">
+          <mxGeometry x="400" y="750" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ===== NOTES ===== -->
+
+        <!-- Note: Safety Classifier -->
+        <mxCell id="note-safety"
+          value="Runs on EVERY message before any retrieval. BERT-like classifier outputs a risk label: none / low / medium / high. This gates the entire downstream pipeline — the safety check is non-negotiable and cannot be bypassed."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="162" width="265" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-safety" style="dashed=1;endArrow=none;strokeColor=#e65100;rounded=0;"
+          edge="1" source="node-safety" target="note-safety" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note: Safety Response -->
+        <mxCell id="note-safety-response"
+          value="For medium/high risk: skip RAG entirely. Return structured crisis resources (hotlines, emergency contacts) and a clear directive to speak with a professional. No clinical content retrieved — wrong context at a moment of acute crisis."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fdecea;strokeColor=#b85450;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="268" width="265" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-safety-response" style="dashed=1;endArrow=none;strokeColor=#b85450;rounded=0;"
+          edge="1" source="node-safety-response" target="note-safety-response" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note: Query Router -->
+        <mxCell id="note-router"
+          value="Lightweight intent classifier. Decides which DBs to query: factual / psychoeducational queries go to Clinical DB; technique-seeking queries go to Therapy DB. Ambiguous or multi-part queries can trigger both DBs simultaneously."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fffde7;strokeColor=#d6b656;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="373" width="265" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-router" style="dashed=1;endArrow=none;strokeColor=#d6b656;rounded=0;"
+          edge="1" source="node-router" target="note-router" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note: Clinical Knowledge DB -->
+        <mxCell id="note-clinical"
+          value="Sources: NHS, WHO mhGAP, NICE, Mayo Clinic.&#xa;Content: conditions, symptoms, causes, prevalence, coping strategies, self-help sections.&#xa;Purpose: factual and psychoeducational responses — explaining what something is and why it happens."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f1f8e9;strokeColor=#558b2f;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="476" width="265" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-clinical" style="dashed=1;endArrow=none;strokeColor=#558b2f;rounded=0;"
+          edge="1" source="node-clinical" target="note-clinical" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note: Therapy Techniques DB -->
+        <mxCell id="note-therapy"
+          value="Sources: CBT worksheets, psychology tool libraries, IAPT self-help materials, evidence-based technique guides, therapist blogs.&#xa;Content: named techniques, step-by-step exercises, use-cases per condition.&#xa;Purpose: actionable, intervention-style responses."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f1f8e9;strokeColor=#558b2f;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="590" width="265" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-therapy" style="dashed=1;endArrow=none;strokeColor=#558b2f;rounded=0;"
+          edge="1" source="node-therapy" target="note-therapy" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note: Reranker -->
+        <mxCell id="note-reranker"
+          value="Cross-corpus re-scoring layer (e.g. Cohere Rerank, BGE Reranker). Merges and re-ranks retrieved chunks from both DBs into a single unified relevance list. Prevents one DB from dominating context. Passes top-k chunks to the LLM."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="704" width="265" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-reranker" style="dashed=1;endArrow=none;strokeColor=#7b1fa2;rounded=0;"
+          edge="1" source="node-reranker" target="note-reranker" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note: LLM -->
+        <mxCell id="note-llm"
+          value="Generates the final response grounded in retrieved context.&#xa;&#xa;// Style and persona are NOT retrieved at runtime:&#xa;// (1) Fine-tuning: SFT/DPO-trained on curated empathetic&#xa;//     dialogue pairs — tone baked into model weights.&#xa;// (2) System prompt: fixed constraints applied on every&#xa;//     call — validate before educate, one question at a&#xa;//     time, no unsolicited advice, no diagnosis."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;fontColor=#333333;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="810" width="265" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-llm" style="dashed=1;endArrow=none;strokeColor=#666666;rounded=0;"
+          edge="1" source="node-llm" target="note-llm" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,345 @@
+================================================================================
+MENTAL HEALTH EXPERT LLM — DATA SOURCES REFERENCE
+================================================================================
+Last updated: 2026-04-15
+
+This document records the chosen data sources for both vector databases,
+the justification for each inclusion and exclusion, and the exact document
+schema each scraper must produce.
+
+================================================================================
+DB 1 — CLINICAL KNOWLEDGE CORPUS
+================================================================================
+
+PURPOSE
+-------
+Factual, psychoeducational content. Used when the user asks what a condition
+is, what causes it, what the symptoms are, or how it is typically treated.
+Responses grounded in this DB should read like a knowledgeable, plain-language
+explanation from a health professional — not a clinical note and not a forum post.
+
+SOURCES INCLUDED
+----------------
+
+1. NHS — National Health Service (nhs.uk/mental-health)
+   License  : Open Government Licence v3.0 (free to reuse, adapt, redistribute)
+   Content  : Condition overviews, symptoms, causes, diagnosis, treatment,
+              self-help, and living-with sections. Written for the general public
+              in plain UK English. Well-structured, consistently formatted,
+              and updated regularly by NHS editorial staff.
+   Why      : Gold-standard public-health source for UK audiences. Covers ~25
+              mental health conditions with multi-section depth. OGL license
+              removes all legal ambiguity. The section-per-page URL structure
+              makes targeted extraction straightforward.
+
+2. NICE — National Institute for Health and Care Excellence (nice.org.uk)
+   License  : Open Government Licence v3.0
+   Content  : "Information for the public" leaflets derived from clinical
+              guidelines. Each leaflet summarises the official NICE guideline
+              for a condition in plain language — covering what the condition is,
+              how it is diagnosed, and what the recommended treatments are.
+   Why      : NICE guidelines are the definitive UK clinical standard. The
+              public-facing versions are accessible without clinical jargon.
+              Complements NHS content by adding guideline-backed treatment
+              recommendations that NHS condition pages sometimes omit.
+
+3. NIMH — National Institute of Mental Health (nimh.nih.gov)
+   License  : US Federal Government — public domain (no copyright restrictions)
+   Content  : Health topic pages and brochures covering conditions, statistics,
+              symptoms, risk factors, and treatment. US-oriented but globally
+              accurate for clinical content.
+   Why      : Highest-authority US source. Public domain removes any scraping
+              concern. Adds prevalence statistics and research-backed framing
+              that enrich the clinical corpus. Covers several conditions (e.g.
+              specific anxiety subtypes) where NHS coverage is thinner.
+
+4. WHO mhGAP — Mental Health Gap Action Programme (who.int)
+   License  : Creative Commons Attribution-NonCommercial-ShareAlike 3.0
+   Content  : mhGAP Intervention Guide web pages covering depression, psychosis,
+              bipolar, epilepsy, substance use, dementia, and other priority
+              conditions. Global framing, concise condition summaries, and
+              emphasis on recognition and community-level support.
+   Why      : International authority adds cross-cultural legitimacy. The mhGAP
+              framing (designed for non-specialist health workers) is closer to
+              the register we want than DSM-style clinical prose. CC license
+              is compatible with our use.
+
+5. Mind UK (mind.org.uk)
+   License  : Content shared for personal, non-commercial use — standard web
+              terms. Scraping for model training is not explicitly permitted but
+              is a grey area for non-commercial research. Verify before
+              commercial deployment.
+   Content  : A-Z of mental health problems with sections on what it feels like,
+              symptoms, causes, treatment, and self-care. Plain, empathetic
+              language. Includes lived-experience framing that other sources lack.
+   Why      : Mind's writing register is closest to how a mental health support
+              tool should speak. It bridges clinical accuracy and human warmth.
+              The "what it feels like" sections are uniquely valuable — they
+              describe subjective experience, not just diagnostic criteria.
+
+6. Centre for Clinical Interventions — CCI (cci.health.wa.gov.au)
+   License  : Free for personal, educational, and clinical use. Explicitly
+              states resources may be reproduced for non-commercial purposes.
+   Content  : Psychoeducation modules (web + PDF) for anxiety, depression, OCD,
+              eating disorders, and more. Each module includes a "what is it"
+              section, a section on the maintenance cycle, and a section on
+              how therapy helps. Written by clinical psychologists.
+   Why      : CCI's psychoeducation modules are the standard material used in
+              NHS IAPT and psychology training. They explain conditions in terms
+              of mechanisms (e.g., the vicious cycle of avoidance) rather than
+              just symptom lists — extremely valuable for generating responses
+              that explain *why* something happens, not just *what* it is.
+
+SOURCES EXCLUDED — DB 1
+-----------------------
+
+Mayo Clinic (mayoclinic.org)
+   Reason   : Terms of Service explicitly prohibit automated scraping and
+              systematic downloading of content. NHS + NIMH + NICE cover the
+              same clinical ground with cleaner licensing. Risk of legal
+              exposure is not justified by marginal content gain.
+
+DSM-5 / ICD-11 diagnostic criteria (verbatim)
+   Reason   : DSM-5 is copyright American Psychiatric Association. ICD-11 is
+              WHO copyright (not the same license as mhGAP materials). More
+              importantly, verbatim diagnostic criteria would push the model
+              toward diagnostic language — the tool should explain conditions,
+              not issue diagnoses.
+
+Academic research papers (PubMed, etc.)
+   Reason   : Register mismatch. Research abstracts are written for clinicians
+              and researchers, not for people in distress. Retrieval would
+              surface highly technical language at the wrong moment. Evidence
+              is already baked into NHS/NICE/NIMH content.
+
+WebMD / Healthline / Verywell Mind (health content farms)
+   Reason   : Quality is inconsistent, editorial standards are lower than NHS
+              or NIMH, and content is often SEO-optimised rather than
+              clinically rigorous. Also frequently contain ads and affiliate
+              links embedded in content.
+
+Reddit / forums for clinical content
+   Reason   : Not a clinical source. Peer accounts of symptoms and experiences
+              are valuable for the dialogue fine-tuning corpus but must not
+              enter the factual clinical DB — the risk of medical misinformation
+              entering retrieval is too high.
+
+Medication information (any source)
+   Reason   : Out of scope for a conversational mental health support tool.
+              Prescribing advice requires a licensed clinician. Including it
+              creates liability and the risk of harm.
+
+================================================================================
+DB 2 — THERAPY TECHNIQUES CORPUS
+================================================================================
+
+PURPOSE
+-------
+Actionable, intervention-style content. Used when the user asks how to cope,
+what to try, or how to practise a specific technique. Responses grounded in
+this DB should read like a therapist explaining and demonstrating a tool —
+clear steps, concrete examples, and an explanation of why it helps.
+
+SOURCES INCLUDED
+----------------
+
+1. Centre for Clinical Interventions — CCI Therapy Workbooks (cci.health.wa.gov.au)
+   License  : Free for non-commercial use.
+   Content  : Full CBT and DBT workbooks in PDF and web format. Covers cognitive
+              restructuring, behavioural activation, exposure hierarchies,
+              thought records, worry management, problem solving, and more.
+              Each module has psychoeducation + worked examples + blank worksheets.
+   Why      : The most clinically rigorous free source available. These workbooks
+              are used by clinical psychologists and NHS IAPT practitioners. The
+              worked examples (showing a filled-in thought record, for instance)
+              are exactly the kind of content that makes retrieved chunks
+              immediately actionable.
+
+2. Therapist Aid (therapistaid.com)
+   License  : Free for clinical and educational use (per their terms).
+   Content  : 200+ technique worksheets and educational articles. Covers CBT,
+              DBT, ACT, mindfulness, motivational interviewing, grief, trauma,
+              and more. Each worksheet has a description, purpose, and
+              instructions. Articles provide step-by-step explanations.
+   Why      : The most comprehensive free worksheet library available. The
+              description text on each worksheet page concisely captures the
+              technique name, purpose, target problem, and instructions — maps
+              almost perfectly to our schema. High practitioner adoption means
+              the content has been field-tested.
+
+3. GetSelfHelp (getselfhelp.co.uk)
+   License  : Free for personal and clinical use (Carol Kennerley / BABCP).
+   Content  : CBT self-help resources — thought records, cognitive distortion
+              explanations, behavioural activation sheets, relaxation scripts,
+              grounding techniques, and problem-solving worksheets.
+   Why      : Written by an accredited CBT therapist. Particularly strong on
+              explaining cognitive distortions with examples and the mechanics
+              of CBT homework. The plain-language style is ideal for retrieval
+              into a conversational context.
+
+4. Anxiety Canada (anxietycanada.com)
+   License  : Free to use (non-commercial educational use).
+   Content  : Anxiety-specific technique guides — SPACE, facing fears step by
+              step, relaxation scripts, worry exposure, problem solving for
+              anxiety, and sleep tools. Includes child/adult variants.
+   Why      : Specialised focus on anxiety makes this a strong complement to
+              general CBT sources. Their "how to" guides are unusually detailed
+              — they include example dialogues and troubleshooting tips that
+              most other sources omit.
+
+5. ACT Mindfully (actmindfully.com.au)
+   License  : Free resources section — explicitly available for download and use.
+   Content  : ACT metaphors, defusion exercises, values worksheets, committed
+              action guides, psychological flexibility explanations. Written by
+              Russ Harris (the primary ACT author/trainer).
+   Why      : Russ Harris is the leading ACT practitioner author. His materials
+              are the standard reference for ACT implementation. The free
+              resources include some of the clearest explanations of defusion
+              and acceptance techniques available anywhere.
+
+6. Self-Compassion (self-compassion.org)
+   License  : Exercises available for free use (Kristin Neff's site).
+   Content  : Guided self-compassion exercises — self-compassion break,
+              compassionate letter writing, common humanity meditation,
+              loving-kindness (Metta) practice, self-compassion journal prompts.
+   Why      : Kristin Neff is the originator of MSC (Mindful Self-Compassion)
+              and the primary research author in this area. Her exercises are
+              the canonical reference. Self-compassion techniques are
+              particularly important for the model — many users will present
+              with self-critical language and shame, and standard CBT techniques
+              don't address this as directly.
+
+7. Positive Psychology (positivepsychology.com)
+   License  : Free articles (standard web terms — grey area for training).
+   Content  : Targeted articles on specific PPT techniques — three good things,
+              best possible self, character strengths, savoring, gratitude
+              interventions, and flourishing exercises. Each article includes
+              step-by-step instructions and the research basis.
+   Why      : Positive psychology tools are underrepresented in clinical
+              worksheet libraries but have strong evidence for depression and
+              wellbeing maintenance. Scraping specific high-quality articles
+              (rather than bulk-crawling the site) minimises licensing risk.
+
+8. DBT Self Help (dbtselfhelp.com)
+   License  : Public resource site, free to use.
+   Content  : Detailed breakdowns of all four DBT skill modules — mindfulness,
+              distress tolerance, emotion regulation, and interpersonal
+              effectiveness. Each skill has its own page with definition,
+              rationale, and instructions.
+   Why      : The most comprehensive free DBT skills reference structured by
+              individual skill rather than by module overview. The page-per-skill
+              structure maps cleanly to our document schema — one technique
+              per chunk.
+
+9. IAPT Self-Help Guides (NHS IAPT programme)
+   License  : Open Government Licence (NHS-produced materials).
+   Content  : Structured self-help workbooks from the NHS Improving Access to
+              Psychological Therapies programme. PDFs covering low-intensity
+              CBT interventions — behavioural activation, worry management,
+              sleep hygiene, graded exposure, and activity scheduling.
+   Why      : IAPT materials are the standard low-intensity CBT intervention
+              used in primary care in England. They are highly structured,
+              clinician-validated, and designed specifically for self-directed
+              use — exactly the use case we're targeting.
+
+SOURCES EXCLUDED — DB 2
+-----------------------
+
+Psychology Tools (psychologytools.com) — paid tier
+   Reason   : The majority of their worksheet PDFs are behind a subscription
+              paywall ($149/year for practitioners). Their free articles are
+              included via direct URL targeting in therapist_aid-style scraping,
+              but the paid PDFs are excluded. The free content from CCI and
+              Therapist Aid covers the same techniques.
+
+Mindfulness apps (Headspace, Calm) content
+   Reason   : Proprietary content behind paywalls. Scraped content would violate
+              ToS and copyright.
+
+Therapist blogs (general)
+   Reason   : Originally considered but excluded for quality-control reasons.
+              Therapist blogs vary enormously in accuracy, may reflect personal
+              opinion rather than evidence-based practice, and are harder to
+              attribute. The curated sources above provide better coverage with
+              known provenance.
+
+Reddit (r/mentalhealth, r/anxiety, r/depression)
+   Reason   : Moved to fine-tuning data pipeline — not a RAG source. See
+              architecture decision notes in architecture.drawio. Dialogue
+              style from Reddit is used to shape the model's tone via SFT/DPO
+              training, not to supply technique content at inference time.
+
+YouTube transcripts (therapy technique videos)
+   Reason   : Transcript quality is highly variable, speaker attribution is
+              unclear, and licensing is complex. The same techniques are
+              covered more cleanly by the written sources above.
+
+================================================================================
+DOCUMENT SCHEMAS
+================================================================================
+
+DB 1 — CLINICAL KNOWLEDGE — Record Schema
+------------------------------------------
+Each record represents one section of one condition from one source.
+Chunking at the section level (not the full condition page) gives retrieval
+the right granularity — a query about "causes of anxiety" should not also
+retrieve "treatment for anxiety" in the same chunk.
+
+{
+  "condition"    : str,        // Canonical condition name
+                               // e.g. "Generalised Anxiety Disorder"
+  "aliases"      : [str],      // Alternate names and abbreviations
+                               // e.g. ["GAD", "generalised anxiety"]
+  "source"       : str,        // One of: NHS | NICE | NIMH | WHO | Mind UK | CCI
+  "source_url"   : str,        // Exact URL the content was scraped from
+  "section"      : str,        // One of: overview | symptoms | causes |
+                               //   risk_factors | diagnosis | treatment |
+                               //   self_help | when_to_seek_help | living_with
+  "content"      : str,        // The cleaned plain-text content of this section
+  "icd11_code"   : str | null, // ICD-11 code for grounding (e.g. "6A70")
+  "last_scraped" : str         // ISO date string (YYYY-MM-DD)
+}
+
+DB 2 — THERAPY TECHNIQUES — Record Schema
+------------------------------------------
+Each record represents one technique from one source. Some fields (steps,
+worked_example, target_conditions) will be extracted by the pipeline from
+raw_content using an LLM — they are left as null in raw data files and
+populated at ingestion time.
+
+{
+  "technique_name"    : str,        // Canonical technique name
+                                    // e.g. "Cognitive Restructuring"
+  "aliases"           : [str],      // e.g. ["thought challenging", "thought records"]
+  "modality"          : str,        // CBT | DBT | ACT | MBSR | MSC | PPT
+                                    //   | relaxation | behavioral | interpersonal
+  "target_conditions" : [str],      // Conditions this technique addresses
+                                    // e.g. ["depression", "anxiety"]
+  "target_problem"    : str,        // Specific problem addressed
+                                    // e.g. "rumination" | "avoidance" | "emotional dysregulation"
+  "steps"             : str,        // Step-by-step instructions (numbered)
+  "worked_example"    : str | null, // Concrete example or sample dialogue
+  "when_to_use"       : str,        // Context / appropriate moment for the technique
+  "estimated_time"    : str,        // e.g. "5-10 minutes" | "ongoing"
+  "difficulty"        : str,        // beginner | intermediate | advanced
+  "raw_content"       : str,        // Full scraped text (pipeline extracts above fields)
+  "source"            : str,        // Source name
+  "source_url"        : str,        // Exact URL
+  "last_scraped"      : str         // ISO date string
+}
+
+NOTE ON PIPELINE ENRICHMENT
+----------------------------
+For DB2, the structured fields (target_conditions, target_problem, steps,
+worked_example, when_to_use, estimated_time, difficulty) are not reliably
+extractable by CSS selectors alone — each source formats this differently.
+These fields will be populated during the vector DB ingestion pipeline using
+a structured LLM extraction pass over raw_content. The schema above defines
+what the *final* ingestion record looks like, not what the raw scraper saves.
+
+Raw scraper output for DB2 will always contain at minimum:
+  technique_name, modality, raw_content, source, source_url, last_scraped
+
+================================================================================
+END OF DOCUMENT
+================================================================================
