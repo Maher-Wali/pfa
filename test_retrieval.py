@@ -26,9 +26,13 @@ import textwrap
 import argparse
 from pathlib import Path
 
-from dotenv import load_dotenv
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+except ModuleNotFoundError:
+    load_dotenv = None
 
+if load_dotenv is not None:
+    load_dotenv()
 # ---------------------------------------------------------------------------
 # Ensure project root is on sys.path
 # ---------------------------------------------------------------------------
