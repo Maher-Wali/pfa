@@ -5,7 +5,7 @@ Fetches ONE representative URL from each source (HTML or PDF) and reports
 PASS / FAIL / BLOCKED without writing anything to disk.
 
 Run from the project root:
-    .venv\\Scripts\\python.exe scraping/test_scraper.py
+    .venv\\Scripts\\python.exe tests/test_scraper.py
 
 Sections
 --------
@@ -17,7 +17,7 @@ Sections
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'scraping'))
 
 from utils.common import BaseScraper
 from utils.pdf_extractor import extract_text

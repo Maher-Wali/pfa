@@ -1,7 +1,11 @@
-from classifier import SafetyClassifier
 import os
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-MODEL_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../output/part_4/part_4'))
+from safety_classifier.classifier import SafetyClassifier
+
+MODEL_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../output/part_4/part_4'))
 
 TESTS = [
     # (text, expected_is_crisis)

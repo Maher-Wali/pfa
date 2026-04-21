@@ -11,8 +11,8 @@ from retrieval.rag_pipeline import MentalHealthRAG
 # ---------------------------------------------------------------------------
 
 # Local model path (kept for offline/development use)
-# CLASSIFIER_PATH = os.path.join(os.path.dirname(__file__), "output/part_4/part_4")
-CLASSIFIER_PATH = "maherwali/mental-safety-classifier"
+CLASSIFIER_PATH = os.path.join(os.path.dirname(__file__), "output/part_4/part_4")
+#CLASSIFIER_PATH = "maherwali/mental-safety-classifier"
 
 CRISIS_RESOURCES = """I'm concerned about what you've shared and I want to make sure you're safe.
 
@@ -24,7 +24,7 @@ Please reach out to a crisis support line right now:
 
 You don't have to face this alone — a trained counsellor is available right now."""
 
-SYSTEM_PROMPT = """You are a supportive mental health companion. You are NOT a therapist, psychiatrist, or doctor.
+SYSTEM_PROMPT_COMPANION = """You are a supportive mental health companion. You are NOT a therapist, psychiatrist, or doctor.
 
 Guidelines:
 - Always acknowledge and validate the person's emotions before offering any information.
@@ -35,6 +35,29 @@ Guidelines:
 - When someone describes chronic or worsening difficulties, gently surface the option of speaking with a professional — this is not reserved only for acute crisis.
 - Ground your responses in the provided context where relevant, but never recite it verbatim.
 - Keep responses warm, concise, and human."""
+
+SYSTEM_PROMPT_INFORMATIONAL = """You are a mental health information assistant. You provide clear, accurate answers grounded in the context passages provided.
+
+Guidelines:
+- Answer the question directly and concisely using the provided context.
+- Do not draw on general knowledge — only use information present in the context.
+- If the context does not cover the question, say so clearly rather than guessing.
+- Do not add unsolicited emotional support or ask follow-up questions.
+- Use plain language; avoid jargon unless it was in the question."""
+
+# Signals that the message is an information request rather than personal sharing.
+_INFORMATIONAL_STARTERS = {
+    "what", "how", "why", "when", "who", "which", "where",
+    "explain", "describe", "define", "list", "give", "tell",
+    "what's", "what are", "what is", "how do", "how does",
+    "can you explain", "could you explain",
+}
+
+
+def _is_informational(message: str) -> bool:
+    """Return True when the message reads as an information request, not personal sharing."""
+    first = message.strip().lower().split()[0] if message.strip() else ""
+    return first in _INFORMATIONAL_STARTERS
 
 # LLM config — override with environment variables.
 # Defaults work with LM Studio running locally (Server tab → Start Server).
@@ -91,11 +114,11 @@ def _get_llm_client() -> OpenAI:
 # ---------------------------------------------------------------------------
 
 
-def _llm_call(prompt: str) -> str:
+def _llm_call(prompt: str, system_prompt: str = SYSTEM_PROMPT_COMPANION) -> str:
     response = _get_llm_client().chat.completions.create(
         model=LLM_MODEL,
         messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt},
         ],
         temperature=0.7,
@@ -112,10 +135,14 @@ def run(message: str) -> PipelineResponse:
     if _get_classifier().is_crisis(message):
         return PipelineResponse(text=CRISIS_RESOURCES, is_crisis=True)
 
+    system_prompt = (
+        SYSTEM_PROMPT_INFORMATIONAL if _is_informational(message)
+        else SYSTEM_PROMPT_COMPANION
+    )
+
     answer = _get_rag().generate_response(
         user_query=message,
-        llm_func=_llm_call,
-        # Therapy DB is currently inactive — all queries go to clinical.
+        llm_func=lambda prompt: _llm_call(prompt, system_prompt),
         force_target="clinical",
     )
 
