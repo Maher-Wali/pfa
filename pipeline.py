@@ -11,8 +11,8 @@ from retrieval.rag_pipeline import MentalHealthRAG
 # ---------------------------------------------------------------------------
 
 # Local model path (kept for offline/development use)
-CLASSIFIER_PATH = os.path.join(os.path.dirname(__file__), "output/part_4/part_4")
-#CLASSIFIER_PATH = "maherwali/mental-safety-classifier"
+#CLASSIFIER_PATH = os.path.join(os.path.dirname(__file__), "output/part_4/part_4")
+CLASSIFIER_PATH = "maherwali/mental-safety-classifier"
 
 CRISIS_RESOURCES = """I'm concerned about what you've shared and I want to make sure you're safe.
 
