@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "condition": "Anxiety — Signs and Symptoms",
+    "aliases": [],
+    "source": "Beyond Blue",
+    "source_url": "https://www.beyondblue.org.au/mental-health/anxiety/signs-and-symptoms",
+    "section": "other",
+    "content": "Beyond Blue uses statistics from trusted references and research. For a full list of references for all statistics quoted on our website, please visit Statistics .",
+    "icd11_code": "6B0Z",
+    "last_scraped": "2026-04-22"
+  },
+  {
+    "condition": "Social Anxiety Disorder",
+    "aliases": [],
+    "source": "Beyond Blue",
+    "source_url": "https://www.beyondblue.org.au/mental-health/anxiety/types-of-anxiety/social-anxiety-disorder",
+    "section": "other",
+    "content": "Beyond Blue uses statistics from trusted references and research. For a full list of references for all statistics quoted on our website, please visit Statistics .",
+    "icd11_code": "6B04",
+    "last_scraped": "2026-04-22"
+  },
+  {
+    "condition": "Stress",
+    "aliases": [],
+    "source": "Beyond Blue",
+    "source_url": "https://www.beyondblue.org.au/mental-health/stress",
+    "section": "other",
+    "content": "Review/build support network. Practise self-care. Create a plan for future challenges.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-22"
+  },
+  {
+    "condition": "Stress",
+    "aliases": [],
+    "source": "Beyond Blue",
+    "source_url": "https://www.beyondblue.org.au/mental-health/stress",
+    "section": "other",
+    "content": "Speak with friends, family or GP. Practice self-care. Contact us or consider low-intensity or online therapies.",
+    "icd11_code": null,
+    "last_scraped": "2026-04-22"
+  }
+]

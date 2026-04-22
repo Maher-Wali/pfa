@@ -64,6 +64,14 @@ BOILERPLATE_SELECTORS = [
     ".alert-bar", ".cookie-notice",
 ]
 
+# Additional paths to crawl for supplementary content
+EXTRA_PATHS = [
+    "/en/health-info/mental-health-101",
+    "/en/health-info/guides-and-publications",
+]
+EXTRA_ALLOWED_DOMAINS = ["www.camh.ca", "camh.ca"]
+EXTRA_MAX_PAGES = 40
+
 
 class CAMHScraper(BaseScraper):
     def __init__(self):
@@ -100,9 +108,80 @@ class CAMHScraper(BaseScraper):
                     "last_scraped": self.today(),
                 })
 
+        records.extend(self._scrape_extra_paths())
+
         self.log.info("Total: %d records", len(records))
         self.save(records, "camh_clinical.json")
         return records
+
+    def _scrape_extra_paths(self) -> list:
+        """Crawl mental-health-101 and guides-and-publications for additional content."""
+        from urllib.parse import urljoin, urlparse, urldefrag
+
+        records = []
+        seen: set = set()
+
+        for root_path in EXTRA_PATHS:
+            queue = [BASE + root_path]
+            path_prefix = root_path.lower()
+
+            while queue and len(seen) < EXTRA_MAX_PAGES:
+                raw_url = queue.pop(0)
+                url, _ = urldefrag(raw_url)
+                if url in seen:
+                    continue
+                seen.add(url)
+
+                parsed = urlparse(url)
+                if parsed.netloc.lower() not in EXTRA_ALLOWED_DOMAINS:
+                    continue
+                if not parsed.path.lower().startswith(path_prefix):
+                    continue
+
+                soup = self.get(url)
+                if soup is None:
+                    continue
+
+                h1 = soup.find("h1")
+                if h1 and any(p in h1.get_text().lower() for p in ["not found", "404"]):
+                    continue
+
+                self.strip_boilerplate(soup, BOILERPLATE_SELECTORS)
+                sections = self._extract_sections(soup)
+
+                for heading, content in sections.items():
+                    if not content or len(content.split()) < 30:
+                        continue
+                    records.append({
+                        "condition":    self._infer_condition(url, soup),
+                        "aliases":      [],
+                        "source":       "CAMH",
+                        "source_url":   url,
+                        "section":      self._classify_section(heading),
+                        "content":      content,
+                        "icd11_code":   None,
+                        "last_scraped": self.today(),
+                    })
+
+                # Harvest links within the same path prefix
+                for a in soup.find_all("a", href=True):
+                    href = a["href"].strip()
+                    if not href or href.startswith(("#", "mailto:", "javascript:")):
+                        continue
+                    abs_url, _ = urldefrag(urljoin(url, href))
+                    if abs_url not in seen:
+                        queue.append(abs_url)
+
+        self.log.info("Extra paths: %d records", len(records))
+        return records
+
+    def _infer_condition(self, url: str, soup) -> str:
+        """Infer condition name from page h1, falling back to URL slug."""
+        h1 = soup.find("h1")
+        if h1:
+            return self.clean(h1.get_text())
+        slug = url.rstrip("/").split("/")[-1].replace("-", " ").title()
+        return slug or "General Mental Health"
 
     def _extract_sections(self, soup) -> dict:
         main = soup.select_one(

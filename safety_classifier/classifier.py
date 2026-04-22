@@ -3,7 +3,6 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 MAX_LENGTH = 512
 # Threshold on P(crisis) — lower = more sensitive, higher = fewer false positives.
-# Start at 0.4 and tune on validation set.
 THRESHOLD = 0.6
 
 

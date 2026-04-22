@@ -35,26 +35,6 @@ MIN_WORDS  = 40
 
 # Condition name aliases: when a source uses a broad/different name, expand the
 # BM25-visible prefix so queries using any alias can match via keyword overlap.
-# NHS pages prepend a boilerplate page-header to every section. Chunks where
-# the content is *only* this header (no actual clinical info) are useless for
-# retrieval and should be dropped before embedding.
-NHS_BOILERPLATE_PHRASES = [
-    "this page is about adults aged 18",
-    "find out more talking therapies",
-    "do try talking about your feelings",
-    "support is available if you or someone",
-    "information: find out more",
-    "you could also contact samaritans",
-]
-
-
-def _is_nhs_boilerplate(source: str, content: str) -> bool:
-    if source != "NHS":
-        return False
-    lower = content.lower()
-    return any(p in lower for p in NHS_BOILERPLATE_PHRASES)
-
-
 CONDITION_ALIASES: dict[str, list[str]] = {
     "Anxiety Disorders":   ["Generalised Anxiety Disorder", "GAD", "social anxiety", "panic disorder"],
     "Anxiety":             ["Generalised Anxiety Disorder", "GAD", "anxiety disorder"],
@@ -85,9 +65,6 @@ def process_record(rec: dict) -> list[dict]:
     icd11     = rec.get("icd11_code")
 
     if len(content.split()) < MIN_WORDS:
-        return []
-
-    if _is_nhs_boilerplate(source, content):
         return []
 
     # Expand condition name with aliases so BM25 can match variant query terms

@@ -12,6 +12,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from utils.common import BaseScraper
+from utils.pdf_extractor import extract_text
 
 BASE = "https://www.mentalhealth.org.uk"
 
@@ -74,6 +75,19 @@ TARGETS = [
      "/explore-mental-health/a-z-topics/grief", None),
     ("Alcohol and Mental Health",
      "/explore-mental-health/a-z-topics/alcohol-and-mental-health", None),
+
+    # Awareness week articles — substantive coping/clinical content
+    ("Anxiety — Coping Strategies",
+     "/our-work/public-engagement/mental-health-awareness-week/what-can-we-do-cope-feelings-anxiety", None),
+    ("Take Action for Good Mental Health",
+     "/our-work/public-engagement/mental-health-awareness-week/take-action-good-mental-health", None),
+]
+
+# Known MHF PDF guides — plain-language self-help content
+PDF_TARGETS = [
+    ("Managing Fear and Anxiety",
+     "https://www.mentalhealth.org.uk/sites/default/files/2025-02/MHF%20How%20to%20manage%20fear%20and%20anxiety%20SINGLE%20PAGES.pdf",
+     "Anxiety", "6B0Z"),
 ]
 
 SECTION_KEYWORDS = {
@@ -99,6 +113,7 @@ class MentalHealthFoundationScraper(BaseScraper):
 
     def run(self) -> list:
         records = []
+
         for condition_name, path, icd11 in TARGETS:
             url = BASE + path
             self.log.info("Page: %s", condition_name)
@@ -128,8 +143,35 @@ class MentalHealthFoundationScraper(BaseScraper):
                     "last_scraped": self.today(),
                 })
 
+        records.extend(self._scrape_pdfs())
+
         self.log.info("Total: %d records", len(records))
         self.save(records, "mental_health_foundation_clinical.json")
+        return records
+
+    def _scrape_pdfs(self) -> list:
+        records = []
+        for title, url, condition, icd11 in PDF_TARGETS:
+            self.log.info("PDF: %s", title)
+            raw = self.download_bytes(url, referer=BASE)
+            if raw is None:
+                self.log.warning("  Failed to download: %s", url)
+                continue
+            text = extract_text(raw)
+            if not text or len(text.split()) < 40:
+                self.log.warning("  No usable text in: %s", url)
+                continue
+            records.append({
+                "condition":    condition,
+                "aliases":      [],
+                "source":       "Mental Health Foundation",
+                "source_url":   url,
+                "section":      "self_help",
+                "content":      self.clean(text),
+                "icd11_code":   icd11,
+                "last_scraped": self.today(),
+            })
+        self.log.info("PDFs: %d records", len(records))
         return records
 
     def _extract_sections(self, soup) -> dict:
