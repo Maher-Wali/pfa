@@ -1,17 +1,16 @@
 # retrieval/rag_pipeline.py
 #
-# Dual-collection RAG orchestrator.
+# Clinical RAG orchestrator.
 #
 # Flow
 # ----
 #   1. Rewrite the user query into 3 standalone search queries (history-aware).
-#   2. Route each query to "clinical", "therapy", or "both" via keyword router.
-#   3. Run hybrid (BM25 + dense) retrieval on the selected collection(s).
-#   4. Fuse all retrieved lists with Reciprocal Rank Fusion.
-#   5. Rerank the fused list with a CrossEncoder.
-#   6. Format the top-k passages into labelled context.
-#   7. Build a context-grounded prompt and call the LLM.
-#   8. Store the exchange in chat history for the next turn.
+#   2. Run hybrid (BM25 + dense) retrieval on the clinical index for each query.
+#   3. Fuse all retrieved lists with Reciprocal Rank Fusion.
+#   4. Rerank the fused list with a CrossEncoder.
+#   5. Format the top-k passages into labelled context.
+#   6. Build a context-grounded prompt and call the LLM.
+#   7. Store the exchange in chat history for the next turn.
 
 from __future__ import annotations
 
@@ -24,15 +23,13 @@ from langchain_core.documents import Document
 
 from retrieval.hybrid_retriever import HybridRetriever
 from retrieval.rrf_rerank import RerankedRRF
-from retrieval.query_router import route_query, RouteTarget
 
 
 # ---------------------------------------------------------------------------
-# Default Pinecone index names
+# Default Pinecone index name
 # ---------------------------------------------------------------------------
 
 _CLINICAL_INDEX = "mental-health-clinical"
-_THERAPY_INDEX = "mental-health-therapy"
 
 
 # ---------------------------------------------------------------------------
@@ -109,18 +106,16 @@ def _format_passages(docs: List[Document], max_len: int = 500) -> List[str]:
 
 class MentalHealthRAG:
     """
-    History-aware RAG pipeline over two Pinecone indexes:
-      • mental-health-clinical  — disorders, symptoms, diagnosis
-      • mental-health-therapy   — coping techniques, exercises, skills
+    History-aware RAG pipeline over the clinical Pinecone index.
 
     Parameters
     ----------
-    clinical_index / therapy_index:
-        Pinecone index names.
+    clinical_index:
+        Pinecone index name for clinical knowledge.
     reranker_model:
         HuggingFace model ID for the CrossEncoder reranker.
     bm25_weight / dense_weight:
-        Hybrid search blend applied to *both* retrievers.
+        Hybrid search blend.
     debug:
         Print intermediate retrieval scores.
     """
@@ -128,7 +123,6 @@ class MentalHealthRAG:
     def __init__(
         self,
         clinical_index: str = _CLINICAL_INDEX,
-        therapy_index: str = _THERAPY_INDEX,
         reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
         bm25_weight: float = 0.65,
         dense_weight: float = 0.35,
@@ -139,14 +133,6 @@ class MentalHealthRAG:
         print("Initialising clinical retriever…")
         self.clinical = HybridRetriever(
             index_name=clinical_index,
-            bm25_weight=bm25_weight,
-            dense_weight=dense_weight,
-            debug=debug,
-        )
-
-        print("Initialising therapy retriever…")
-        self.therapy = HybridRetriever(
-            index_name=therapy_index,
             bm25_weight=bm25_weight,
             dense_weight=dense_weight,
             debug=debug,
@@ -167,26 +153,6 @@ class MentalHealthRAG:
         self.chat_history.clear()
 
     # ------------------------------------------------------------------
-    # Retrieval helpers
-    # ------------------------------------------------------------------
-
-    def _retrieve(
-        self,
-        query: str,
-        target: RouteTarget,
-        k: int,
-    ) -> List[Document]:
-        """Run hybrid search on the target collection(s) and return docs."""
-        if target == "clinical":
-            return self.clinical.hybrid_search(query, k=k)
-        if target == "therapy":
-            return self.therapy.hybrid_search(query, k=k)
-        # "both" — retrieve from each and combine (RRF happens upstream)
-        clinical_docs = self.clinical.hybrid_search(query, k=k)
-        therapy_docs = self.therapy.hybrid_search(query, k=k)
-        return clinical_docs + therapy_docs
-
-    # ------------------------------------------------------------------
     # Main entry point
     # ------------------------------------------------------------------
 
@@ -195,7 +161,6 @@ class MentalHealthRAG:
         user_query: str,
         llm_func: Callable[[str], str],
         top_k_docs: int = 5,
-        force_target: RouteTarget | None = None,
     ) -> str:
         """
         Generate a grounded answer for *user_query*.
@@ -209,9 +174,6 @@ class MentalHealthRAG:
             remote LLM (e.g. ``generate_with_qwen25``).
         top_k_docs:
             Number of passages to include in the final context.
-        force_target:
-            Override the automatic query router (``"clinical"``,
-            ``"therapy"``, or ``"both"``).
         """
         # --- 1. Rewrite query ---
         rewritten = _rewrite_queries(user_query, self.chat_history, llm_func)
@@ -219,13 +181,10 @@ class MentalHealthRAG:
         if self.debug:
             print(f"Rewritten queries: {rewritten}")
 
-        # --- 2. Route + retrieve ---
+        # --- 2. Retrieve from clinical index ---
         all_lists: List[List[Document]] = []
         for q in rewritten:
-            target = route_query(q, force=force_target)
-            if self.debug:
-                print(f"  '{q[:60]}' → {target}")
-            docs = self._retrieve(q, target, k=top_k_docs * 3)
+            docs = self.clinical.hybrid_search(q, k=top_k_docs * 3)
             all_lists.append(docs)
 
         # --- 3. Fuse with RRF ---

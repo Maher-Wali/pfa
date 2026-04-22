@@ -1,6 +1,9 @@
 import os
 from dataclasses import dataclass
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from openai import OpenAI
 
 from safety_classifier.classifier import SafetyClassifier
@@ -143,7 +146,6 @@ def run(message: str) -> PipelineResponse:
     answer = _get_rag().generate_response(
         user_query=message,
         llm_func=lambda prompt: _llm_call(prompt, system_prompt),
-        force_target="clinical",
     )
 
     return PipelineResponse(text=answer, is_crisis=False)
