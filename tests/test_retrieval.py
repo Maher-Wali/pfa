@@ -6,12 +6,13 @@ Runs a set of test queries and prints two responses side-by-side:
   • RAG       — MentalHealthRAG pipeline (hybrid search + rerank + grounded prompt)
 
 Usage:
-  1. Start LM Studio and load any model (Server tab → Start Server).
-     Default endpoint: http://localhost:1234
+  1. Install Ollama (brew install ollama) and pull a model:
+       ollama pull qwen2.5
+     Default endpoint: http://localhost:11434
   2. python test_retrieval.py
   3. Optional flags:
-       --model   <model-id>   LM Studio model name (default: auto-detects first loaded)
-       --host    <url>        LM Studio server URL (default: http://localhost:1234)
+       --model   <model-id>   Ollama model name (default: auto-detects first loaded)
+       --host    <url>        Ollama server URL (default: http://localhost:11434)
        --top-k   <n>          Passages passed to LLM (default: 5)
        --queries <path>       JSON file with a list of query strings
 """
@@ -25,6 +26,13 @@ import textwrap
 import argparse
 from pathlib import Path
 
+try:
+    from dotenv import load_dotenv
+except ModuleNotFoundError:
+    load_dotenv = None
+
+if load_dotenv is not None:
+    load_dotenv()
 # ---------------------------------------------------------------------------
 # Ensure project root is on sys.path
 # ---------------------------------------------------------------------------
@@ -60,7 +68,7 @@ def build_llm(host: str, model: str | None):
         print("ERROR: 'openai' package not found.  Run:  pip install openai")
         sys.exit(1)
 
-    client = OpenAI(base_url=f"{host}/v1", api_key="lm-studio")
+    client = OpenAI(base_url=f"{host}/v1", api_key="ollama")
 
     # Auto-detect model if not specified
     if model is None:
@@ -69,8 +77,8 @@ def build_llm(host: str, model: str | None):
             model = models.data[0].id
             print(f"  Auto-detected model: {model}")
         except Exception as e:
-            print(f"ERROR: Could not reach LM Studio at {host}.\n  {e}")
-            print("  Make sure LM Studio is running with a model loaded.")
+            print(f"ERROR: Could not reach Ollama at {host}.\n  {e}")
+            print("  Make sure Ollama is running with a model loaded (ollama pull qwen2.5).")
             sys.exit(1)
 
     RAG_SYSTEM = (
@@ -173,8 +181,8 @@ def print_comparison(
 def main():
     parser = argparse.ArgumentParser(description="RAG vs bare-LLM comparison")
     parser.add_argument("--model", default=None, help="LM Studio model ID")
-    parser.add_argument("--host", default="http://localhost:1234",
-                        help="LM Studio server URL")
+    parser.add_argument("--host", default="http://localhost:11434",
+                        help="Ollama server URL")
     parser.add_argument("--top-k", type=int, default=5,
                         help="Passages to include in RAG context")
     parser.add_argument("--queries", default=None,
@@ -190,8 +198,12 @@ def main():
         queries = DEFAULT_QUERIES
 
     # -- LLM --
+    #-- LM Studio --
     print("\nConnecting to LM Studio…")
     bare_llm, rag_llm, model_id = build_llm(args.host, args.model)
+    #-- Ollama --
+    #print("\nConnecting to Ollama…")
+    #llm_func, model_id = build_llm(args.host, args.model)
     print(f"  Model: {model_id}")
     print(f"  Host:  {args.host}")
 

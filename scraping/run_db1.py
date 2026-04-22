@@ -31,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 # --- Active: re-scraped with brotli fix ---
 from db1_clinical.mental_health_foundation import MentalHealthFoundationScraper
 from db1_clinical.beyond_blue              import BeyondBlueScraper
+from db1_clinical.mayo_clinic              import MayoClinicScraper
 
 # --- Active: new sources ---
 from db1_clinical.medlineplus              import MedlinePlusScraper
@@ -59,6 +60,14 @@ SCRAPERS = [
     ("Better Health Channel",               BetterHealthScraper),
     ("Royal College of Psychiatrists",      RCPsychScraper),
     ("CAMH",                                CAMHScraper),
+    #("NHS",                        NHSScraper),
+    ("NICE",                       NICEScraper),
+    ("NIMH",                       NIMHScraper),
+    ("WHO mhGAP",                  WHOMhGAPScraper),
+    ("Mind UK",                    MindUKScraper),
+    ("Mental Health Foundation",   MentalHealthFoundationScraper),
+    ("Beyond Blue",                BeyondBlueScraper),
+    ("Mayo Clinic",                MayoClinicScraper),
 ]
 
 
