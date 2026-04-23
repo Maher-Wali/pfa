@@ -5,19 +5,14 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
-        <!-- Title -->
         <mxCell id="title" value="Vector Database Creation Pipeline" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=22;" vertex="1" parent="1">
           <mxGeometry x="480" y="16" width="500" height="44" as="geometry" />
         </mxCell>
 
-        <!-- ══════════════════════════════════════════════
-             SECTION 1 — DATA PREPARATION
-        ══════════════════════════════════════════════ -->
         <mxCell id="sec1-label" value="STAGE 1 — DATA PREPARATION" style="text;html=1;strokeColor=none;fillColor=none;fontStyle=1;fontSize=14;align=left;" vertex="1" parent="1">
           <mxGeometry x="40" y="68" width="340" height="26" as="geometry" />
         </mxCell>
 
-        <!-- ── DB1 prep lane background ── -->
         <mxCell id="db1-lane-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f3fb;strokeColor=#6c8ebf;opacity=40;" vertex="1" parent="1">
           <mxGeometry x="40" y="100" width="1070" height="125" as="geometry" />
         </mxCell>
@@ -25,7 +20,6 @@
           <mxGeometry x="52" y="104" width="380" height="20" as="geometry" />
         </mxCell>
 
-        <!-- DB1 prep nodes -->
         <mxCell id="db1-raw" value="&lt;b&gt;DB1 Raw JSON&lt;/b&gt;&lt;br&gt;292 records&lt;br&gt;data/raw/db1_clinical/" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="55" y="130" width="140" height="70" as="geometry" />
         </mxCell>
@@ -42,13 +36,11 @@
           <mxGeometry x="885" y="130" width="150" height="70" as="geometry" />
         </mxCell>
 
-        <!-- DB1 prep edges -->
         <mxCell id="e-db1-raw-load"   style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="db1-raw"        target="db1-load"        parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-db1-load-chunk" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="db1-load"       target="db1-chunk"       parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-db1-chunk-pfx"  style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="db1-chunk"      target="db1-prefix"      parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-db1-pfx-file"   style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="db1-prefix"     target="db1-chunks-file" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- ── DB2 prep lane background ── -->
         <mxCell id="db2-lane-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf5ea;strokeColor=#82b366;opacity=40;" vertex="1" parent="1">
           <mxGeometry x="40" y="252" width="1250" height="130" as="geometry" />
         </mxCell>
@@ -56,7 +48,6 @@
           <mxGeometry x="52" y="256" width="380" height="20" as="geometry" />
         </mxCell>
 
-        <!-- DB2 prep nodes -->
         <mxCell id="db2-raw" value="&lt;b&gt;DB2 Raw JSON&lt;/b&gt;&lt;br&gt;81 records&lt;br&gt;data/raw/db2_therapy/" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="55" y="283" width="140" height="70" as="geometry" />
         </mxCell>
@@ -76,24 +67,19 @@
           <mxGeometry x="1098" y="283" width="150" height="70" as="geometry" />
         </mxCell>
 
-        <!-- DB2 prep edges -->
         <mxCell id="e-db2-raw-load"   style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="db2-raw"        target="db2-load"        parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-db2-load-llm"   style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="db2-load"       target="db2-llm"         parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-db2-llm-chunk"  style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="db2-llm"        target="db2-chunk"       parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-db2-chunk-pfx"  style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="db2-chunk"      target="db2-prefix"      parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-db2-pfx-file"   style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="db2-prefix"     target="db2-chunks-file" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- utils.py shared note -->
         <mxCell id="utils" value="&lt;b&gt;utils.py&lt;/b&gt; — shared by both prepare scripts&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;sentence_chunk() · context_prefix() · clean_text()&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="430" y="400" width="310" height="44" as="geometry" />
         </mxCell>
-        <!-- utils → chunk boxes -->
         <mxCell id="e-utils-db1" style="dashed=1;endArrow=open;endFill=0;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="utils" target="db1-chunk" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-utils-db2" style="dashed=1;endArrow=open;endFill=0;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="utils" target="db2-chunk" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- ══════════════════════════════════════════════
-             SECTION 2 — EMBEDDING & INDEXING
-        ══════════════════════════════════════════════ -->
+
         <mxCell id="sec2-label" value="STAGE 2 — EMBEDDING &amp; INDEXING" style="text;html=1;strokeColor=none;fillColor=none;fontStyle=1;fontSize=14;align=left;" vertex="1" parent="1">
           <mxGeometry x="40" y="464" width="380" height="26" as="geometry" />
         </mxCell>
@@ -101,7 +87,6 @@
           <mxGeometry x="1100" y="464" width="180" height="26" as="geometry" />
         </mxCell>
 
-        <!-- ── DB1 indexing lane ── -->
         <mxCell id="idx1-lane-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f3fb;strokeColor=#6c8ebf;opacity=40;" vertex="1" parent="1">
           <mxGeometry x="40" y="498" width="1270" height="120" as="geometry" />
         </mxCell>
@@ -130,7 +115,6 @@
         <mxCell id="e-i1-ups-fil"   style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="idx1-upsert" target="idx1-filter" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-i1-fil-chr"   style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="idx1-filter" target="idx1-chroma" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- ── DB2 indexing lane ── -->
         <mxCell id="idx2-lane-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf5ea;strokeColor=#82b366;opacity=40;" vertex="1" parent="1">
           <mxGeometry x="40" y="636" width="1270" height="120" as="geometry" />
         </mxCell>
@@ -159,61 +143,50 @@
         <mxCell id="e-i2-ups-fil" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="idx2-upsert" target="idx2-filter" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-i2-fil-chr" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="idx2-filter" target="idx2-chroma" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- Shared model bracket connecting both embed boxes -->
         <mxCell id="shared-model-note" value="same model · separate collections" style="text;html=1;strokeColor=#9673a6;fillColor=#f9f0ff;align=center;fontSize=10;fontStyle=2;rounded=1;" vertex="1" parent="1">
           <mxGeometry x="260" y="600" width="175" height="24" as="geometry" />
         </mxCell>
         <mxCell id="e-shared-emb1" style="dashed=1;endArrow=none;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="shared-model-note" target="idx1-embed" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-shared-emb2" style="dashed=1;endArrow=none;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="shared-model-note" target="idx2-embed" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- Cross-stage arrows: intermediate files → indexing inputs -->
         <mxCell id="e-db1-file-idx" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#666;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="db1-chunks-file" target="idx1-in" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-db2-file-idx" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#666;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="db2-chunks-file" target="idx2-in" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- ══════════════════════════════════════════════
-             DESIGN RATIONALE — KEY DECISIONS
-        ══════════════════════════════════════════════ -->
+       
         <mxCell id="rationale-hdr" value="DESIGN RATIONALE — KEY DECISIONS" style="text;html=1;strokeColor=none;fillColor=none;fontStyle=1;fontSize=14;align=left;" vertex="1" parent="1">
           <mxGeometry x="40" y="784" width="440" height="26" as="geometry" />
         </mxCell>
 
-        <!-- N1: Two separate collections -->
         <mxCell id="n1" value="&lt;b&gt;① Two separate ChromaDB collections&lt;/b&gt;&lt;br&gt;The Query Router (upstream in the architecture) selects which DB to hit based on the user&apos;s intent before retrieval begins. Mixing clinical and therapy content in one collection would force the reranker to do work that should be done by routing — a &quot;CBT steps for anxiety&quot; query would surface clinical symptom records alongside technique guides, degrading precision in both directions." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#b8b800;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="40" y="818" width="370" height="105" as="geometry" />
         </mxCell>
         <mxCell id="e-n1" style="dashed=1;endArrow=open;endFill=0;strokeColor=#b8b800;edgeStyle=orthogonalEdgeStyle;" edge="1" source="n1" target="idx1-chroma" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- N2: Sentence-aware chunking -->
         <mxCell id="n2" value="&lt;b&gt;② Sentence-boundary chunking (not word-count)&lt;/b&gt;&lt;br&gt;medai splits on raw word count — this cuts mid-sentence, producing fragments with broken syntax that embed poorly. Using sentence tokenisation before splitting ensures every chunk is semantically complete. The 200-word / 30-word overlap target suits our records (avg 300–500 words each): short enough for precise retrieval, long enough to preserve context within a claim." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#b8b800;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="430" y="818" width="370" height="105" as="geometry" />
         </mxCell>
         <mxCell id="e-n2" style="dashed=1;endArrow=open;endFill=0;strokeColor=#b8b800;edgeStyle=orthogonalEdgeStyle;" edge="1" source="n2" target="db1-chunk" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- N3: Context prefix -->
         <mxCell id="n3" value="&lt;b&gt;③ Context prefix before embedding&lt;/b&gt;&lt;br&gt;Without a prefix, &quot;symptoms include persistent sadness&quot; looks identical whether it comes from a Depression or an Anxiety record — the embedding model has no topic signal. Prepending &quot;Condition: Depression | Section: symptoms | Source: NHS&quot; biases the vector toward the clinical topic. This is the single highest-leverage change over medai&apos;s plain-text approach." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#b8b800;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="820" y="818" width="370" height="105" as="geometry" />
         </mxCell>
         <mxCell id="e-n3" style="dashed=1;endArrow=open;endFill=0;strokeColor=#b8b800;edgeStyle=orthogonalEdgeStyle;" edge="1" source="n3" target="db1-prefix" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- N4: LLM enrichment DB2 only -->
         <mxCell id="n4" value="&lt;b&gt;④ LLM enrichment on DB2 only&lt;/b&gt;&lt;br&gt;DB2 scrapers collect raw prose — structured fields (steps, when_to_use, difficulty, target_conditions) are all null after scraping because HTML parsing cannot extract them structurally. Claude Haiku reads each technique&apos;s raw_content and populates these fields, then a structured summary becomes an extra chunk alongside the prose chunks. DB1 does not need this: sections are already labelled by URL structure and heading keywords during scraping." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#b8b800;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="40" y="942" width="370" height="115" as="geometry" />
         </mxCell>
         <mxCell id="e-n4" style="dashed=1;endArrow=open;endFill=0;strokeColor=#b8b800;edgeStyle=orthogonalEdgeStyle;" edge="1" source="n4" target="db2-llm" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- N5: Embedding model choice -->
         <mxCell id="n5" value="&lt;b&gt;⑤ BAAI/bge-base-en-v1.5 over biomedical models&lt;/b&gt;&lt;br&gt;Our content is written in lay language for general audiences — not clinical notes or academic papers. Domain-specific biomedical models (e.g. PubMedBERT-based) are trained on MEDLINE abstracts and underperform on conversational health text. bge-base-en-v1.5 leads MTEB retrieval benchmarks for lay-language tasks. Also consistent with medai, making cross-project benchmarking straightforward." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#b8b800;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="430" y="942" width="370" height="115" as="geometry" />
         </mxCell>
         <mxCell id="e-n5" style="dashed=1;endArrow=open;endFill=0;strokeColor=#b8b800;edgeStyle=orthogonalEdgeStyle;" edge="1" source="n5" target="idx1-embed" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- N6: Batch upsert -->
         <mxCell id="n6" value="&lt;b&gt;⑥ Batch upsert (5 000/batch) vs. per-document loop&lt;/b&gt;&lt;br&gt;medai inserts one document at a time in a Python loop — roughly 1 doc/second due to per-call overhead. ChromaDB&apos;s add() accepts up to ~41 000 items per call. Batching at 5 000 is a safe upper bound that cuts total indexing time from ~25 minutes to under 30 seconds for our 1 500-chunk corpus. The same code scales to 500 000 chunks without change." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#b8b800;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="820" y="942" width="370" height="115" as="geometry" />
         </mxCell>
         <mxCell id="e-n6" style="dashed=1;endArrow=open;endFill=0;strokeColor=#b8b800;edgeStyle=orthogonalEdgeStyle;" edge="1" source="n6" target="idx1-upsert" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- N7: Metadata filtering -->
         <mxCell id="n7" value="&lt;b&gt;⑦ Rich metadata for post-embedding filtering&lt;/b&gt;&lt;br&gt;medai stores only {focus, source, url, file}. We store condition, icd11_code, section, modality, and source. This enables Chroma&apos;s .where() pre-filter at query time — e.g. retrieve only &quot;section=treatment&quot; chunks for a treatment question, or only &quot;modality=CBT&quot; techniques. Pre-filtering before ANN search is free at query time and dramatically reduces irrelevant results surfaced to the reranker." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#b8b800;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="1210" y="818" width="370" height="115" as="geometry" />
         </mxCell>
