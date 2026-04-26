@@ -160,6 +160,7 @@ class MentalHealthRAG:
         user_query: str,
         llm_func: Callable[[str], str],
         top_k_docs: int = 5,
+        informational: bool = True,
     ) -> str:
         """
         Generate a grounded answer for *user_query*.
@@ -173,17 +174,25 @@ class MentalHealthRAG:
             remote LLM (e.g. ``generate_with_qwen25``).
         top_k_docs:
             Number of passages to include in the final context.
+        informational:
+            True  → clinical/factual query: favour BM25 (0.70/0.30).
+            False → emotional/companion query: favour dense (0.35/0.65).
         """
+        bm25_w, dense_w = (0.70, 0.30) if informational else (0.35, 0.65)
+
         # --- 1. Rewrite query ---
         rewritten = _rewrite_queries(user_query, self.chat_history, llm_func)
 
         if self.debug:
             print(f"Rewritten queries: {rewritten}")
+            print(f"Hybrid weights — BM25={bm25_w}, dense={dense_w}")
 
         # --- 2. Retrieve from clinical index ---
         all_lists: List[List[Document]] = []
         for q in rewritten:
-            docs = self.clinical.hybrid_search(q, k=top_k_docs * 3)
+            docs = self.clinical.hybrid_search(
+                q, k=top_k_docs * 3, bm25_weight=bm25_w, dense_weight=dense_w
+            )
             all_lists.append(docs)
 
         # --- 3. Fuse with RRF ---

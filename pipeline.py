@@ -138,14 +138,15 @@ def run(message: str) -> PipelineResponse:
     if _get_classifier().is_crisis(message):
         return PipelineResponse(text=CRISIS_RESOURCES, is_crisis=True)
 
+    is_info = _is_informational(message)
     system_prompt = (
-        SYSTEM_PROMPT_INFORMATIONAL if _is_informational(message)
-        else SYSTEM_PROMPT_COMPANION
+        SYSTEM_PROMPT_INFORMATIONAL if is_info else SYSTEM_PROMPT_COMPANION
     )
 
     answer = _get_rag().generate_response(
         user_query=message,
         llm_func=lambda prompt: _llm_call(prompt, system_prompt),
+        informational=is_info,
     )
 
     return PipelineResponse(text=answer, is_crisis=False)

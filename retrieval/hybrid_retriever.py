@@ -139,7 +139,16 @@ class HybridRetriever:
     # Public API
     # ------------------------------------------------------------------
 
-    def hybrid_search(self, query: str, k: int = 10) -> List[Document]:
+    def hybrid_search(
+        self,
+        query: str,
+        k: int = 10,
+        bm25_weight: float | None = None,
+        dense_weight: float | None = None,
+    ) -> List[Document]:
+        bm25_w = bm25_weight if bm25_weight is not None else self.bm25_weight
+        dense_w = dense_weight if dense_weight is not None else self.dense_weight
+
         bm25 = self._bm25_scores(query)
         dense = self._dense_scores(query)
 
@@ -150,7 +159,7 @@ class HybridRetriever:
         bm25_norm = (bm25 - bm25.min()) / (bm25.max() - bm25.min() + 1e-12)
         dense_norm = (dense - dense.min()) / (dense.max() - dense.min() + 1e-12)
 
-        final = self.bm25_weight * bm25_norm + self.dense_weight * dense_norm
+        final = bm25_w * bm25_norm + dense_w * dense_norm
         top_idx = np.argsort(final)[::-1][:k]
 
         results = []
