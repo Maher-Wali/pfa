@@ -74,20 +74,19 @@ Output ONLY valid JSON:
 # Passage filter  (same logic as medai — keeps only query-relevant sentences)
 # ---------------------------------------------------------------------------
 
-def _format_passages(docs: List[Document], max_len: int = 500) -> List[str]:
+def _format_passages(docs: List[Document], max_len: int = 10_000) -> List[str]:
     """
     Format reranked documents into labelled context passages.
 
     The CrossEncoder has already selected and ranked the most relevant docs,
     so no further sentence-level filtering is needed — that only discards
-    useful content. Each passage is truncated to max_len characters and
-    labelled with the most informative metadata field.
+    useful content. Passages are passed in full; max_len exists only as a
+    safety ceiling for pathologically large chunks.
     """
     passages = []
     for doc in docs:
         text = doc.page_content.replace("\n", " ").strip()
         if len(text) > max_len:
-            # Truncate at a sentence boundary where possible
             cut = text[:max_len].rfind(". ")
             text = text[: cut + 1] if cut > max_len // 2 else text[:max_len]
         label = (
