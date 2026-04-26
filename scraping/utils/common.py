@@ -52,18 +52,35 @@ class BaseScraper:
             "User-Agent": random.choice(USER_AGENTS),
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.5",
-            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Encoding": "gzip, deflate",
             "Connection": "keep-alive",
         }
 
-    def get(self, url: str, retries: int = 3) -> Optional[BeautifulSoup]:
-        """Fetch a URL and return a BeautifulSoup object, or None on failure."""
+    def get(self, url: str, retries: int = 3,
+            extra_headers: Optional[dict] = None) -> Optional[BeautifulSoup]:
+        """Fetch a URL and return a BeautifulSoup object, or None on failure.
+
+        Parameters
+        ----------
+        extra_headers:
+            Optional dict merged into the default headers.  Useful for
+            adding Referer, stricter Accept types, or anti-bot cues for
+            sites that return 403 to plain requests.
+        """
         for attempt in range(retries):
             try:
-                resp = self.session.get(url, headers=self._headers(), timeout=20)
+                headers = self._headers()
+                if extra_headers:
+                    headers.update(extra_headers)
+                resp = self.session.get(url, headers=headers, timeout=20)
                 resp.raise_for_status()
                 self._wait()
-                return BeautifulSoup(resp.text, "lxml")
+                # Decode explicitly from bytes so that brotli/gzip decompression
+                # is handled by urllib3 regardless of Content-Type charset hints.
+                # Falls back to apparent encoding, then utf-8.
+                encoding = resp.encoding or resp.apparent_encoding or "utf-8"
+                html = resp.content.decode(encoding, errors="replace")
+                return BeautifulSoup(html, "lxml")
             except requests.HTTPError as exc:
                 # 404 means the page definitively does not exist — no point retrying
                 if exc.response is not None and exc.response.status_code == 404:
@@ -83,11 +100,22 @@ class BaseScraper:
         self.log.error("All retries exhausted for %s", url)
         return None
 
-    def download_bytes(self, url: str, retries: int = 3) -> Optional[bytes]:
-        """Download raw bytes (for PDFs)."""
+    def download_bytes(self, url: str, retries: int = 3,
+                       referer: Optional[str] = None) -> Optional[bytes]:
+        """Download raw bytes (for PDFs).
+
+        Parameters
+        ----------
+        referer:
+            Optional Referer header value.  Some servers (e.g. GetSelfHelp)
+            reject PDF hotlink requests that lack a matching Referer.
+        """
         for attempt in range(retries):
             try:
-                resp = self.session.get(url, headers=self._headers(), timeout=40)
+                headers = self._headers()
+                if referer:
+                    headers["Referer"] = referer
+                resp = self.session.get(url, headers=headers, timeout=40)
                 resp.raise_for_status()
                 self._wait()
                 return resp.content

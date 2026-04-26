@@ -1,17 +1,16 @@
 # retrieval/rag_pipeline.py
 #
-# Dual-collection RAG orchestrator.
+# Clinical RAG orchestrator.
 #
 # Flow
 # ----
 #   1. Rewrite the user query into 3 standalone search queries (history-aware).
-#   2. Route each query to "clinical", "therapy", or "both" via keyword router.
-#   3. Run hybrid (BM25 + dense) retrieval on the selected collection(s).
-#   4. Fuse all retrieved lists with Reciprocal Rank Fusion.
-#   5. Rerank the fused list with a CrossEncoder.
-#   6. Filter passages for query-relevant sentences.
-#   7. Build a context-grounded prompt and call the LLM.
-#   8. Store the exchange in chat history for the next turn.
+#   2. Run hybrid (BM25 + dense) retrieval on the clinical index for each query.
+#   3. Fuse all retrieved lists with Reciprocal Rank Fusion.
+#   4. Rerank the fused list with a CrossEncoder.
+#   5. Format the top-k passages into labelled context.
+#   6. Build a context-grounded prompt and call the LLM.
+#   7. Store the exchange in chat history for the next turn.
 
 from __future__ import annotations
 
@@ -24,15 +23,13 @@ from langchain_core.documents import Document
 
 from retrieval.hybrid_retriever import HybridRetriever
 from retrieval.rrf_rerank import RerankedRRF
-from retrieval.query_router import route_query, RouteTarget
 
 
 # ---------------------------------------------------------------------------
-# Default Pinecone index names
+# Default Pinecone index name
 # ---------------------------------------------------------------------------
 
 _CLINICAL_INDEX = "mental-health-clinical"
-_THERAPY_INDEX = "mental-health-therapy"
 
 
 # ---------------------------------------------------------------------------
@@ -77,34 +74,29 @@ Output ONLY valid JSON:
 # Passage filter  (same logic as medai — keeps only query-relevant sentences)
 # ---------------------------------------------------------------------------
 
-def _filter_passages(
-    docs: List[Document],
-    query: str,
-    max_len: int = 300,
-) -> List[str]:
-    query_tokens = set(re.findall(r"\w+", query.lower()))
-    passages: List[str] = []
+def _format_passages(docs: List[Document], max_len: int = 500) -> List[str]:
+    """
+    Format reranked documents into labelled context passages.
 
+    The CrossEncoder has already selected and ranked the most relevant docs,
+    so no further sentence-level filtering is needed — that only discards
+    useful content. Each passage is truncated to max_len characters and
+    labelled with the most informative metadata field.
+    """
+    passages = []
     for doc in docs:
         text = doc.page_content.replace("\n", " ").strip()
-        sentences = re.split(r"(?<=[.!?])\s+", text)
-
-        relevant = [
-            s for s in sentences
-            if len(set(re.findall(r"\w+", s.lower())) & query_tokens) >= 2
-        ]
-
-        if relevant:
-            excerpt = " ".join(relevant)[:max_len]
-            # Label the passage with the most informative metadata field
-            label = (
-                doc.metadata.get("condition")
-                or doc.metadata.get("technique_name")
-                or doc.metadata.get("source")
-                or "Doc"
-            )
-            passages.append(f"[{label}] {excerpt}")
-
+        if len(text) > max_len:
+            # Truncate at a sentence boundary where possible
+            cut = text[:max_len].rfind(". ")
+            text = text[: cut + 1] if cut > max_len // 2 else text[:max_len]
+        label = (
+            doc.metadata.get("condition")
+            or doc.metadata.get("technique_name")
+            or doc.metadata.get("source")
+            or "Doc"
+        )
+        passages.append(f"[{label}] {text}")
     return passages
 
 
@@ -114,18 +106,16 @@ def _filter_passages(
 
 class MentalHealthRAG:
     """
-    History-aware RAG pipeline over two Pinecone indexes:
-      • mental-health-clinical  — disorders, symptoms, diagnosis
-      • mental-health-therapy   — coping techniques, exercises, skills
+    History-aware RAG pipeline over the clinical Pinecone index.
 
     Parameters
     ----------
-    clinical_index / therapy_index:
-        Pinecone index names.
+    clinical_index:
+        Pinecone index name for clinical knowledge.
     reranker_model:
         HuggingFace model ID for the CrossEncoder reranker.
     bm25_weight / dense_weight:
-        Hybrid search blend applied to *both* retrievers.
+        Hybrid search blend.
     debug:
         Print intermediate retrieval scores.
     """
@@ -133,7 +123,6 @@ class MentalHealthRAG:
     def __init__(
         self,
         clinical_index: str = _CLINICAL_INDEX,
-        therapy_index: str = _THERAPY_INDEX,
         reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
         bm25_weight: float = 0.65,
         dense_weight: float = 0.35,
@@ -149,16 +138,9 @@ class MentalHealthRAG:
             debug=debug,
         )
 
-        print("Initialising therapy retriever…")
-        self.therapy = HybridRetriever(
-            index_name=therapy_index,
-            bm25_weight=bm25_weight,
-            dense_weight=dense_weight,
-            debug=debug,
-        )
-
         self.reranker = RerankedRRF(model_name=reranker_model)
         self.chat_history: List[Tuple[str, str]] = []
+        self._last_passages: List[str] = []
 
     # ------------------------------------------------------------------
     # Chat history
@@ -171,26 +153,6 @@ class MentalHealthRAG:
         self.chat_history.clear()
 
     # ------------------------------------------------------------------
-    # Retrieval helpers
-    # ------------------------------------------------------------------
-
-    def _retrieve(
-        self,
-        query: str,
-        target: RouteTarget,
-        k: int,
-    ) -> List[Document]:
-        """Run hybrid search on the target collection(s) and return docs."""
-        if target == "clinical":
-            return self.clinical.hybrid_search(query, k=k)
-        if target == "therapy":
-            return self.therapy.hybrid_search(query, k=k)
-        # "both" — retrieve from each and combine (RRF happens upstream)
-        clinical_docs = self.clinical.hybrid_search(query, k=k)
-        therapy_docs = self.therapy.hybrid_search(query, k=k)
-        return clinical_docs + therapy_docs
-
-    # ------------------------------------------------------------------
     # Main entry point
     # ------------------------------------------------------------------
 
@@ -199,7 +161,6 @@ class MentalHealthRAG:
         user_query: str,
         llm_func: Callable[[str], str],
         top_k_docs: int = 5,
-        force_target: RouteTarget | None = None,
     ) -> str:
         """
         Generate a grounded answer for *user_query*.
@@ -213,9 +174,6 @@ class MentalHealthRAG:
             remote LLM (e.g. ``generate_with_qwen25``).
         top_k_docs:
             Number of passages to include in the final context.
-        force_target:
-            Override the automatic query router (``"clinical"``,
-            ``"therapy"``, or ``"both"``).
         """
         # --- 1. Rewrite query ---
         rewritten = _rewrite_queries(user_query, self.chat_history, llm_func)
@@ -223,13 +181,10 @@ class MentalHealthRAG:
         if self.debug:
             print(f"Rewritten queries: {rewritten}")
 
-        # --- 2. Route + retrieve ---
+        # --- 2. Retrieve from clinical index ---
         all_lists: List[List[Document]] = []
         for q in rewritten:
-            target = route_query(q, force=force_target)
-            if self.debug:
-                print(f"  '{q[:60]}' → {target}")
-            docs = self._retrieve(q, target, k=top_k_docs * 3)
+            docs = self.clinical.hybrid_search(q, k=top_k_docs * 3)
             all_lists.append(docs)
 
         # --- 3. Fuse with RRF ---
@@ -238,27 +193,20 @@ class MentalHealthRAG:
         # --- 4. CrossEncoder rerank ---
         top_docs = self.reranker.rerank(user_query, fused, top_k=top_k_docs * 2)
 
-        # --- 5. Filter to relevant sentences ---
-        passages = _filter_passages(top_docs, user_query)
+        # --- 5. Format passages for context ---
+        passages = _format_passages(top_docs)
+        self._last_passages = passages[:top_k_docs]   # exposed for debug/testing
 
-        if not passages:
-            return "I don't have enough information in the knowledge base to answer this question."
-
-        context = "\n".join(passages[:top_k_docs])
+        context = "\n".join(self._last_passages)
 
         # --- 6. Prompt LLM ---
+        # Plain text only — no chat template tokens.  The caller's llm_func
+        # is responsible for wrapping this in whatever format the model needs
+        # (e.g. system/user messages via the OpenAI API).
         prompt = (
-            "<|im_start|>system\n"
-            "You are a mental-health information assistant. "
-            "Answer ONLY using the provided context. "
-            "If the context does not contain the answer, say "
-            "\"I cannot find this information in the provided context.\" "
-            "Be concise and do not repeat the instructions.<|im_end|>\n"
-            "<|im_start|>user\n"
             f"Context:\n{context}\n\n"
             f"Question:\n{user_query}\n\n"
-            "Answer:<|im_end|>\n"
-            "<|im_start|>assistant\n"
+            "Answer:"
         )
 
         answer = llm_func(prompt)

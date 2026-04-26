@@ -17,60 +17,56 @@ from utils.common import BaseScraper
 BASE = "https://www.beyondblue.org.au"
 
 # (condition_name, url_path, icd11_code)
+# URL structure updated to reflect Beyond Blue's 2024 site restructure
+# (old /the-facts/ paths now live under /mental-health/)
 TARGETS = [
-    # Conditions
+    # Core conditions
     ("Depression",
-     "/the-facts/depression", "6A70"),
+     "/mental-health/depression", "6A70"),
     ("Anxiety Disorders",
-     "/the-facts/anxiety", "6B0Z"),
-    ("OCD",
-     "/the-facts/anxiety/types-of-anxiety/ocd", "6B20"),
-    ("PTSD",
-     "/the-facts/anxiety/types-of-anxiety/ptsd", "6B40"),
+     "/mental-health/anxiety", "6B0Z"),
+    ("Anxiety — Signs and Symptoms",
+     "/mental-health/anxiety/signs-and-symptoms", "6B0Z"),
+    ("Anxiety — Treatments",
+     "/mental-health/anxiety/treatments-for-anxiety", "6B0Z"),
+    ("Anxiety — Types",
+     "/mental-health/anxiety/types-of-anxiety", "6B0Z"),
     ("Panic Disorder",
-     "/the-facts/anxiety/types-of-anxiety/panic-disorder", "6B01"),
-    ("Social Anxiety",
-     "/the-facts/anxiety/types-of-anxiety/social-anxiety", "6B04"),
-    ("Phobias",
-     "/the-facts/anxiety/types-of-anxiety/phobias", "6B03"),
+     "/mental-health/anxiety/types-of-anxiety/panic-disorder", "6B01"),
+    ("Social Anxiety Disorder",
+     "/mental-health/anxiety/types-of-anxiety/social-anxiety-disorder", "6B04"),
     ("Bipolar Disorder",
-     "/the-facts/bipolar-disorder", "6A60"),
+     "/mental-health/bipolar-disorder", "6A60"),
     ("Eating Disorders",
-     "/the-facts/eating-disorders", "6B8Z"),
+     "/mental-health/eating-disorders", "6B8Z"),
     ("Psychosis",
-     "/the-facts/psychosis", "6A2Z"),
+     "/mental-health/psychosis", "6A2Z"),
     ("Postnatal Depression",
-     "/the-facts/postnatal-depression", "6A70"),
+     "/mental-health/postpartum-depression", "6A70"),
     ("Grief and Loss",
-     "/the-facts/grief-and-loss", None),
-    ("Suicide — Understanding and Prevention",
-     "/the-facts/suicide-prevention", None),
+     "/mental-health/grief", None),
+    ("Suicide Prevention",
+     "/mental-health/suicide-prevention", None),
     ("Anger",
-     "/the-facts/anger", None),
-
-    # Self-help and coping articles
-    ("Managing Depression — Self-Help",
-     "/get-support/managing-depression-and-anxiety", "6A70"),
-    ("Managing Anxiety — Self-Help",
-     "/get-support/managing-depression-and-anxiety/managing-anxiety", "6B0Z"),
-    ("Exercise and Mental Health",
-     "/the-facts/physical-health-and-wellbeing", None),
-    ("Sleep and Mental Health",
-     "/the-facts/sleep-and-mental-health", None),
-    ("Mindfulness",
-     "/get-support/managing-depression-and-anxiety/mindfulness", None),
-    ("Social Connections and Mental Health",
-     "/the-facts/social-connections-and-mental-health", None),
-    ("Loneliness",
-     "/the-facts/loneliness", None),
+     "/mental-health/anger", None),
     ("Stress",
-     "/the-facts/stress", None),
+     "/mental-health/stress", None),
+    ("Sleep and Mental Health",
+     "/mental-health/sleep", None),
+    ("Loneliness",
+     "/mental-health/loneliness", None),
 
-    # Specific demographics
-    ("Young People and Mental Health",
-     "/the-facts/young-people", None),
-    ("Men and Mental Health",
-     "/the-facts/men-and-mental-health", None),
+    # Self-help and wellbeing
+    ("Exercise and Mental Health",
+     "/mental-health/exercise-and-mental-health", None),
+    ("Mindfulness",
+     "/mental-health/mindfulness", None),
+    ("Social Connections and Mental Health",
+     "/mental-health/social-connections-and-mental-health", None),
+
+    # Resource library (broader self-help articles)
+    ("Mental Health Resource Library",
+     "/mental-health/resource-library", None),
 ]
 
 SECTION_KEYWORDS = {

@@ -1,39 +1,50 @@
 """
 Runner: DB1 — Clinical Knowledge Corpus
-Runs all DB1 scrapers in sequence and prints a summary.
+========================================
+Runs DB1 scrapers in sequence and prints a summary.
 
-Usage (from the scraping/ directory):
-    python run_db1.py
+Usage (from the project root):
+    .venv\\Scripts\\python.exe scraping/run_db1.py
 
-CCI removed — site times out consistently.
-HelpGuide added as replacement.
+Scraper status
+--------------
+ACTIVE — modified/new (run these):
+    Mental Health Foundation  — added awareness-week articles + PDF support
+    Beyond Blue               — updated to new /mental-health/ URL structure
+    CAMH                      — added mental-health-101 + guides-and-publications crawler
+    Rethink Mental Illness    — new source
+    Cleveland Clinic          — new source
+
+SKIPPED — re-scraped separately / data already good:
+    NHS    — re-scraped manually after single-page layout fix
+    NICE, NIMH, WHO, CCI, MedlinePlus, Better Health, RCPsych, Mayo Clinic, Mind UK
 """
 import sys
 import logging
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from db1_clinical.nhs                      import NHSScraper
-from db1_clinical.nice                     import NICEScraper
-from db1_clinical.nimh                     import NIMHScraper
-from db1_clinical.who_mhgap               import WHOMhGAPScraper
-from db1_clinical.mind_uk                  import MindUKScraper
-from db1_clinical.mental_health_foundation import MentalHealthFoundationScraper
-from db1_clinical.beyond_blue              import BeyondBlueScraper
-from db1_clinical.mayo_clinic              import MayoClinicScraper
-
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
+    datefmt="%H:%M:%S",
+)
 log = logging.getLogger("run_db1")
 
+from db1_clinical.mental_health_foundation import MentalHealthFoundationScraper
+from db1_clinical.beyond_blue              import BeyondBlueScraper
+from db1_clinical.camh                     import CAMHScraper
+from db1_clinical.rethink                  import RethinkScraper
+from db1_clinical.cleveland_clinic         import ClevelandClinicScraper
+
 SCRAPERS = [
-    ("NHS",                        NHSScraper),
-    ("NICE",                       NICEScraper),
-    ("NIMH",                       NIMHScraper),
-    ("WHO mhGAP",                  WHOMhGAPScraper),
-    ("Mind UK",                    MindUKScraper),
-    ("Mental Health Foundation",   MentalHealthFoundationScraper),
-    ("Beyond Blue",                BeyondBlueScraper),
-    ("Mayo Clinic",                MayoClinicScraper),
+    ("Mental Health Foundation", MentalHealthFoundationScraper),
+    ("Beyond Blue",              BeyondBlueScraper),
+    ("CAMH",                     CAMHScraper),
+    ("Rethink Mental Illness",   RethinkScraper),
+    ("Cleveland Clinic",         ClevelandClinicScraper),
 ]
 
 
@@ -41,7 +52,7 @@ def main():
     totals = {}
     for name, ScraperClass in SCRAPERS:
         log.info("=" * 60)
-        log.info("Starting scraper: %s", name)
+        log.info("Starting: %s", name)
         log.info("=" * 60)
         try:
             records = ScraperClass().run()
@@ -53,14 +64,15 @@ def main():
     print("\n" + "=" * 60)
     print("DB1 SCRAPING SUMMARY")
     print("=" * 60)
-    total_records = 0
+    total = 0
     for name, count in totals.items():
-        print(f"  {name:<30} {count:>5} records")
-        total_records += count
+        status = "OK" if count > 0 else "EMPTY"
+        print(f"  [{status}] {name:<35} {count:>4} records")
+        total += count
     print("-" * 60)
-    print(f"  {'TOTAL':<30} {total_records:>5} records")
+    print(f"  {'TOTAL':<40} {total:>4} records")
     print("=" * 60)
-    print(f"\nRaw data saved to: data/raw/db1_clinical/")
+    print(f"\nRaw JSON saved under: {ROOT / 'data' / 'raw' / 'db1_clinical'}/")
 
 
 if __name__ == "__main__":

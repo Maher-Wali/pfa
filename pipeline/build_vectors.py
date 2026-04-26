@@ -26,6 +26,9 @@ import sys
 import time
 from pathlib import Path
 from typing import Any
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -55,6 +58,24 @@ BATCH_SIZE   = 100   # Pinecone recommended max per upsert
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def _is_readable(text: str) -> bool:
+    """
+    Return True if *text* looks like natural English prose.
+
+    Rejects chunks that are Brotli/gzip binary garbage or PDF font-encoding
+    failures — both produce very low letter density and short average word
+    length.  Threshold values chosen from empirical analysis of known-good
+    (NHS, ACT Mindfully) vs known-bad (Beyond Blue, Self-Compassion.org pre-fix)
+    chunks.
+    """
+    if not text or len(text) < 30:
+        return False
+    letter_ratio = sum(c.isalpha() for c in text) / len(text)
+    words = text.split()
+    avg_word_len = sum(len(w) for w in words) / max(len(words), 1)
+    return letter_ratio >= 0.50 and avg_word_len >= 2.5
+
 
 def _clean_metadata(meta: dict, allowed_keys: list[str]) -> dict:
     """
@@ -123,6 +144,17 @@ def build_index(db_key: str, reset: bool = False):
 
     if not chunks:
         print("  Nothing to index.")
+        return
+
+    # Drop unreadable chunks (Brotli garbage, PDF font failures, etc.)
+    before = len(chunks)
+    chunks = [c for c in chunks if _is_readable(c["text"])]
+    dropped = before - len(chunks)
+    if dropped:
+        print(f"  Dropped {dropped}/{before} unreadable chunks ({100*dropped//before}%)")
+
+    if not chunks:
+        print("  No readable chunks remain after quality filter.")
         return
 
     texts     = [c["text"] for c in chunks]

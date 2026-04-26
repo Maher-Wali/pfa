@@ -5,17 +5,15 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
-        <!-- Title -->
+
         <mxCell id="title" value="Scraping Pipeline" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=22;" vertex="1" parent="1">
           <mxGeometry x="480" y="18" width="380" height="44" as="geometry" />
         </mxCell>
 
-        <!-- BaseScraper shared base class -->
         <mxCell id="base" value="&lt;b&gt;BaseScraper&lt;/b&gt; — utils/common.py&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;HTTP session · exponential retry (3×) · polite delay (1.5–3.5s)&lt;br&gt;JSON save · whitespace clean · boilerplate strip&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="520" y="82" width="300" height="62" as="geometry" />
         </mxCell>
 
-        <!-- ═══════ DB1 COLUMN ═══════ -->
         <mxCell id="db1-label" value="DB1 — Clinical Knowledge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;align=center;" vertex="1" parent="1">
           <mxGeometry x="55" y="170" width="280" height="34" as="geometry" />
         </mxCell>
@@ -39,7 +37,6 @@
           <mxGeometry x="55" y="474" width="280" height="40" as="geometry" />
         </mxCell>
 
-        <!-- DB1 blocked -->
         <mxCell id="db1-blocked-label" value="blocked / failed" style="text;html=1;strokeColor=none;fillColor=none;fontStyle=2;fontSize=10;fontColor=#b85450;align=left;" vertex="1" parent="1">
           <mxGeometry x="55" y="528" width="120" height="20" as="geometry" />
         </mxCell>
@@ -53,12 +50,10 @@
           <mxGeometry x="55" y="650" width="280" height="40" as="geometry" />
         </mxCell>
 
-        <!-- DB1 output -->
         <mxCell id="db1-out" value="&lt;b&gt;DB1 Raw JSON&lt;/b&gt;&lt;br&gt;292 records · 6 active sources&lt;br&gt;data/raw/db1_clinical/" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="75" y="730" width="230" height="72" as="geometry" />
         </mxCell>
 
-        <!-- ═══════ DB2 COLUMN ═══════ -->
         <mxCell id="db2-label" value="DB2 — Therapy Techniques" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;align=center;" vertex="1" parent="1">
           <mxGeometry x="870" y="170" width="280" height="34" as="geometry" />
         </mxCell>
@@ -88,7 +83,6 @@
           <mxGeometry x="870" y="574" width="280" height="40" as="geometry" />
         </mxCell>
 
-        <!-- DB2 blocked -->
         <mxCell id="db2-blocked-label" value="blocked / failed" style="text;html=1;strokeColor=none;fillColor=none;fontStyle=2;fontSize=10;fontColor=#b85450;align=left;" vertex="1" parent="1">
           <mxGeometry x="870" y="628" width="120" height="20" as="geometry" />
         </mxCell>
@@ -96,19 +90,15 @@
           <mxGeometry x="870" y="650" width="280" height="40" as="geometry" />
         </mxCell>
 
-        <!-- PDF Extractor helper -->
         <mxCell id="pdf" value="&lt;b&gt;PDF Extractor&lt;/b&gt;&lt;br&gt;utils/pdf_extractor.py&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;pdfplumber · bytes or Path input&lt;br&gt;heading-based section split&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="1230" y="402" width="175" height="65" as="geometry" />
         </mxCell>
 
-        <!-- DB2 output -->
         <mxCell id="db2-out" value="&lt;b&gt;DB2 Raw JSON&lt;/b&gt;&lt;br&gt;81 records · 8 active sources&lt;br&gt;data/raw/db2_therapy/" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="890" y="730" width="230" height="72" as="geometry" />
         </mxCell>
 
-        <!-- ═══════ EDGES ═══════ -->
 
-        <!-- BaseScraper → group labels (inheritance / extends) -->
         <mxCell id="e-base-db1" style="dashed=1;endArrow=block;endFill=0;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" source="base" target="db1-label" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -116,7 +106,6 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- DB1 active scrapers → DB1 output -->
         <mxCell id="e-nhs"  style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="nhs"  target="db1-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-nice" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="nice" target="db1-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-nimh" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="nimh" target="db1-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
@@ -124,7 +113,6 @@
         <mxCell id="e-mhf"  style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="mhf"  target="db1-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-bb"   style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="bb"   target="db1-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- DB2 active scrapers → DB2 output (direct) -->
         <mxCell id="e-sp"  style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="sp"  target="db2-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-ac"  style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="ac"  target="db2-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-pp"  style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="pp"  target="db2-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
@@ -132,7 +120,6 @@
         <mxCell id="e-ta"  style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="ta"  target="db2-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-sc"  style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="sc"  target="db2-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
 
-        <!-- ACT Mindfully + NHS IAPT → PDF Extractor → DB2 output -->
         <mxCell id="e-act-pdf"  style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="act"  target="pdf" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-iapt-pdf" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="iapt" target="pdf" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e-pdf-out"  style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="pdf" target="db2-out" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
