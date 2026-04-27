@@ -163,6 +163,7 @@ def main():
     # Load pipeline (imports safety classifier + RAG — takes ~30s first time)
     print("\nLoading pipeline (safety classifier + RAG)…")
     import pipeline
+    session_id = pipeline.create_session()
     print("  Pipeline ready.\n")
 
     for i, query in enumerate(queries, 1):
@@ -173,7 +174,7 @@ def main():
         bare_t = time.time() - t0
 
         t0 = time.time()
-        result = pipeline.run(query)
+        result = pipeline.run(query, session_id)
         pipeline_t = time.time() - t0
 
         passages = None

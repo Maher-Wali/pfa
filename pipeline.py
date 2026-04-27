@@ -8,6 +8,7 @@ from openai import OpenAI
 
 from safety_classifier.classifier import SafetyClassifier
 from retrieval.rag_pipeline import MentalHealthRAG
+from session.store import SessionStore
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -86,6 +87,7 @@ class PipelineResponse:
 _classifier: SafetyClassifier | None = None
 _rag: MentalHealthRAG | None = None
 _llm_client: OpenAI | None = None
+_session_store: SessionStore | None = None
 
 
 def _get_classifier() -> SafetyClassifier:
@@ -100,6 +102,13 @@ def _get_rag() -> MentalHealthRAG:
     if _rag is None:
         _rag = MentalHealthRAG()
     return _rag
+
+
+def _get_session_store() -> SessionStore:
+    global _session_store
+    if _session_store is None:
+        _session_store = SessionStore()
+    return _session_store
 
 
 def _get_llm_client() -> OpenAI:
@@ -134,8 +143,19 @@ def _llm_call(prompt: str, system_prompt: str = SYSTEM_PROMPT_COMPANION) -> str:
 # ---------------------------------------------------------------------------
 
 
-def run(message: str) -> PipelineResponse:
+def create_session() -> str:
+    """Create a new session and return its ID."""
+    return _get_session_store().create_session()
+
+
+def run(message: str, session_id: str) -> PipelineResponse:
+    store = _get_session_store()
+
+    if not store.session_exists(session_id):
+        raise ValueError(f"Unknown session: {session_id!r}. Call create_session() first.")
+
     if _get_classifier().is_crisis(message):
+        store.append_turn(session_id, message, CRISIS_RESOURCES)
         return PipelineResponse(text=CRISIS_RESOURCES, is_crisis=True)
 
     is_info = _is_informational(message)
@@ -143,10 +163,15 @@ def run(message: str) -> PipelineResponse:
         SYSTEM_PROMPT_INFORMATIONAL if is_info else SYSTEM_PROMPT_COMPANION
     )
 
-    answer = _get_rag().generate_response(
+    rag = _get_rag()
+    rag.chat_history = store.load_history(session_id)
+
+    answer = rag.generate_response(
         user_query=message,
         llm_func=lambda prompt: _llm_call(prompt, system_prompt),
         informational=is_info,
     )
+
+    store.append_turn(session_id, message, answer)
 
     return PipelineResponse(text=answer, is_crisis=False)
