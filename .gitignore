@@ -14,6 +14,9 @@ build/
 # ChromaDB vector stores — large binary files, regenerate with pipeline/build_vectors.py
 data/vectordb/
 
+# BM25 disk cache — regenerated automatically on startup when stale
+data/cache/
+
 # Processed chunks — regenerate with pipeline/prepare_db1.py + prepare_db2.py
 data/processed/
 
@@ -37,3 +40,8 @@ Thumbs.db
 .claude/
 output/
 scripts/
+
+safety_classifier/combined_training_kaggle.ipynb
+safety_classifier/combined_training.ipynb
+safety_classifier/improved_training.ipynb
+safety_classifier/read_nb.py

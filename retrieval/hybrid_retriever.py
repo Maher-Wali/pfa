@@ -5,7 +5,10 @@
 
 import re
 import os
+import json
+import pickle
 import numpy as np
+from pathlib import Path
 from typing import List
 from langchain_core.documents import Document
 from rank_bm25 import BM25Okapi
@@ -14,6 +17,8 @@ from pinecone import Pinecone
 
 # Avoid OpenMP conflicts when torch and llama.cpp are both loaded
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
+_CACHE_DIR = Path(__file__).parent.parent / "data" / "cache"
 
 
 def _normalize_for_bm25(text: str) -> str:
@@ -52,7 +57,41 @@ class HybridRetriever:
         self.embedding_model = SentenceTransformer(embedding_model_name)
 
         self._load_documents()
-        self._init_bm25()
+
+    # ------------------------------------------------------------------
+    # Cache helpers
+    # ------------------------------------------------------------------
+
+    def _cache_paths(self):
+        _CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        base = _CACHE_DIR / self.index_name
+        return base.with_suffix(".pkl"), base.with_name(self.index_name + "_meta.json")
+
+    def _pinecone_vector_count(self) -> int:
+        stats = self.index.describe_index_stats()
+        return stats.total_vector_count
+
+    def _load_cache(self, expected_count: int):
+        pkl_path, meta_path = self._cache_paths()
+        if not pkl_path.exists() or not meta_path.exists():
+            return False
+        meta = json.loads(meta_path.read_text())
+        if meta.get("vector_count") != expected_count:
+            return False
+        with open(pkl_path, "rb") as f:
+            cached = pickle.load(f)
+        self.docs = cached["docs"]
+        self.doc_ids = cached["doc_ids"]
+        self.bm25 = cached["bm25"]
+        print(f"BM25 loaded from cache ({len(self.docs)} docs)")
+        return True
+
+    def _write_cache(self, vector_count: int):
+        pkl_path, meta_path = self._cache_paths()
+        with open(pkl_path, "wb") as f:
+            pickle.dump({"docs": self.docs, "doc_ids": self.doc_ids, "bm25": self.bm25}, f)
+        meta_path.write_text(json.dumps({"vector_count": vector_count}))
+        print(f"BM25 cache written ({len(self.docs)} docs)")
 
     # ------------------------------------------------------------------
     # Initialisation helpers
@@ -60,50 +99,49 @@ class HybridRetriever:
 
     def _load_documents(self):
         """
-        Fetch all vectors from the Pinecone index to build the local
-        BM25 index and document store.
-
-        Uses pagination via list() + fetch() to retrieve all records.
+        Load BM25 index and document store from disk cache when possible.
+        Falls back to fetching all vectors from Pinecone and rebuilds cache.
+        Cache is invalidated when the Pinecone vector count changes.
         """
         self.docs: List[Document] = []
-        self.normalized_texts: List[str] = []
         self.doc_ids: List[str] = []
 
-        # Paginate through all vector IDs in the index
+        vector_count = self._pinecone_vector_count()
+
+        if self._load_cache(vector_count):
+            return
+
+        print(f"Cache miss — fetching {vector_count} vectors from '{self.index_name}'")
+        normalized_texts: List[str] = []
+
         all_ids = []
         for id_batch in self.index.list():
             all_ids.extend(id_batch)
 
         if not all_ids:
-            raise ValueError(
-                f"No vectors found in index '{self.index_name}'."
-            )
+            raise ValueError(f"No vectors found in index '{self.index_name}'.")
 
-        # Fetch vectors in batches of 100 (Pinecone fetch limit)
         for i in range(0, len(all_ids), 100):
             batch_ids = all_ids[i : i + 100]
             fetched = self.index.fetch(ids=batch_ids)
-
             for vid, vec_data in fetched.vectors.items():
                 meta = vec_data.metadata or {}
                 text = meta.pop("text", "")
                 if text:
                     self.docs.append(Document(page_content=text, metadata=meta))
-                    self.normalized_texts.append(_normalize_for_bm25(text))
+                    normalized_texts.append(_normalize_for_bm25(text))
                     self.doc_ids.append(vid)
 
         if not self.docs:
             raise ValueError(
-                f"No documents with text metadata found in index "
-                f"'{self.index_name}'."
+                f"No documents with text metadata found in index '{self.index_name}'."
             )
 
         print(f"Loaded {len(self.docs)} documents from '{self.index_name}'")
-
-    def _init_bm25(self):
-        tokenized = [t.split() for t in self.normalized_texts]
+        tokenized = [t.split() for t in normalized_texts]
         self.bm25 = BM25Okapi(tokenized)
         print(f"BM25 index built ({len(self.docs)} docs)")
+        self._write_cache(vector_count)
 
     # ------------------------------------------------------------------
     # Scoring
