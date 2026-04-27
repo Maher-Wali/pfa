@@ -19,10 +19,26 @@ def _connect() -> sqlite3.Connection:
 
 def _bootstrap(conn: sqlite3.Connection) -> None:
     conn.executescript("""
+        CREATE TABLE IF NOT EXISTS users (
+            user_id             TEXT PRIMARY KEY,
+            email               TEXT NOT NULL UNIQUE,
+            password_hash       TEXT NOT NULL,
+            age                 INTEGER NOT NULL,
+            country             TEXT,
+            mood_baseline       INTEGER NOT NULL,
+            goals               TEXT NOT NULL DEFAULT '[]',
+            job                 TEXT,
+            relationship_status TEXT,
+            created_at          REAL NOT NULL,
+            updated_at          REAL NOT NULL
+        );
+
         CREATE TABLE IF NOT EXISTS sessions (
             session_id  TEXT PRIMARY KEY,
+            user_id     TEXT,
             created_at  REAL NOT NULL,
-            last_active REAL NOT NULL
+            last_active REAL NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(user_id)
         );
 
         CREATE TABLE IF NOT EXISTS turns (
@@ -35,6 +51,7 @@ def _bootstrap(conn: sqlite3.Connection) -> None:
         );
 
         CREATE INDEX IF NOT EXISTS idx_turns_session ON turns(session_id);
+        CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
     """)
     conn.commit()
 
@@ -57,13 +74,13 @@ class SessionStore:
     # Session lifecycle
     # ------------------------------------------------------------------
 
-    def create_session(self) -> str:
+    def create_session(self, user_id: str | None = None) -> str:
         session_id = str(uuid.uuid4())
         now = time.time()
         with self._open() as conn:
             conn.execute(
-                "INSERT INTO sessions (session_id, created_at, last_active) VALUES (?, ?, ?)",
-                (session_id, now, now),
+                "INSERT INTO sessions (session_id, user_id, created_at, last_active) VALUES (?, ?, ?, ?)",
+                (session_id, user_id, now, now),
             )
             conn.commit()
         return session_id
