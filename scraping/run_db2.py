@@ -11,15 +11,19 @@ Source status
 SKIPPED — already in DB with good data (re-scraping would overwrite clean data):
     Anxiety Canada, ACT Mindfully, NHS IAPT
 
-SKIPPED — blocked (WAF / JS-rendered, 0 readable records):
-    Therapist Aid, Self-Compassion.org, Positive Psychology,
-    Simply Psychology, DBT Self Help
+SKIPPED — network blocked (connection timeout from this host, no workaround):
+    CCI WA        (cci.health.wa.gov.au — TCP timeout on all attempts)
+    CCI Therapy   (same domain, same issue)
 
-ACTIVE — HTML confirmed PASS in test_scraper.py:
-    GetSelfHelp  (HTML pages work; PDF links will gracefully 404 if URLs changed)
+SKIPPED — WAF-blocked / site closed — JSON files zeroed, data was binary garbage:
+    Therapist Aid, Self-Compassion.org, Positive Psychology, Simply Psychology
+    Anxiety Canada (site shut down April 2025)
+    (Mind UK was Cloudflare-blocked but is now handled via cloudscraper)
 
-ACTIVE — new source, confirmed PASS in test_scraper.py:
-    CCI WA  (previously timed out — retry now)
+ACTIVE — HTML / __NEXT_DATA__ confirmed working:
+    GetSelfHelp, NHS Therapy, Mental Health Foundation, CAMH,
+    Beyond Blue (migrated to Next.js; now parsed via __NEXT_DATA__ JSON),
+    DBT Self Help (blog scraper confirmed 38 articles accessible)
 
 To re-enable skipped sources, uncomment their entries in SCRAPERS below.
 """
@@ -30,28 +34,41 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 # --- Active ---
-from db2_therapy.getselfhelp  import GetSelfHelpScraper
-from db2_therapy.cci_wa       import CCIWAScraper
+from db2_therapy.getselfhelp                       import GetSelfHelpScraper
+from db2_therapy.nhs_therapy                       import NHSTherapyScraper
+from db2_therapy.mental_health_foundation_therapy  import MHFTherapyScraper
+from db2_therapy.camh_therapy                      import CAMHTherapyScraper
+from db2_therapy.beyond_blue_therapy               import BeyondBlueTherapyScraper
+from db2_therapy.dbt_selfhelp                      import DBTSelfHelpScraper
+from db2_therapy.helpguide                         import HelpGuideScraper
+from db2_therapy.mind_uk_therapy                   import MindUKTherapyScraper
 
 # --- Skipped: already have good data in DB ---
 # from db2_therapy.anxiety_canada    import AnxietyCanadaScraper
 # from db2_therapy.act_mindfully     import ACTMindfullycraper
 # from db2_therapy.iapt              import IAPTScraper
 
-# --- Skipped: blocked / JS-rendered / 0 readable records ---
-# from db2_therapy.therapist_aid     import TherapistAidScraper
-# from db2_therapy.self_compassion   import SelfCompassionScraper
+# --- Skipped: network blocked (TCP timeout on cci.health.wa.gov.au) ---
+# from db2_therapy.cci_wa       import CCIWAScraper
+# from db2_therapy.cci_therapy  import CCITherapyScraper
+
+# --- Skipped: WAF-blocked ---
+# from db2_therapy.therapist_aid       import TherapistAidScraper
+# from db2_therapy.self_compassion     import SelfCompassionScraper
 # from db2_therapy.positive_psychology import PositivePsychologyScraper
-# from db2_therapy.simply_psychology import SimplyPsychologyScraper
-# from db2_therapy.dbt_selfhelp      import DBTSelfHelpScraper
+# from db2_therapy.simply_psychology   import SimplyPsychologyScraper
 
 log = logging.getLogger("run_db2")
 
 SCRAPERS = [
-    # HTML confirmed PASS
-    ("GetSelfHelp",  GetSelfHelpScraper),
-    # New source — gov.au, no bot protection
-    ("CCI WA",       CCIWAScraper),
+    ("GetSelfHelp",              GetSelfHelpScraper),
+    ("NHS Therapy",              NHSTherapyScraper),
+    ("Mental Health Foundation", MHFTherapyScraper),
+    ("CAMH",                     CAMHTherapyScraper),
+    ("Beyond Blue",              BeyondBlueTherapyScraper),
+    ("DBT Self Help",            DBTSelfHelpScraper),
+    ("HelpGuide",                HelpGuideScraper),
+    ("Mind UK",                  MindUKTherapyScraper),
 ]
 
 

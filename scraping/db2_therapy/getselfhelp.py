@@ -39,19 +39,8 @@ HTML_PAGES = [
     ("Depression — Self-Help",        "/depression.htm",                   "CBT"),
 ]
 
-# PDF worksheets — downloadable thought records and worksheets
-PDF_WORKSHEETS = [
-    ("Thought Record — 7 Column",
-     "/docs/ThoughtRecord7.pdf", "CBT"),
-    ("Thought Record — 5 Column",
-     "/docs/ThoughtRecord5.pdf", "CBT"),
-    ("Behavioural Activation Diary",
-     "/docs/BADiary.pdf", "CBT"),
-    ("Problem Solving Worksheet",
-     "/docs/ProblemSolving.pdf", "CBT"),
-    ("Worry Postponement Record",
-     "/docs/WorryPostpone.pdf", "CBT"),
-]
+# PDF worksheets — /docs/ path was removed in 2025 site restructure, all 404
+PDF_WORKSHEETS = []
 
 BOILERPLATE_SELECTORS = [
     "nav", "header", "footer", ".menu", "#menu",
