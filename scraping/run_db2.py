@@ -30,8 +30,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 # --- Active ---
-from db2_therapy.getselfhelp  import GetSelfHelpScraper
-from db2_therapy.cci_wa       import CCIWAScraper
+from db2_therapy.getselfhelp        import GetSelfHelpScraper
+from db2_therapy.cci_wa             import CCIWAScraper
+from db2_therapy.compassionate_mind import CompassionateMindscraper
 
 # --- Skipped: already have good data in DB ---
 # from db2_therapy.anxiety_canada    import AnxietyCanadaScraper
@@ -49,9 +50,11 @@ log = logging.getLogger("run_db2")
 
 SCRAPERS = [
     # HTML confirmed PASS
-    ("GetSelfHelp",  GetSelfHelpScraper),
+    ("GetSelfHelp",          GetSelfHelpScraper),
     # New source — gov.au, no bot protection
-    ("CCI WA",       CCIWAScraper),
+    ("CCI WA",               CCIWAScraper),
+    # CFT publications 2023 — bibliography + abstracts
+    ("Compassionate Mind",   CompassionateMindscraper),
 ]
 
 
