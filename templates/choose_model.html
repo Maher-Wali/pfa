@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <h1>How do you want to use the assistant?</h1>
+    <p>Choose the workspace you want to open.</p>
+</section>
+
+<section class="mode-grid">
+    <a class="mode-card" href="/conversations/content_creation">
+        <h2>Content Creation</h2>
+        <p>
+            Create Facebook posts, blogs, product descriptions,
+            captions, marketing copy, and more.
+        </p>
+    </a>
+
+    <a class="mode-card" href="/conversations/virtual_therapy">
+        <h2>Virtual Therapy</h2>
+        <p>
+            Continue supportive conversations, coping guidance,
+            grounding exercises, and emotional support.
+        </p>
+    </a>
+</section>
+{% endblock %}

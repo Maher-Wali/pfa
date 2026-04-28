@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="chat-layout">
+    <aside class="chat-sidebar">
+        <a href="/conversations/{{ conversation.mode }}">← Back</a>
+
+        <h2>{{ conversation.title }}</h2>
+        <p>{{ conversation.mode }}</p>
+
+        {% if conversation.mode == "virtual_therapy" %}
+        <div class="safety-box">
+            Safety status:
+            <strong>{{ conversation.safety_status }}</strong>
+        </div>
+        {% endif %}
+    </aside>
+
+    <section class="chat-panel">
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="message {{ message.role }}">
+                    <strong>{{ message.role }}</strong>
+                    <p>{{ message.content }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h2>Start the conversation</h2>
+                    <p>Send your first message below.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <form class="chat-form" method="post" action="/chat/{{ conversation.id }}">
+            <textarea
+                name="message"
+                rows="3"
+                placeholder="Write your message..."
+                required
+            ></textarea>
+
+            <button type="submit">Send</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

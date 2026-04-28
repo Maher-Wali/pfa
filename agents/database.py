@@ -7,8 +7,12 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Literal
 
+from passlib.context import CryptContext
+
 
 Mode = Literal["content_creation", "virtual_therapy"]
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class ConversationDB:
@@ -26,6 +30,17 @@ class ConversationDB:
         with self._connect() as conn:
             conn.execute(
                 """
+                CREATE TABLE IF NOT EXISTS users (
+                    id TEXT PRIMARY KEY,
+                    username TEXT UNIQUE NOT NULL,
+                    password_hash TEXT NOT NULL,
+                    created_at TEXT NOT NULL
+                )
+                """
+            )
+
+            conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS conversations (
                     id TEXT PRIMARY KEY,
                     user_id TEXT NOT NULL,
@@ -33,7 +48,8 @@ class ConversationDB:
                     title TEXT,
                     safety_status TEXT DEFAULT 'NOT_CRITICAL',
                     created_at TEXT NOT NULL,
-                    updated_at TEXT NOT NULL
+                    updated_at TEXT NOT NULL,
+                    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
                 )
                 """
             )
@@ -67,6 +83,59 @@ class ConversationDB:
                 ON messages(conversation_id)
                 """
             )
+
+    def create_user(self, username: str, password: str) -> str:
+        user_id = str(uuid.uuid4())
+        now = self._now()
+        password_hash = pwd_context.hash(password)
+
+        with self._connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO users (id, username, password_hash, created_at)
+                VALUES (?, ?, ?, ?)
+                """,
+                (user_id, username, password_hash, now),
+            )
+
+        return user_id
+
+    def get_user_by_username(self, username: str) -> dict[str, Any] | None:
+        with self._connect() as conn:
+            row = conn.execute(
+                """
+                SELECT *
+                FROM users
+                WHERE username = ?
+                """,
+                (username,),
+            ).fetchone()
+
+        return dict(row) if row else None
+
+    def get_user_by_id(self, user_id: str) -> dict[str, Any] | None:
+        with self._connect() as conn:
+            row = conn.execute(
+                """
+                SELECT *
+                FROM users
+                WHERE id = ?
+                """,
+                (user_id,),
+            ).fetchone()
+
+        return dict(row) if row else None
+
+    def verify_user(self, username: str, password: str) -> dict[str, Any] | None:
+        user = self.get_user_by_username(username)
+
+        if not user:
+            return None
+
+        if not pwd_context.verify(password, user["password_hash"]):
+            return None
+
+        return user
 
     def create_conversation(
         self,
@@ -136,11 +205,7 @@ class ConversationDB:
 
         return message_id
 
-    def update_safety_status(
-        self,
-        conversation_id: str,
-        safety_status: str,
-    ) -> None:
+    def update_safety_status(self, conversation_id: str, safety_status: str) -> None:
         now = self._now()
 
         with self._connect() as conn:
@@ -191,25 +256,17 @@ class ConversationDB:
 
         return [dict(row) for row in rows]
 
-    def get_messages(
-        self,
-        conversation_id: str,
-        limit: int | None = None,
-    ) -> list[dict[str, Any]]:
-        query = """
-            SELECT *
-            FROM messages
-            WHERE conversation_id = ?
-            ORDER BY created_at ASC
-        """
-        params: list[Any] = [conversation_id]
-
-        if limit:
-            query += " LIMIT ?"
-            params.append(limit)
-
+    def get_messages(self, conversation_id: str) -> list[dict[str, Any]]:
         with self._connect() as conn:
-            rows = conn.execute(query, params).fetchall()
+            rows = conn.execute(
+                """
+                SELECT *
+                FROM messages
+                WHERE conversation_id = ?
+                ORDER BY created_at ASC
+                """,
+                (conversation_id,),
+            ).fetchall()
 
         messages = []
 
@@ -246,10 +303,7 @@ class ConversationDB:
 
         return messages
 
-    def count_assistant_messages(
-        self,
-        conversation_id: str,
-    ) -> int:
+    def count_assistant_messages(self, conversation_id: str) -> int:
         with self._connect() as conn:
             row = conn.execute(
                 """
@@ -262,16 +316,6 @@ class ConversationDB:
             ).fetchone()
 
         return int(row["count"])
-
-    def delete_conversation(self, conversation_id: str) -> None:
-        with self._connect() as conn:
-            conn.execute(
-                """
-                DELETE FROM conversations
-                WHERE id = ?
-                """,
-                (conversation_id,),
-            )
 
     def _default_title(self, mode: Mode) -> str:
         if mode == "content_creation":
