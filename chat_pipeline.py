@@ -8,6 +8,8 @@ from openai import OpenAI
 
 from safety_classifier.classifier import SafetyClassifier
 from retrieval.rag_pipeline import MentalHealthRAG
+from session.store import SessionStore
+from session.users import User, UserStore
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -86,6 +88,8 @@ class PipelineResponse:
 _classifier: SafetyClassifier | None = None
 _rag: MentalHealthRAG | None = None
 _llm_client: OpenAI | None = None
+_session_store: SessionStore | None = None
+_user_store: UserStore | None = None
 
 
 def _get_classifier() -> SafetyClassifier:
@@ -100,6 +104,37 @@ def _get_rag() -> MentalHealthRAG:
     if _rag is None:
         _rag = MentalHealthRAG()
     return _rag
+
+
+def _get_session_store() -> SessionStore:
+    global _session_store
+    if _session_store is None:
+        _session_store = SessionStore()
+    return _session_store
+
+
+def _get_user_store() -> UserStore:
+    global _user_store
+    if _user_store is None:
+        _user_store = UserStore()
+    return _user_store
+
+
+def _build_profile_block(user: User) -> str:
+    goals_str = ", ".join(user.goals) if user.goals else "not specified"
+    lines = [
+        "User profile (use this to personalise your responses — do not recite these facts back verbatim):",
+        f"- Age: {user.age}",
+        f"- Mood baseline: {user.mood_baseline}/10 (their typical day-to-day level)",
+        f"- Goals: {goals_str}",
+    ]
+    if user.country:
+        lines.append(f"- Country: {user.country}")
+    if user.job:
+        lines.append(f"- Job: {user.job}")
+    if user.relationship_status:
+        lines.append(f"- Relationship status: {user.relationship_status}")
+    return "\n".join(lines)
 
 
 def _get_llm_client() -> OpenAI:
@@ -134,19 +169,39 @@ def _llm_call(prompt: str, system_prompt: str = SYSTEM_PROMPT_COMPANION) -> str:
 # ---------------------------------------------------------------------------
 
 
-def run(message: str) -> PipelineResponse:
+def create_session(user_id: str) -> str:
+    """Create a new session linked to *user_id* and return its ID."""
+    return _get_session_store().create_session(user_id=user_id)
+
+
+def run(message: str, session_id: str) -> PipelineResponse:
+    store = _get_session_store()
+
+    if not store.session_exists(session_id):
+        raise ValueError(f"Unknown session: {session_id!r}. Call create_session() first.")
+
     if _get_classifier().is_crisis(message):
+        store.append_turn(session_id, message, CRISIS_RESOURCES)
         return PipelineResponse(text=CRISIS_RESOURCES, is_crisis=True)
 
     is_info = _is_informational(message)
+    base_prompt = SYSTEM_PROMPT_INFORMATIONAL if is_info else SYSTEM_PROMPT_COMPANION
+
+    user_id = store.get_user_id(session_id)
+    user = _get_user_store().get_by_id(user_id) if user_id else None
     system_prompt = (
-        SYSTEM_PROMPT_INFORMATIONAL if is_info else SYSTEM_PROMPT_COMPANION
+        base_prompt + "\n\n" + _build_profile_block(user) if user else base_prompt
     )
 
-    answer = _get_rag().generate_response(
+    rag = _get_rag()
+    rag.chat_history = store.load_history(session_id)
+
+    answer = rag.generate_response(
         user_query=message,
         llm_func=lambda prompt: _llm_call(prompt, system_prompt),
         informational=is_info,
     )
+
+    store.append_turn(session_id, message, answer)
 
     return PipelineResponse(text=answer, is_crisis=False)
