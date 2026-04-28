@@ -57,9 +57,9 @@ class UserStore:
         self,
         email: str,
         password: str,
-        age: int,
-        mood_baseline: int,
-        goals: List[str],
+        age: int = 0,
+        mood_baseline: int = 5,
+        goals: List[str] | None = None,
         country: str | None = None,
     ) -> User:
         if self.get_by_email(email) is not None:
@@ -77,7 +77,7 @@ class UserStore:
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     user_id, email, password_hash, age, country,
-                    mood_baseline, json.dumps(goals), now, now,
+                    mood_baseline, json.dumps(goals or []), now, now,
                 ),
             )
             conn.commit()
@@ -125,6 +125,35 @@ class UserStore:
     ) -> None:
         """Update whichever extracted fields are provided (non-None only)."""
         fields, values = [], []
+        if job is not None:
+            fields.append("job = ?")
+            values.append(job)
+        if relationship_status is not None:
+            fields.append("relationship_status = ?")
+            values.append(relationship_status)
+        if not fields:
+            return
+        fields.append("updated_at = ?")
+        values.append(time.time())
+        values.append(user_id)
+        with self._open() as conn:
+            conn.execute(
+                f"UPDATE users SET {', '.join(fields)} WHERE user_id = ?",
+                values,
+            )
+            conn.commit()
+
+    def update_profile(
+        self,
+        user_id: str,
+        age: int | None = None,
+        job: str | None = None,
+        relationship_status: str | None = None,
+    ) -> None:
+        fields, values = [], []
+        if age is not None:
+            fields.append("age = ?")
+            values.append(age)
         if job is not None:
             fields.append("job = ?")
             values.append(job)

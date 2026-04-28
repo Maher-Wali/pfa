@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-card" style="max-width: 520px;">
+    <h1>Your profile</h1>
+    <p class="muted">This information personalises your therapy sessions.</p>
+
+    {% if saved %}
+    <div style="padding:12px; border-radius:12px; background:#e8f5e9; color:#1b5e20; margin:16px 0;">
+        Profile saved.
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/profile">
+        <label>Email</label>
+        <input type="text" value="{{ user.email }}" disabled>
+
+        <label>Age</label>
+        <input type="number" name="age" min="1" max="120"
+               value="{{ user.age if user.age else '' }}"
+               placeholder="e.g. 28">
+
+        <label>Job</label>
+        <input type="text" name="job"
+               value="{{ user.job or '' }}"
+               placeholder="e.g. Software engineer">
+
+        <label>Relationship status</label>
+        <select name="relationship_status">
+            <option value="">— prefer not to say —</option>
+            {% for opt in ["Single", "In a relationship", "Married", "Divorced", "Widowed"] %}
+            <option value="{{ opt }}"
+                {% if user.relationship_status == opt %}selected{% endif %}>
+                {{ opt }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Save profile</button>
+    </form>
+
+    <p class="muted" style="margin-top:20px;">
+        <a href="/choose-mode">← Back</a>
+    </p>
+</div>
+{% endblock %}

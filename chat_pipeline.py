@@ -159,7 +159,7 @@ def _llm_call(prompt: str, system_prompt: str = SYSTEM_PROMPT_COMPANION) -> str:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt},
         ],
-        temperature=0.7,
+        temperature=0.45,
     )
     return response.choices[0].message.content or ""
 
@@ -174,6 +174,10 @@ def create_session(user_id: str) -> str:
     return _get_session_store().create_session(user_id=user_id)
 
 
+_CLASSIFY_EVERY_N_TURNS: int = 4
+_HISTORY_TURN_LIMIT: int = 6  # 6 turns = ~12 messages
+
+
 def run(message: str, session_id: str) -> PipelineResponse:
     store = _get_session_store()
 
@@ -183,6 +187,16 @@ def run(message: str, session_id: str) -> PipelineResponse:
     if _get_classifier().is_crisis(message):
         store.append_turn(session_id, message, CRISIS_RESOURCES)
         return PipelineResponse(text=CRISIS_RESOURCES, is_crisis=True)
+
+    turn_count = store.count_turns(session_id)
+    if turn_count > 0 and turn_count % _CLASSIFY_EVERY_N_TURNS == 0:
+        recent = store.load_history(session_id, limit=_HISTORY_TURN_LIMIT)
+        conversation_text = "\n".join(
+            f"user: {u}\nassistant: {a}" for u, a in recent
+        )
+        if _get_classifier().is_crisis(conversation_text):
+            store.append_turn(session_id, message, CRISIS_RESOURCES)
+            return PipelineResponse(text=CRISIS_RESOURCES, is_crisis=True)
 
     is_info = _is_informational(message)
     base_prompt = SYSTEM_PROMPT_INFORMATIONAL if is_info else SYSTEM_PROMPT_COMPANION
@@ -194,7 +208,7 @@ def run(message: str, session_id: str) -> PipelineResponse:
     )
 
     rag = _get_rag()
-    rag.chat_history = store.load_history(session_id)
+    rag.chat_history = store.load_history(session_id, limit=_HISTORY_TURN_LIMIT)
 
     answer = rag.generate_response(
         user_query=message,

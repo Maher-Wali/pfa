@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Compare</h1>
+    <p class="muted">Bare LLM (same prompt, no retrieval) vs RAG + refinement pipeline</p>
+</div>
+
+<form class="compare-form" method="post" action="/compare">
+    <div class="compare-form-row">
+        <div class="compare-form-field">
+            <label for="mode">Agent</label>
+            <select name="mode" id="mode">
+                <option value="content_creation" {% if result and result.mode == "content_creation" %}selected{% endif %}>Content Creation</option>
+                <option value="virtual_therapy" {% if result and result.mode == "virtual_therapy" %}selected{% endif %}>Virtual Therapy</option>
+            </select>
+        </div>
+    </div>
+
+    <label for="message">Message</label>
+    <textarea
+        name="message"
+        id="message"
+        rows="4"
+        placeholder="e.g. I've been feeling really low lately and can't seem to shake it."
+        required
+    >{% if result %}{{ result.message }}{% endif %}</textarea>
+
+    <button type="submit">Run comparison</button>
+</form>
+
+{% if result %}
+<div class="compare-grid">
+    <div class="compare-col">
+        <h2 class="compare-col-title">Bare LLM</h2>
+        <p class="compare-col-subtitle muted">System prompt only — no retrieval, no refinement</p>
+        <div class="compare-answer">{{ result.bare }}</div>
+    </div>
+
+    <div class="compare-col">
+        <h2 class="compare-col-title">RAG + Refinement</h2>
+        <p class="compare-col-subtitle muted">Hybrid retrieval → draft → critique → revise</p>
+        <div class="compare-answer">{{ result.rag }}</div>
+
+        {% if result.passages %}
+        <details class="compare-details">
+            <summary>Retrieved passages ({{ result.passages | length }})</summary>
+            {% for p in result.passages %}
+            <div class="compare-passage">
+                <strong>{{ p.source }}</strong>
+                <p>{{ p.text }}</p>
+            </div>
+            {% endfor %}
+        </details>
+        {% endif %}
+
+        <details class="compare-details">
+            <summary>Critique</summary>
+            <div class="compare-passage">{{ result.critique }}</div>
+        </details>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from typing import List
+from typing import Callable, List, Tuple
 
 from langchain_core.documents import Document
 
-from retrieval.hybrid_retriever import HybridRetriever
-from retrieval.rrf_rerank import RerankedRRF
+from retrieval.rag_pipeline import MentalHealthRAG
 
 
 class RAGStore:
@@ -14,23 +13,44 @@ class RAGStore:
         index_name: str,
         embedding_model_name: str,
         reranker_model_name: str,
-        bm25_weight: float = 0.55,
-        dense_weight: float = 0.45,
         debug: bool = False,
     ):
-        self.retriever = HybridRetriever(
-            index_name=index_name,
-            embedding_model_name=embedding_model_name,
-            bm25_weight=bm25_weight,
-            dense_weight=dense_weight,
+        self._rag = MentalHealthRAG(
+            clinical_index=index_name,
+            reranker_model=reranker_model_name,
             debug=debug,
         )
 
-        self.reranker = RerankedRRF(model_name=reranker_model_name)
+    def retrieve(
+        self,
+        query: str,
+        top_k: int = 5,
+        informational: bool = True,
+        history: List[Tuple[str, str]] | None = None,
+        llm_func: Callable[[str], str] | None = None,
+    ) -> List[Document]:
+        self._rag.chat_history = history or []
+        if llm_func is not None:
+            return self._rag.retrieve(
+                user_query=query,
+                llm_func=llm_func,
+                top_k_docs=top_k,
+                informational=informational,
+            )
+        return self._rag.clinical.hybrid_search(query, k=top_k)
 
-    def retrieve(self, query: str, top_k: int = 5) -> List[Document]:
-        docs = self.retriever.hybrid_search(query, k=top_k * 4)
-        return self.reranker.rerank(query, docs, top_k=top_k)
+
+def messages_to_history(messages: list[dict]) -> list[tuple[str, str]]:
+    """Convert a flat role/content message list into (user, assistant) turn pairs."""
+    history: list[tuple[str, str]] = []
+    i = 0
+    while i < len(messages) - 1:
+        if messages[i]["role"] == "user" and messages[i + 1]["role"] == "assistant":
+            history.append((messages[i]["content"], messages[i + 1]["content"]))
+            i += 2
+        else:
+            i += 1
+    return history
 
 
 def format_context(docs: List[Document], max_chars_per_doc: int = 1800) -> str:

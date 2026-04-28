@@ -4,7 +4,7 @@ from agents.config import Settings, get_settings
 from agents.database import ConversationDB
 from agents.llm import build_llm, invoke_text
 from agents.prompts import CONTENT_CREATOR_SYSTEM, CRITIC_SYSTEM, REVISER_SYSTEM
-from agents.rag import RAGStore, format_context
+from agents.rag import RAGStore, format_context, messages_to_history
 
 
 class ContentCreationAgent:
@@ -52,13 +52,27 @@ class ContentCreationAgent:
             content=user_input,
         )
 
+        recent_messages = self.db.get_recent_messages(
+            conversation_id=conversation_id,
+            limit=12,
+        )
+        history = messages_to_history(recent_messages)
+        llm_func = lambda prompt: invoke_text(self.llm, "", prompt)
+
         docs = self.rag.retrieve(
-            user_input,
+            query=user_input,
             top_k=self.settings.top_k_docs,
+            informational=True,
+            history=history,
+            llm_func=llm_func,
         )
         context = format_context(docs)
 
-        draft = self._draft(user_input=user_input, context=context)
+        draft = self._draft(
+            user_input=user_input,
+            context=context,
+            recent_messages=recent_messages,
+        )
         critique = self._critique(
             user_input=user_input,
             context=context,
@@ -88,8 +102,50 @@ class ContentCreationAgent:
             "critique": critique,
         }
 
-    def _draft(self, user_input: str, context: str) -> str:
+    def compare(self, user_input: str) -> dict:
+        """One-shot retrieval + generation without writing to the DB. For the /compare route."""
+        llm_func = lambda prompt: invoke_text(self.llm, "", prompt)
+        docs = self.rag.retrieve(
+            query=user_input,
+            top_k=self.settings.top_k_docs,
+            informational=True,
+            history=[],
+            llm_func=llm_func,
+        )
+        context = format_context(docs)
+        draft = self._draft(user_input=user_input, context=context, recent_messages=[])
+        critique = self._critique(user_input=user_input, context=context, draft=draft)
+        answer = self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+
+        passages = [
+            {
+                "source": (
+                    doc.metadata.get("source")
+                    or doc.metadata.get("title")
+                    or doc.metadata.get("condition")
+                    or f"Doc {i}"
+                ),
+                "text": doc.page_content.replace("\n", " ").strip()[:600],
+            }
+            for i, doc in enumerate(docs, 1)
+        ]
+
+        return {"answer": answer, "passages": passages, "critique": critique}
+
+    def _draft(
+        self,
+        user_input: str,
+        context: str,
+        recent_messages: list[dict],
+    ) -> str:
+        history = "\n".join(
+            f"{m['role']}: {m['content']}" for m in recent_messages
+        )
+
         prompt = f"""
+Recent conversation:
+{history}
+
 Retrieved context:
 {context}
 

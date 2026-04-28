@@ -263,9 +263,117 @@ button:hover {
     resize: none;
 }
 
+/* ---- Compare page ---- */
+
+.compare-form {
+    background: white;
+    padding: 28px;
+    border-radius: 24px;
+    border: 1px solid #ececec;
+    margin-bottom: 32px;
+}
+
+.compare-form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.compare-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+select {
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid #d7d7d7;
+    font-size: 15px;
+    font-family: inherit;
+    background: white;
+}
+
+.compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.compare-col {
+    background: white;
+    border-radius: 24px;
+    padding: 28px;
+    border: 1px solid #ececec;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.compare-col-title {
+    margin: 0;
+    font-size: 20px;
+}
+
+.compare-col-subtitle {
+    margin: 0;
+    font-size: 13px;
+}
+
+.compare-answer {
+    line-height: 1.7;
+    white-space: pre-wrap;
+    flex: 1;
+}
+
+.compare-details {
+    border: 1px solid #ececec;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.compare-details summary {
+    padding: 12px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #f6f7fb;
+    list-style: none;
+}
+
+.compare-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.compare-details[open] summary {
+    border-bottom: 1px solid #ececec;
+}
+
+.compare-passage {
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.compare-passage:last-child {
+    border-bottom: none;
+}
+
+.compare-passage strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #444;
+}
+
+.compare-passage p {
+    margin: 0;
+    color: #555;
+}
+
 @media (max-width: 800px) {
     .mode-grid,
-    .chat-layout {
+    .chat-layout,
+    .compare-grid {
         grid-template-columns: 1fr;
     }
 

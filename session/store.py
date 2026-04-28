@@ -102,15 +102,33 @@ class SessionStore:
     # History access
     # ------------------------------------------------------------------
 
-    def load_history(self, session_id: str) -> List[Tuple[str, str]]:
-        """Return all turns for *session_id* in chronological order."""
+    def load_history(
+        self, session_id: str, limit: int | None = None
+    ) -> List[Tuple[str, str]]:
+        """Return turns for *session_id* in chronological order, newest *limit* turns if given."""
         with self._open() as conn:
+            if limit is not None:
+                rows = conn.execute(
+                    "SELECT user_message, assistant_message FROM turns "
+                    "WHERE session_id = ? ORDER BY id DESC LIMIT ?",
+                    (session_id, limit),
+                ).fetchall()
+                return [(r["user_message"], r["assistant_message"]) for r in reversed(rows)]
             rows = conn.execute(
                 "SELECT user_message, assistant_message FROM turns "
                 "WHERE session_id = ? ORDER BY id ASC",
                 (session_id,),
             ).fetchall()
         return [(r["user_message"], r["assistant_message"]) for r in rows]
+
+    def count_turns(self, session_id: str) -> int:
+        """Return the total number of completed turns for *session_id*."""
+        with self._open() as conn:
+            row = conn.execute(
+                "SELECT COUNT(*) as count FROM turns WHERE session_id = ?",
+                (session_id,),
+            ).fetchone()
+        return int(row["count"])
 
     def append_turn(
         self, session_id: str, user_message: str, assistant_message: str

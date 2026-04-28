@@ -11,7 +11,8 @@
 
     {% if user %}
     <div class="nav-right">
-        <span>{{ user.username }}</span>
+        <a href="/compare">Compare</a>
+        <a href="/profile">{{ user.username }}</a>
         <a href="/logout">Logout</a>
     </div>
     {% endif %}

@@ -155,6 +155,35 @@ class MentalHealthRAG:
     # Main entry point
     # ------------------------------------------------------------------
 
+    def retrieve(
+        self,
+        user_query: str,
+        llm_func: Callable[[str], str],
+        top_k_docs: int = 5,
+        informational: bool = True,
+    ) -> List[Document]:
+        """
+        Run query rewriting + hybrid retrieval + RRF + rerank and return top docs.
+        Stops before the LLM call so callers can use their own generation pipeline.
+        """
+        bm25_w, dense_w = (0.70, 0.30) if informational else (0.35, 0.65)
+
+        rewritten = _rewrite_queries(user_query, self.chat_history, llm_func)
+
+        if self.debug:
+            print(f"Rewritten queries: {rewritten}")
+            print(f"Hybrid weights — BM25={bm25_w}, dense={dense_w}")
+
+        all_lists: List[List[Document]] = []
+        for q in rewritten:
+            docs = self.clinical.hybrid_search(
+                q, k=top_k_docs * 3, bm25_weight=bm25_w, dense_weight=dense_w
+            )
+            all_lists.append(docs)
+
+        fused = self.reranker.reciprocal_rank_fusion(all_lists)
+        return self.reranker.rerank(user_query, fused, top_k=top_k_docs)
+
     def generate_response(
         self,
         user_query: str,

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import sqlite3
-
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -11,11 +9,15 @@ from starlette.middleware.sessions import SessionMiddleware
 from agents.config import get_settings
 from agents.content_agent import ContentCreationAgent
 from agents.database import ConversationDB
+from agents.llm import invoke_text
+from agents.prompts import CONTENT_CREATOR_SYSTEM, THERAPY_AGENT_SYSTEM
 from agents.therapy_agent import VirtualTherapyAgent
+from session.users import User, UserStore
 
 
 settings = get_settings()
 db = ConversationDB(settings.sqlite_db_path)
+user_store = UserStore()
 
 content_agent = ContentCreationAgent(settings=settings, db=db)
 therapy_agent = VirtualTherapyAgent(settings=settings, db=db)
@@ -32,13 +34,29 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
+def _user_dict(user: User) -> dict:
+    """Convert User dataclass to a dict compatible with templates and session logic."""
+    return {
+        "id": user.user_id,
+        "username": user.email,
+        "email": user.email,
+        "age": user.age,
+        "mood_baseline": user.mood_baseline,
+        "goals": user.goals,
+        "country": user.country,
+        "job": user.job,
+        "relationship_status": user.relationship_status,
+    }
+
+
 def current_user(request: Request) -> dict | None:
     user_id = request.session.get("user_id")
 
     if not user_id:
         return None
 
-    return db.get_user_by_id(user_id)
+    user = user_store.get_by_id(user_id)
+    return _user_dict(user) if user else None
 
 
 def require_user(request: Request):
@@ -63,11 +81,9 @@ def home(request: Request):
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
     return templates.TemplateResponse(
+        request,
         "register.html",
-        {
-            "request": request,
-            "error": None,
-        },
+        {"error": None},
     )
 
 
@@ -81,45 +97,37 @@ def register(
 
     if len(username) < 3:
         return templates.TemplateResponse(
+            request,
             "register.html",
-            {
-                "request": request,
-                "error": "Username must contain at least 3 characters.",
-            },
+            {"error": "Username must contain at least 3 characters."},
         )
 
     if len(password) < 6:
         return templates.TemplateResponse(
+            request,
             "register.html",
-            {
-                "request": request,
-                "error": "Password must contain at least 6 characters.",
-            },
+            {"error": "Password must contain at least 6 characters."},
         )
 
     try:
-        user_id = db.create_user(username=username, password=password)
-    except sqlite3.IntegrityError:
+        user = user_store.create_user(email=username, password=password)
+    except ValueError:
         return templates.TemplateResponse(
+            request,
             "register.html",
-            {
-                "request": request,
-                "error": "This username already exists.",
-            },
+            {"error": "This username already exists."},
         )
 
-    request.session["user_id"] = user_id
+    request.session["user_id"] = user.user_id
     return RedirectResponse("/choose-mode", status_code=303)
 
 
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
     return templates.TemplateResponse(
+        request,
         "login.html",
-        {
-            "request": request,
-            "error": None,
-        },
+        {"error": None},
     )
 
 
@@ -129,18 +137,16 @@ def login(
     username: str = Form(...),
     password: str = Form(...),
 ):
-    user = db.verify_user(username=username.strip(), password=password)
+    user = user_store.authenticate(email=username.strip(), password=password)
 
     if not user:
         return templates.TemplateResponse(
+            request,
             "login.html",
-            {
-                "request": request,
-                "error": "Invalid username or password.",
-            },
+            {"error": "Invalid username or password."},
         )
 
-    request.session["user_id"] = user["id"]
+    request.session["user_id"] = user.user_id
     return RedirectResponse("/choose-mode", status_code=303)
 
 
@@ -158,11 +164,9 @@ def choose_mode(request: Request):
         return user
 
     return templates.TemplateResponse(
-        "choose_mode.html",
-        {
-            "request": request,
-            "user": user,
-        },
+        request,
+        "choose_model.html",
+        {"user": user},
     )
 
 
@@ -182,13 +186,9 @@ def conversations(request: Request, mode: str):
     )
 
     return templates.TemplateResponse(
-        "conversations.html",
-        {
-            "request": request,
-            "user": user,
-            "mode": mode,
-            "conversations": conversations_list,
-        },
+        request,
+        "conversation.html",
+        {"user": user, "mode": mode, "conversations": conversations_list},
     )
 
 
@@ -235,12 +235,117 @@ def chat_page(request: Request, conversation_id: str):
     messages = db.get_messages(conversation_id)
 
     return templates.TemplateResponse(
+        request,
         "chat.html",
+        {"user": user, "conversation": conversation, "messages": messages},
+    )
+
+
+@app.get("/profile", response_class=HTMLResponse)
+def profile_page(request: Request):
+    user = require_user(request)
+
+    if isinstance(user, RedirectResponse):
+        return user
+
+    return templates.TemplateResponse(
+        request,
+        "profile.html",
+        {"user": user, "saved": False},
+    )
+
+
+@app.post("/profile", response_class=HTMLResponse)
+def profile_save(
+    request: Request,
+    age: str = Form(""),
+    job: str = Form(""),
+    relationship_status: str = Form(""),
+):
+    user = require_user(request)
+
+    if isinstance(user, RedirectResponse):
+        return user
+
+    age_int: int | None = None
+    if age.strip():
+        try:
+            age_int = int(age.strip())
+        except ValueError:
+            return templates.TemplateResponse(
+                request,
+                "profile.html",
+                {"user": user, "saved": False, "error": "Age must be a number."},
+            )
+
+    user_store.update_profile(
+        user_id=user["id"],
+        age=age_int,
+        job=job.strip() or None,
+        relationship_status=relationship_status.strip() or None,
+    )
+
+    updated = user_store.get_by_id(user["id"])
+    return templates.TemplateResponse(
+        request,
+        "profile.html",
+        {"user": _user_dict(updated), "saved": True},
+    )
+
+
+@app.get("/compare", response_class=HTMLResponse)
+def compare_page(request: Request):
+    user = require_user(request)
+
+    if isinstance(user, RedirectResponse):
+        return user
+
+    return templates.TemplateResponse(
+        request,
+        "compare.html",
+        {"user": user, "result": None},
+    )
+
+
+@app.post("/compare", response_class=HTMLResponse)
+def compare_run(
+    request: Request,
+    message: str = Form(...),
+    mode: str = Form(...),
+):
+    user = require_user(request)
+
+    if isinstance(user, RedirectResponse):
+        return user
+
+    message = message.strip()
+
+    if not message or mode not in {"content_creation", "virtual_therapy"}:
+        return templates.TemplateResponse(
+            request,
+            "compare.html",
+            {"user": user, "result": None},
+        )
+
+    system = CONTENT_CREATOR_SYSTEM if mode == "content_creation" else THERAPY_AGENT_SYSTEM
+    agent = content_agent if mode == "content_creation" else therapy_agent
+
+    bare_answer = invoke_text(agent.llm, system, message)
+    rag_result = agent.compare(message)
+
+    return templates.TemplateResponse(
+        request,
+        "compare.html",
         {
-            "request": request,
             "user": user,
-            "conversation": conversation,
-            "messages": messages,
+            "result": {
+                "message": message,
+                "mode": mode,
+                "bare": bare_answer,
+                "rag": rag_result["answer"],
+                "passages": rag_result["passages"],
+                "critique": rag_result["critique"],
+            },
         },
     )
 
