@@ -162,8 +162,18 @@ def main():
 
     # Load pipeline (imports safety classifier + RAG — takes ~30s first time)
     print("\nLoading pipeline (safety classifier + RAG)…")
-    import pipeline
-    session_id = pipeline.create_session()
+    import chat_pipeline as pipeline
+    from session.users import UserStore
+    email = os.environ.get("TEST_EMAIL")
+    password = os.environ.get("TEST_PASSWORD")
+    if not email or not password:
+        print("ERROR: set TEST_EMAIL and TEST_PASSWORD env vars to run the comparison script.")
+        sys.exit(1)
+    user = UserStore().authenticate(email, password)
+    if not user:
+        print("ERROR: authentication failed. Check TEST_EMAIL / TEST_PASSWORD.")
+        sys.exit(1)
+    session_id = pipeline.create_session(user.user_id)
     print("  Pipeline ready.\n")
 
     for i, query in enumerate(queries, 1):

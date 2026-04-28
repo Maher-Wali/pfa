@@ -126,6 +126,13 @@ class SessionStore:
             self._touch(conn, session_id)
             conn.commit()
 
+    def get_user_id(self, session_id: str) -> str | None:
+        with self._open() as conn:
+            row = conn.execute(
+                "SELECT user_id FROM sessions WHERE session_id = ?", (session_id,)
+            ).fetchone()
+        return row["user_id"] if row else None
+
     def delete_session(self, session_id: str) -> None:
         with self._open() as conn:
             conn.execute("DELETE FROM turns WHERE session_id = ?", (session_id,))
