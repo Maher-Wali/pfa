@@ -21,7 +21,7 @@
       "cancer",
       "Netherlands"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Bringing the inside out and the outside in: The therapeutic relationships in compassion focused ther",
@@ -41,13 +41,15 @@
       "therapeuticrelationship",
       "chairwork"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Kind minds: using the ‘compassionate kitbag’ in a compassion focused therapy group for adults with i",
     "aliases": [],
     "modality": "CFT",
-    "target_conditions": [],
+    "target_conditions": [
+      "intellectual disabilities"
+    ],
     "target_problem": null,
     "steps": null,
     "worked_example": null,
@@ -60,7 +62,7 @@
     "hashtags": [
       "intellectualdifficulties"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — A compassion focused approach to understanding the mental health of climate scientists.",
@@ -73,13 +75,13 @@
     "when_to_use": null,
     "estimated_time": null,
     "difficulty": null,
-    "raw_content": "Title: A compassion focused approach to understanding the mental health of climate scientists.\nAuthors: Calabria, L., Peters, C., & Williams, M\nJournal: The Cognitive Behaviour Therapist .  # scientists\n",
+    "raw_content": "Title: A compassion focused approach to understanding the mental health of climate scientists.\nAuthors: Calabria, L., Peters, C., & Williams, M\nJournal: The Cognitive Behaviour Therapist\n",
     "source": "Compassionate Mind Foundation",
     "source_url": "https://orca.cardiff.ac.uk/id/eprint/162876/1/Williams.%20A%20compassion%20focused%20approach.pdf",
     "hashtags": [
       "climatechange"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — ‘Like I'd been listened to without actually saying words’: Picturing the nurturer in compassion-focu",
@@ -96,10 +98,10 @@
     "source": "Compassionate Mind Foundation",
     "source_url": "https://onlinelibrary.wiley.com/doi/10.1002/capr.12730?fbclid=IwAR10KcRb-lyd0d5VzvXq9JQ9agAeryJfjj0pmsJJ_bfdbwuSv8RcVo7tfPQ",
     "hashtags": [],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
-    "technique_name": "CFT — he Effectiveness of Compassion-Focused Therapy on Resilience, Shame, Internal Self-Criticism, and Qu",
+    "technique_name": "CFT — The Effectiveness of Compassion-Focused Therapy on Resilience, Shame, Internal Self-Criticism, and Q",
     "aliases": [],
     "modality": "CFT",
     "target_conditions": [
@@ -112,7 +114,7 @@
     "when_to_use": null,
     "estimated_time": null,
     "difficulty": null,
-    "raw_content": "Title: he Effectiveness of Compassion-Focused Therapy on Resilience, Shame, Internal Self-Criticism, and Quality of Life of Patients with Vitiligo\nAuthors: Kianimoghadam, A. S., Bahri, R., Khesali, M., Aghaei, Z. P. S., & Arani, A. M\nJournal: Iranian Journal of Psychiatry and Behavioral Sciences\n\nAbstract Background : Vitiligo is a disease of progressive and permanent skin depigmentation. This disease impacts patients' quality of life through psychological distress, which shows itself in various ways. This distress includes shame and internal self-criticism in patients with vitiligo. Resilience can appear as the strength against distress. Objectives : This research aimed to assess the impact of compassion-focused therapy (CFT) on various outcomes, including resilience, shame, internal self-criticism, and quality of life in individuals with vitiligo. Methods : In this study, an RCT design was employed, incorporating both pre- and post-test evaluations alongside a control group, to examine the impact of CFT on resilience, shame, internal self-criticism, and quality of life in patients with vitiligo. Forty patients with vitiligo were selected from Razi Dermatology Hospital in Tehran in 2019. The participants were randomly assigned to either a control or experimental group. The World Health Organization Quality of Life Questionnaire, Connor-Davidson Resilience Scale, levels of self-criticism scale, and Internalized Shame Scale were used to complete the pre-and post-test phases. Compassion-focused therapy based on the Gilbert therapy package was held in eight 2 h sessions once a week for the experimental group. The control group received the intervention after the end of the experimental group intervention. Results : The results of the covariance analysis indicated that CFT significantly increased the quality of life (P < 0.05, F = 308.97) and resilience (P < 0.05, F = 125.75) and reduced shame (P < 0.05, F = 228.30) and internal self-criticism (P < 0.05, F = 53.44) of patients with vitiligo. Conclusions : Compassion-focused therapy can improve the quality of life and resilience and reduce the shame and internal self-criticism of patients with vitiligo.",
+    "raw_content": "Title: The Effectiveness of Compassion-Focused Therapy on Resilience, Shame, Internal Self-Criticism, and Quality of Life of Patients with Vitiligo\nAuthors: Kianimoghadam, A. S., Bahri, R., Khesali, M., Aghaei, Z. P. S., & Arani, A. M\nJournal: \n\nAbstract Background : Vitiligo is a disease of progressive and permanent skin depigmentation. This disease impacts patients' quality of life through psychological distress, which shows itself in various ways. This distress includes shame and internal self-criticism in patients with vitiligo. Resilience can appear as the strength against distress. Objectives : This research aimed to assess the impact of compassion-focused therapy (CFT) on various outcomes, including resilience, shame, internal self-criticism, and quality of life in individuals with vitiligo. Methods : In this study, an RCT design was employed, incorporating both pre- and post-test evaluations alongside a control group, to examine the impact of CFT on resilience, shame, internal self-criticism, and quality of life in patients with vitiligo. Forty patients with vitiligo were selected from Razi Dermatology Hospital in Tehran in 2019. The participants were randomly assigned to either a control or experimental group. The World Health Organization Quality of Life Questionnaire, Connor-Davidson Resilience Scale, levels of self-criticism scale, and Internalized Shame Scale were used to complete the pre-and post-test phases. Compassion-focused therapy based on the Gilbert therapy package was held in eight 2 h sessions once a week for the experimental group. The control group received the intervention after the end of the experimental group intervention. Results : The results of the covariance analysis indicated that CFT significantly increased the quality of life (P < 0.05, F = 308.97) and resilience (P < 0.05, F = 125.75) and reduced shame (P < 0.05, F = 228.30) and internal self-criticism (P < 0.05, F = 53.44) of patients with vitiligo. Conclusions : Compassion-focused therapy can improve the quality of life and resilience and reduce the shame and internal self-criticism of patients with vitiligo.",
     "source": "Compassionate Mind Foundation",
     "source_url": "https://brieflands.com/articles/ijpbs-137483",
     "hashtags": [
@@ -122,7 +124,7 @@
       "skindisorder",
       "Iran"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — ‘It’s Nice for My Body but I Don’t Like It’–Experiences of Soothing Rhythm Breathing in Clients with",
@@ -145,7 +147,7 @@
       "depression",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — A Dimensional Approach to Schizotypy: Conceptualization and Treatment",
@@ -158,34 +160,16 @@
     "when_to_use": null,
     "estimated_time": null,
     "difficulty": null,
-    "raw_content": "Title: A Dimensional Approach to Schizotypy: Conceptualization and Treatment\nAuthors: Gilbert, P\nJournal: (pp. 157-175). Cham: Springer International Publishing; pp.157-175\n\nBuy A Dimensional Approach to Schizotypy: Conceptualization and Treatment 1st ed. 2023 by Cheli, Simone, Lysaker, Paul H. (ISBN: 9783031417870) from Amazon's Book Store. Everyday low prices and free delivery on eligible orders.",
+    "raw_content": "Title: A Dimensional Approach to Schizotypy: Conceptualization and Treatment\nAuthors: Gilbert, P\nJournal: (pp. 157-175). Cham: Springer International Publishing; pp.157-175\n",
     "source": "Compassionate Mind Foundation",
-    "source_url": "https://www.amazon.co.uk/dp/3031417879/ref=nosim?tag=compwell1-21",
+    "source_url": "https://www.compassionatemind.co.uk/cft-publications-2023",
     "hashtags": [
       "evolutionarytheory",
-      "schizotypy"
-    ],
-    "last_scraped": "2026-04-23"
-  },
-  {
-    "technique_name": "CFT — Energizing compassion: using music and community focus to stimulate compassion drive and sense of co",
-    "aliases": [],
-    "modality": "CFT",
-    "target_conditions": [],
-    "target_problem": null,
-    "steps": null,
-    "worked_example": null,
-    "when_to_use": null,
-    "estimated_time": null,
-    "difficulty": null,
-    "raw_content": "Title: Energizing compassion: using music and community focus to stimulate compassion drive and sense of connectedness.\nAuthors: ‍Gilbert, P., Basran, J. K., Plowright, P., & Gilbert, H\nJournal: Frontiers in Psychology , 14\n",
-    "source": "Compassionate Mind Foundation",
-    "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10586219/",
-    "hashtags": [
+      "schizotypy",
       "energisingcompassion",
       "guidedpractice"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Exploration of Evolution-Informed Compassion-Focused Therapy and Buddhist Approaches to Insight Medi",
@@ -205,7 +189,7 @@
       "meditation",
       "evolutionarytheory"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassion as a skill: A comparison of contemplative and evolution-based approaches",
@@ -222,7 +206,7 @@
     "source": "Compassionate Mind Foundation",
     "source_url": "https://link.springer.com/article/10.1007/s12671-023-02173-w",
     "hashtags": [],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — An Exploration of Compassion Focused Therapy for Grieving Individuals.",
@@ -243,10 +227,29 @@
     "hashtags": [
       "grief"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — A Dimensional Approach to Schizotypy: Conceptualization and Treatment",
+    "aliases": [],
+    "modality": "CFT",
+    "target_conditions": [],
+    "target_problem": null,
+    "steps": null,
+    "worked_example": null,
+    "when_to_use": null,
+    "estimated_time": null,
+    "difficulty": null,
+    "raw_content": "Title: A Dimensional Approach to Schizotypy: Conceptualization and Treatment\nAuthors: Heriot-Maitland, C., & Murphy, N\nJournal: (pp. 157-175). Cham: Springer International Publishing; pp.157-175\n",
+    "source": "Compassionate Mind Foundation",
+    "source_url": "https://www.compassionatemind.co.uk/cft-publications-2023",
+    "hashtags": [
+      "beliefsystems"
+    ],
+    "last_scraped": "2026-05-01"
+  },
+  {
+    "technique_name": "CFT — A case series study of compassion‐focused therapy for distressing experiences in psychosis",
     "aliases": [],
     "modality": "CFT",
     "target_conditions": [
@@ -258,15 +261,14 @@
     "when_to_use": null,
     "estimated_time": null,
     "difficulty": null,
-    "raw_content": "Title: A Dimensional Approach to Schizotypy: Conceptualization and Treatment\nAuthors: Heriot-Maitland, C., & Murphy, N\nJournal: (pp. 157-175). Cham: Springer International Publishing; pp.157-175.  ‍ Heriot‐Maitland, C., Gumley, A., Wykes, T., Longden, E., Irons, C., Gilbert, P., & Peters, E. (2023). A case series study of compassion‐focused therapy for distressing experiences in psychosis . British Journal of Clinical Psychology\n\nBuy A Dimensional Approach to Schizotypy: Conceptualization and Treatment 1st ed. 2023 by Cheli, Simone, Lysaker, Paul H. (ISBN: 9783031417870) from Amazon's Book Store. Everyday low prices and free delivery on eligible orders.",
+    "raw_content": "Title: A case series study of compassion‐focused therapy for distressing experiences in psychosis\nAuthors: Heriot‐Maitland, C., Gumley, A., Wykes, T., Longden, E., Irons, C., Gilbert, P., & Peters, E\nJournal: British Journal of Clinical Psychology\n",
     "source": "Compassionate Mind Foundation",
-    "source_url": "https://www.amazon.co.uk/dp/3031417879/ref=nosim?tag=compwell1-21",
+    "source_url": "https://bpspsychub.onlinelibrary.wiley.com/doi/pdf/10.1111/bjc.12437",
     "hashtags": [
-      "beliefsystems",
       "psychosis",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — A brief compassion focused therapy intervention can help self‐critical parents and their children: A",
@@ -290,13 +292,15 @@
       "RCT",
       "Australia"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — A Compassion-Focused Therapy group for young people who live in foster, adoptive or kinship care: In",
     "aliases": [],
     "modality": "CFT",
-    "target_conditions": [],
+    "target_conditions": [
+      "attachment difficulties"
+    ],
     "target_problem": null,
     "steps": null,
     "worked_example": null,
@@ -311,7 +315,7 @@
       "adoptionandfostercare",
       "youngpeople"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Using structure compassion focused formulation towards change in couples and organisations.",
@@ -324,13 +328,13 @@
     "when_to_use": null,
     "estimated_time": null,
     "difficulty": null,
-    "raw_content": "Title: Using structure compassion focused formulation towards change in couples and organisations.\nAuthors: Lennox, T. & Kennedy, A\nJournal: OBM Integrative and Complementary Medicine 8(3)  organisations\n",
+    "raw_content": "Title: Using structure compassion focused formulation towards change in couples and organisations.\nAuthors: Lennox, T. & Kennedy, A\nJournal: OBM Integrative and Complementary Medicine 8(3)\n",
     "source": "Compassionate Mind Foundation",
     "source_url": "https://cdn.prod.website-files.com/641587796769f7271a4bacec/64cc09fc2c8239611b6244d8_obm.icm.2303030%20(1).pdf",
     "hashtags": [
-      "formulation"
+      "formulation_organisations"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassion-focused therapy with autistic adults.",
@@ -345,7 +349,7 @@
     "when_to_use": null,
     "estimated_time": null,
     "difficulty": null,
-    "raw_content": "Title: Compassion-focused therapy with autistic adults.\nAuthors: Mason, D., Acland, J., Stark, E., Happé, F., & Spain, D\nJournal: Frontiers in Psychology , 14\n\nAbstract Some autistic adults experience repeated adverse events, including rejection, victimization and stigmatization. They also describe others being critical and negatively judging them, such as for how they socially interact or for expressing passion for particular interests. The impact of these adverse events can be substantial, including increasing vulnerability for poorer mental health, and contributing to development of negative self beliefs (such as “I am different” or “I do not fit in”) and shame-based difficulties. Not all evidence-based psychological therapies are well-received by autistic people, or effective. Given high rates of self-harm and suicidality, finding acceptable and effective therapies for autistic adults is paramount. Here, writing as autistic and non-autistic clinicians and researchers, we outline the theoretical principles of compassion-focused theory and therapy (CFT). We propose that: (1) compassion-focused theory can provide a useful framework for conceptualizing shame-based difficulties some autistic adults experience; (2) CFT can be appropriate for addressing these; and (3) there is an impetus for practitioners to adopt compassion-focused approaches when supporting autistic adults. Keywords: autism, compassion-focused therapy, shame, threat system, drive system, soothe system",
+    "raw_content": "Title: Compassion-focused therapy with autistic adults.\nAuthors: Mason, D., Acland, J., Stark, E., Happé, F., & Spain, D\nJournal: Frontiers in Psychology , 14\n",
     "source": "Compassionate Mind Foundation",
     "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10641016/",
     "hashtags": [
@@ -353,7 +357,7 @@
       "adults",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Online Compassion Focused Therapy for overeating: Feasibility and acceptability pilot study",
@@ -376,13 +380,15 @@
       "eatingdisorder",
       "Portugal"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Never underestimate fears, blocks, and resistances: The interplay between experiential practices, se",
     "aliases": [],
     "modality": "CFT",
-    "target_conditions": [],
+    "target_conditions": [
+      "social anxiety"
+    ],
     "target_problem": null,
     "steps": null,
     "worked_example": null,
@@ -394,56 +400,22 @@
     "source_url": "https://onlinelibrary.wiley.com/doi/abs/10.1002/jclp.23474?casa_token=hejSu3pb_ncAAAAA%3AAZvSIjdW3KGnYIcpUgdhVDbco_ie4CHqzdi4DAGVlD2J10NGL5zHbsAuokLWKgxjTQBTlrx8wwfEgj0",
     "hashtags": [
       "fearsblocksandresistances",
-      "casestudy"
-    ],
-    "last_scraped": "2026-04-23"
-  },
-  {
-    "technique_name": "CFT — Self‐forgiveness, self‐compassion and psychological health: A qualitative exploration of change duri",
-    "aliases": [],
-    "modality": "CFT",
-    "target_conditions": [],
-    "target_problem": null,
-    "steps": null,
-    "worked_example": null,
-    "when_to_use": null,
-    "estimated_time": null,
-    "difficulty": null,
-    "raw_content": "Title: Self‐forgiveness, self‐compassion and psychological health: A qualitative exploration of change during compassion focused therapy groups.\nAuthors: Maynard, P. G., van Kessel, K., & Feather, J. S\nJournal: Psychology and Psychotherapy: Theory, Research and Practice , 96(2), 265-280\n",
-    "source": "Compassionate Mind Foundation",
-    "source_url": "https://bpspsychub.onlinelibrary.wiley.com/doi/abs/10.1111/papt.12435?casa_token=x93IpOBVTwYAAAAA%3A_0gQlc0zSAxMExdSEbmnb3BYq-uOBKxZG-30SsolrGfEUcHOKyqFi4fPxrSoBc6bKB87I_Heywd6U-s",
-    "hashtags": [
+      "casestudy_Maynard",
       "groups",
-      "NewZealand"
-    ],
-    "last_scraped": "2026-04-23"
-  },
-  {
-    "technique_name": "CFT — Effectiveness of Compassion-Focused Therapy on Social Anxiety and Rumination among Female Heads of H",
-    "aliases": [],
-    "modality": "CFT",
-    "target_conditions": [],
-    "target_problem": null,
-    "steps": null,
-    "worked_example": null,
-    "when_to_use": null,
-    "estimated_time": null,
-    "difficulty": null,
-    "raw_content": "Title: Effectiveness of Compassion-Focused Therapy on Social Anxiety and Rumination among Female Heads of Households.\nAuthors: Mousavi, S., Mousavi, S., & Shahsavari, M. R\nJournal: Journal of Clinical Research in Paramedical Sciences , 12 (2)\n\nAbstract Background : Given that a significant group of female heads of households face poverty, disability, and powerlessness, particularly in managing household economic affairs, their self-esteem and mental health are affected, which has paved the way for depression, anxiety, and other disorders. Objectives : This study aimed to investigate the effects of compassion-focused therapy (CFT) on social anxiety and rumination among female heads of households. Methods : This study employed a quasi-experimental design with a pretest-posttest and a control group. The study population consisted of all female heads of households visiting the welfare centers in Aligudarz (Iran) in 2022. A sample of 40 individuals (20 women per group) was selected based on the inclusion criteria and randomly assigned to either the intervention group or the control group. The intervention group received 8 sessions of 90 minutes (one session per week) of CFT. After completing the sessions, a posttest was administered to both the intervention and control groups under similar conditions. The research instruments included the Social Phobia Inventory (SPIN) and Rumination Response Scale (RRS). Data analysis was performed using covariance analysis with SPSS version 27. Results : The mean ( ± SD) of the posttest scores of social anxiety and rumination in the intervention group was 29.95 (± 4.26) and 39.70 (± 4.29) which was significantly different from the control groups (57.75 (± 5.59) and 57.90 (± 4.71)) (P < 0.001). The results indicated that CFT effectively reduced social anxiety and rumination among female heads of households (P < 0.001). Conclusions : CFT was a suitable method for addressing social anxiety and rumination among female heads of households. These findings highlight the significance of implementing compassion-focused interventions among female heads of households and provide implications for clinical interventions.",
-    "source": "Compassionate Mind Foundation",
-    "source_url": "https://brieflands.com/articles/jcrps-139058",
-    "hashtags": [
+      "NewZealand_Mousavi",
       "socialanxiety",
       "femaleheadsofhouseholds",
       "Iran"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassion focused therapy for women in the perinatal period: A summary of the current literature.",
     "aliases": [],
     "modality": "CFT",
-    "target_conditions": [],
+    "target_conditions": [
+      "perinatal mental health"
+    ],
     "target_problem": null,
     "steps": null,
     "worked_example": null,
@@ -457,13 +429,15 @@
       "literaturereview",
       "perinatal"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Effectiveness of compassion‐focused therapy for self‐criticism in patients with personality disorder",
     "aliases": [],
     "modality": "CFT",
-    "target_conditions": [],
+    "target_conditions": [
+      "personality disorders"
+    ],
     "target_problem": null,
     "steps": null,
     "worked_example": null,
@@ -477,7 +451,7 @@
       "personalitydisorderdiagnosis",
       "casestudyseries"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Handbook of Anger, Aggression, and Violence",
@@ -490,16 +464,16 @@
     "when_to_use": null,
     "estimated_time": null,
     "difficulty": null,
-    "raw_content": "Title: Handbook of Anger, Aggression, and Violence\nAuthors: Ribeiro da Silva, D., Martin, C. R., Preedy, V. R., & Patel, V. B\nJournal: Springer; pp/2197-2212\n\nBuy Handbook of Anger, Aggression, and Violence 1st ed. 2023 by Martin, Colin R., Preedy, Victor R., Patel, Vinood B. (ISBN: 9783031315466) from Amazon's Book Store. Everyday low prices and free delivery on eligible orders.",
+    "raw_content": "Title: Handbook of Anger, Aggression, and Violence\nAuthors: Ribeiro da Silva, D., Martin, C. R., Preedy, V. R., & Patel, V. B\nJournal: Springer; pp/2197-2212\n",
     "source": "Compassionate Mind Foundation",
-    "source_url": "https://www.amazon.co.uk/dp/3031315464/ref=nosim?tag=compwell1-21",
+    "source_url": "https://www.compassionatemind.co.uk/cft-publications-2023",
     "hashtags": [
       "psychopathy",
       "youngpeople",
       "forensic",
       "Portugal"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassion-focused therapy (CFT) for the reduction of the self-stigma of mental disorders: the COMpa",
@@ -518,56 +492,22 @@
     "hashtags": [
       "stigma",
       "RCT",
-      "France"
-    ],
-    "last_scraped": "2026-04-23"
-  },
-  {
-    "technique_name": "CFT — Investigating the mood effects of nature sounds and soothing images in adolescents: A proof-of-conce",
-    "aliases": [],
-    "modality": "CFT",
-    "target_conditions": [],
-    "target_problem": null,
-    "steps": null,
-    "worked_example": null,
-    "when_to_use": null,
-    "estimated_time": null,
-    "difficulty": null,
-    "raw_content": "Title: Investigating the mood effects of nature sounds and soothing images in adolescents: A proof-of-concept randomised control pilot study.\nAuthors: Ryynanen, J., MacLennan, K., Witten, E., Tipp, C., Wisdom, S., & Chan, S. W\nJournal: Wellcome Open Research , 8 (433), 433\n",
-    "source": "Compassionate Mind Foundation",
-    "source_url": "https://wellcomeopenresearch.org/articles/8-433/v1?src=rss",
-    "hashtags": [
+      "France_Ryynanen",
       "nature",
-      "adolescents"
-    ],
-    "last_scraped": "2026-04-23"
-  },
-  {
-    "technique_name": "CFT — Teaching Refugees and Displaced Students: What Every Educator Should Know",
-    "aliases": [],
-    "modality": "CFT",
-    "target_conditions": [],
-    "target_problem": null,
-    "steps": null,
-    "worked_example": null,
-    "when_to_use": null,
-    "estimated_time": null,
-    "difficulty": null,
-    "raw_content": "Title: Teaching Refugees and Displaced Students: What Every Educator Should Know\nAuthors: ‍Sochacki, J., & Case, K. I\nJournal: (pp. 35-47). Cham: Springer International Publishing; pp. 35-47\n\nBuy Teaching Refugees and Displaced Students: What Every Educator Should Know (Springer Texts in Education) 1st ed. 2023 by Wolsey, Thomas DeVere, Karkouti, Ibrahim M. (ISBN: 9783031338335) from Amazon's Book Store. Everyday low prices and free delivery on eligible orders.",
-    "source": "Compassionate Mind Foundation",
-    "source_url": "https://www.amazon.co.uk/dp/3031338332/ref=nosim?tag=compwell1-21",
-    "hashtags": [
+      "adolescents",
       "compassionineducation",
       "refugeea",
       "childrenandyoungpeople"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Introducing compassion focused psychosexual therapy",
     "aliases": [],
     "modality": "CFT",
-    "target_conditions": [],
+    "target_conditions": [
+      "sexual difficulties"
+    ],
     "target_problem": null,
     "steps": null,
     "worked_example": null,
@@ -581,7 +521,7 @@
       "psychosexual",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Integrating Compassion into EMDR for PTSD",
@@ -601,7 +541,7 @@
       "EMDR",
       "integration"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassion Focused Therapy to Reduce Body Weight Shame for Individuals with Obesity: A Randomized Co",
@@ -624,13 +564,15 @@
       "obesity",
       "Australia"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — The effectiveness of compassion-focused therapy on the components of self-determination and suicidal",
     "aliases": [],
     "modality": "CFT",
-    "target_conditions": [],
+    "target_conditions": [
+      "self-harm"
+    ],
     "target_problem": null,
     "steps": null,
     "worked_example": null,
@@ -645,10 +587,10 @@
       "selfharmandsuicide",
       "Iran"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
-    "technique_name": "CFT — he Way is in Training: Martial Arts-informed Compassionate Mind Training to enhance CFT Therapists’ ",
+    "technique_name": "CFT — The Way is in Training: Martial Arts-informed Compassionate Mind Training to enhance CFT Therapists’",
     "aliases": [],
     "modality": "CFT",
     "target_conditions": [],
@@ -658,7 +600,7 @@
     "when_to_use": null,
     "estimated_time": null,
     "difficulty": null,
-    "raw_content": "Title: he Way is in Training: Martial Arts-informed Compassionate Mind Training to enhance CFT Therapists’ Compassionate Competencies\nAuthors: Clapton, N., & Hiskey, S\nJournal: OBM Integrative and Complementary Medicine , 8 (1), 1-17\n\nTraditional Martial Arts practice(s) can be construed as forms of fully embodied Compassionate Mind Training (CMT). Integration of these body-mind systems can be a powerful means to cultivate and entrain important therapist competencies in compassionate engagement and action. Through such training and personal practice, compassion-focused therapists can develop and enhance their abilities to stimulate and access compassionate motivation at a deeply embodied level. Martial arts-informed CMT thus has the potential to afford therapists greater sensitivity, attunement, distress tolerance, courage and compassionate responsiveness, particularly in difficult therapeutic encounters such as alliance ruptures.",
+    "raw_content": "Title: The Way is in Training: Martial Arts-informed Compassionate Mind Training to enhance CFT Therapists’ Compassionate Competencies\nAuthors: Clapton, N., & Hiskey, S\nJournal: \n\nTraditional Martial Arts practice(s) can be construed as forms of fully embodied Compassionate Mind Training (CMT). Integration of these body-mind systems can be a powerful means to cultivate and entrain important therapist competencies in compassionate engagement and action. Through such training and personal practice, compassion-focused therapists can develop and enhance their abilities to stimulate and access compassionate motivation at a deeply embodied level. Martial arts-informed CMT thus has the potential to afford therapists greater sensitivity, attunement, distress tolerance, courage and compassionate responsiveness, particularly in difficult therapeutic encounters such as alliance ruptures.",
     "source": "Compassionate Mind Foundation",
     "source_url": "https://www.lidsen.com/journals/icm/icm-08-01-001",
     "hashtags": [
@@ -667,7 +609,7 @@
       "therapistcompetency",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Becoming an inner ally: the compassionate minds approach to self-compassion− an online programme",
@@ -690,13 +632,15 @@
       "nursing",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassion-Focused Therapy and People with Intellectual Disabilities: A Renewed Focus",
     "aliases": [],
     "modality": "CFT",
-    "target_conditions": [],
+    "target_conditions": [
+      "intellectual disabilities"
+    ],
     "target_problem": null,
     "steps": null,
     "worked_example": null,
@@ -710,7 +654,7 @@
       "intellectualdifficulties",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassion training influences state but not trait level heart-rate variability within severe depres",
@@ -733,7 +677,7 @@
       "depression",
       "Australia"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Self-compassion in eating disorders and childhood trauma: A study of within-person effects in a rand",
@@ -755,7 +699,7 @@
       "eatingdisorders",
       "Norway"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Defining compassion: A Delphi study of compassion therapists’ experiences when introducing patients ",
@@ -774,13 +718,14 @@
     "hashtags": [
       "definitionofcompassion"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassion focused therapy for pain management: ‘3 systems approach’ to understanding why striving a",
     "aliases": [],
     "modality": "CFT",
     "target_conditions": [
+      "chronic pain",
       "self-criticism"
     ],
     "target_problem": null,
@@ -789,15 +734,15 @@
     "when_to_use": null,
     "estimated_time": null,
     "difficulty": null,
-    "raw_content": "Title: Compassion focused therapy for pain management: ‘3 systems approach’ to understanding why striving and self-criticism are key psychological barriers to regulating activity and improving self-care for people living with persistent pain.\nAuthors: Malpus, Z., Nazar, Z., Smith, C., & Armitage, L\nJournal: British Journal of Pain , 17 (1), 87-102.  pain\n",
+    "raw_content": "Title: Compassion focused therapy for pain management: ‘3 systems approach’ to understanding why striving and self-criticism are key psychological barriers to regulating activity and improving self-care for people living with persistent pain.\nAuthors: Malpus, Z., Nazar, Z., Smith, C., & Armitage, L\nJournal: British Journal of Pain , 17 (1), 87-102\n",
     "source": "Compassionate Mind Foundation",
     "source_url": "https://journals.sagepub.com/doi/pdf/10.1177/20494637221133630?casa_token=VhSu5JWW8asAAAAA:V86ryh7pj4phqqvs_1FAtMErcuLwz71pJXrDVgIe1n0ScwQGt-BMN0uHFLWhPc-TNngT9NOvtSNU",
     "hashtags": [
-      "chronic",
+      "chronic_pain",
       "selfcriticism",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — A systematic review of the effectiveness of compassion focused imagery in improving psychological ou",
@@ -817,7 +762,7 @@
       "imagery",
       "systematicreview"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Psychological Interventions for Psychosis: Towards a Paradigm Shift",
@@ -839,7 +784,7 @@
       "casestudy",
       "psychosis"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Improvements in Compassion and Fears of Compassion throughout the COVID-19 Pandemic: A Multinational",
@@ -860,7 +805,7 @@
       "international",
       "compassion"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassionate Mind Training Group Programme: Implementation and Evaluation within an NHS Physical He",
@@ -881,7 +826,7 @@
       "physicalhealth",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — The effectiveness of compassion focused therapy with clinical populations: A systematic review and m",
@@ -902,7 +847,7 @@
       "clinicalpopulations",
       "metaanalysis"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — The Effectiveness of Compassion-focused Therapy on Pain Catastrophizing, and Resilience in Skeletal-",
@@ -924,7 +869,7 @@
       "pain",
       "Iran"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Feasibility and acceptability of group compassion-focused therapy to treat the consequences of child",
@@ -946,7 +891,7 @@
       "clinical",
       "France"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassionate Mind Training for Ex‐Service Personnel with PTSD and their Partners",
@@ -969,7 +914,7 @@
       "PTSD",
       "Australia"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassion and Gender Diversity: Evaluation of an Online Compassion-Focused Therapy Group in a Gende",
@@ -991,13 +936,15 @@
       "cftgroup",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Effects of a brief compassion exercise on affect and emotion regulation in patients with personality",
     "aliases": [],
     "modality": "CFT",
-    "target_conditions": [],
+    "target_conditions": [
+      "personality disorders"
+    ],
     "target_problem": null,
     "steps": null,
     "worked_example": null,
@@ -1006,13 +953,13 @@
     "difficulty": null,
     "raw_content": "Title: Effects of a brief compassion exercise on affect and emotion regulation in patients with personality disorders\nAuthors: Sommers-Spijkerman, M., Radstaak, M., & Chakhssi, F\nJournal: Journal of Behavior Therapy and Experimental Psychiatry , 78\n",
     "source": "Compassionate Mind Foundation",
-    "source_url": "http://Sommers-Spijkerman, M., Radstaak, M., & Chakhssi, F. (2023). Effects of a brief compassion exercise on affect and emotion regulation in patients with personality disorders. Journal of Behavior Therapy and Experimental Psychiatry, 78, 101803.",
+    "source_url": "https://www.compassionatemind.co.uk/cft-publications-2023",
     "hashtags": [
       "experiential",
       "personalitydisorderdiagnosis",
       "Netherlands"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — The effectiveness of compassion-focused therapy on resilience, emotional ataxia and feelings of lone",
@@ -1032,7 +979,7 @@
       "femalewellbeing",
       "Iran"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Effect of compassion‐focused therapy on self‐criticism and self‐soothing: A meta‐analysis",
@@ -1054,7 +1001,7 @@
       "metanalysis",
       "selfcriticism"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Feasibility and efficacy of an online compassion‐focused imagery intervention for veterinarian self‐",
@@ -1079,7 +1026,7 @@
       "COVID19",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   },
   {
     "technique_name": "CFT — Compassion-Focused therapy for an older adult with motor functional neurological disorder: A case st",
@@ -1103,6 +1050,6 @@
       "neurological",
       "UK"
     ],
-    "last_scraped": "2026-04-23"
+    "last_scraped": "2026-05-01"
   }
 ]

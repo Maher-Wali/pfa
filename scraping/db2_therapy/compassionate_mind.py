@@ -13,33 +13,16 @@ The scraper:
      (many are open-access; paywalled papers yield only the abstract)
   3. Falls back to the citation text if the link is inaccessible
 
-
-  ⏺ The scraper is working. Here's a summary:
-                                                                                                                                                           
-  Results:                                                                                                                                                 
-  - 52 records scraped from the CFT Publications 2023 page                                                                                               
-  - 19 records with full abstracts (from open-access journals)                                                                                             
-  - 33 records with citation data only (journal sites returned 403)                                                                                      
-                                                                                                                                                           
-                                                                                                                               
-  - scraping/db2_therapy/compassionate_mind.py — new scraper                                                                                               
-  - scraping/run_db2.py — registered the new scraper                                                                                                       
-                                                                                                                                                         
-  To integrate into the pipeline, run:                                                                                                                     
-  # 1. Re-run preprocessing (chunks the raw data)                                                                                                        
-  python pipeline/prepare_db2.py                                                                                                                           
-                                                                                                                                                           
-  # 2. Re-index into Pinecone                                                                                                                              
-  python pipeline/build_vectors.py --db db2                                                                                                                
-                                                                                                                                                           
-  Note: many academic publishers (Wiley, Sage, Elsevier, Taylor & Francis) block scraping with 403s. The 19 records with abstracts came from open-access   
-  journals (LIDSEN, Brieflands, Springer, etc.). If you want richer content, the site also has a /resource/audio page with guided CFT practices that would 
-  provide more actionable therapy content for the RAG system.   
+Page structure (as of 2026-05):
+  - January-May entries: individual <p> tags inside a <div class="w-richtext">
+  - June-December entries: single large <p> with <br/>-separated entries
+  Both sections are handled by _parse_entries / _split_br_paragraph.
 """
 import re
 import sys
 from pathlib import Path
 from urllib.parse import urljoin
+from bs4 import BeautifulSoup
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from utils.common import BaseScraper
@@ -53,7 +36,6 @@ BOILERPLATE_SELECTORS = [
     ".site-header", ".nav-wrapper",
 ]
 
-# Hashtag → target_conditions mapping
 HASHTAG_CONDITIONS = {
     "anxiety": ["anxiety"],
     "depression": ["depression"],
@@ -65,9 +47,11 @@ HASHTAG_CONDITIONS = {
     "eatingdisorder": ["eating disorders"],
     "eatingdisorders": ["eating disorders"],
     "pain": ["chronic pain"],
+    "chronic_pain": ["chronic pain"],
     "chronicpain": ["chronic pain"],
     "cancer": ["cancer distress"],
     "selfharm": ["self-harm"],
+    "selfharmandsuicide": ["self-harm"],
     "shame": ["shame"],
     "selfcriticism": ["self-criticism"],
     "selfcriticsm": ["self-criticism"],
@@ -80,7 +64,15 @@ HASHTAG_CONDITIONS = {
     "adhd": ["adhd"],
     "substance": ["substance use"],
     "neurological": ["neurological conditions"],
+    "socialanxiety": ["social anxiety"],
+    "personalitydisorderdiagnosis": ["personality disorders"],
+    "intellectualdifficulties": ["intellectual disabilities"],
+    "psychosexual": ["sexual difficulties"],
+    "perinatal": ["perinatal mental health"],
+    "adoptionandfostercare": ["attachment difficulties"],
 }
+
+_BOOKSTORE_HOSTS = ("amazon.co.uk", "amazon.com", "amazon.")
 
 
 class CompassionateMindscraper(BaseScraper):
@@ -103,12 +95,10 @@ class CompassionateMindscraper(BaseScraper):
         for entry in entries:
             self.log.info("Processing: %s", entry["title"][:80])
 
-            # Try to fetch abstract/content from the linked paper
             content = None
             if entry["url"]:
                 content = self._fetch_paper_content(entry["url"])
 
-            # Build raw_content: abstract if available, otherwise citation
             if content and len(content.split()) >= 30:
                 raw = (
                     f"Title: {entry['title']}\n"
@@ -141,7 +131,11 @@ class CompassionateMindscraper(BaseScraper):
                 "difficulty":        None,
                 "raw_content":       raw,
                 "source":            "Compassionate Mind Foundation",
-                "source_url":        entry["url"] or BASE_URL + PAGE_PATH,
+                "source_url":        (
+                    entry["url"]
+                    if entry["url"] and not any(h in entry["url"] for h in _BOOKSTORE_HOSTS)
+                    else BASE_URL + PAGE_PATH
+                ),
                 "hashtags":          entry["hashtags"],
                 "last_scraped":      self.today(),
             })
@@ -152,80 +146,125 @@ class CompassionateMindscraper(BaseScraper):
 
     def _parse_entries(self, soup) -> list:
         """Extract publication entries from the bibliography page."""
-        entries = []
-
-        # Find all paragraphs in the main content area
         main = soup.select_one("main") or soup.select_one("article") or soup.find("body")
         if main is None:
-            return entries
+            return []
 
+        entries = []
         for p in main.find_all("p"):
+            # Skip <p> tags that nest other <p> tags (section wrappers).
+            if p.find("p"):
+                continue
+
             text = p.get_text(separator=" ", strip=True)
-            if not text:
+            if not text or "(2023)" not in text:
                 continue
 
-            # A valid entry has: author (year). "Title". Journal. #hashtag
-            # Minimum: must contain (2023) and a hashtag
-            if "(2023)" not in text:
-                continue
-
-            # Extract the linked title
-            link = p.find("a", href=True)
-            title = ""
-            url = ""
-            if link:
-                title = link.get_text(strip=True)
-                href = link["href"]
-                if href.startswith("http"):
-                    url = href
-                elif href.startswith("/"):
-                    url = urljoin(BASE_URL, href)
-                else:
-                    url = href
-
-            # Extract authors (everything before "(2023)")
-            authors_match = re.match(r"^(.+?)\(2023\)", text)
-            authors = authors_match.group(1).strip().rstrip(",. ") if authors_match else ""
-
-            # If no link title, try to extract title from quotes or after (2023).
-            if not title:
-                title_match = re.search(r'\(2023\)\.\s*["\u201c]?(.+?)["\u201d]?\.', text)
-                title = title_match.group(1).strip() if title_match else ""
-
-            if not title:
-                continue
-
-            # Extract hashtags
-            hashtags = re.findall(r"#(\w+)", text)
-
-            # Extract journal: text after title, before hashtags
-            journal = ""
-            if title in text:
-                after_title = text.split(title, 1)[-1]
-                # Remove hashtags from the tail
-                journal_part = re.sub(r"#\w+", "", after_title).strip(" .,;")
-                # Clean up
-                journal_part = re.sub(r"^\.\s*", "", journal_part)
-                journal = journal_part.strip() if len(journal_part) > 3 else ""
-
-            entries.append({
-                "title":    title,
-                "authors":  authors,
-                "journal":  journal,
-                "url":      url,
-                "hashtags": hashtags,
-            })
+            # A <p> with multiple (2023) occurrences is a <br/>-delimited block
+            # (the June-December section). Split into per-entry chunks.
+            if text.count("(2023)") > 1:
+                for sub_p in self._split_br_paragraph(p):
+                    entry = self._extract_entry(sub_p)
+                    if entry:
+                        entries.append(entry)
+            else:
+                raw_tags = re.findall(r"#(\w+)", text)
+                if len(raw_tags) > 10:
+                    self.log.warning(
+                        "Skipping oversized paragraph (%d hashtags) — likely a section wrapper",
+                        len(raw_tags),
+                    )
+                    continue
+                entry = self._extract_entry(p)
+                if entry:
+                    entries.append(entry)
 
         return entries
 
+    def _split_br_paragraph(self, p) -> list:
+        """Split a <p> with <br/>-separated entries into individual sub-paragraphs."""
+        chunks, current = [], []
+        for child in p.children:
+            if getattr(child, "name", None) == "br":
+                if current:
+                    chunks.append(current[:])
+                    current = []
+            else:
+                current.append(str(child))
+        if current:
+            chunks.append(current)
+
+        result = []
+        for parts in chunks:
+            html = "".join(parts).strip()
+            if "(2023)" in html:
+                sub = BeautifulSoup(f"<p>{html}</p>", "html.parser").find("p")
+                if sub:
+                    result.append(sub)
+        return result
+
+    def _extract_entry(self, p) -> dict | None:
+        """Parse one publication <p> node into an entry dict, or None if invalid."""
+        text = p.get_text(separator=" ", strip=True)
+
+        link = p.find("a", href=True)
+        title = ""
+        url = ""
+        if link:
+            title = link.get_text(strip=True)
+            # Some entries render the first char (e.g. "T") as a text sibling outside
+            # the <a> tag, separated by a space from BeautifulSoup's separator=" ".
+            # Recover it by scanning the 4 chars before the link text in the paragraph.
+            if title and title[0].islower():
+                idx = text.find(title)
+                if idx > 0:
+                    preceding = text[max(0, idx - 4):idx]
+                    m = re.search(r"([A-Z])", preceding)
+                    if m:
+                        title = m.group(1) + title
+            href = link["href"]
+            # Reject hrefs that are citation strings (contain spaces)
+            if href.startswith("http") and " " not in href:
+                url = href
+            elif href.startswith("/"):
+                url = urljoin(BASE_URL, href)
+
+        authors_match = re.match(r"^(.+?)\(2023\)", text)
+        authors = authors_match.group(1).strip().rstrip(",. ") if authors_match else ""
+
+        if not title:
+            title_match = re.search(r'\(2023\)\.\s*["“]?(.+?)["”]?\.', text)
+            title = title_match.group(1).strip() if title_match else ""
+
+        if not title:
+            return None
+
+        # The page occasionally writes "#two words" with a space between hashtag words.
+        # Normalise to "#two_words" before extraction so both words are captured.
+        hashtag_text = re.sub(r"#(\w+) (\w+)", r"#\1_\2", text)
+        hashtags = re.findall(r"#(\w+)", hashtag_text)
+
+        journal = ""
+        if title in text:
+            after_title = text.split(title, 1)[-1]
+            journal_part = re.split(r"\s*#\w+", after_title)[0]
+            journal_part = re.sub(r"^\.\s*", "", journal_part)
+            journal_part = re.sub(r"\s{2,}\w+$", "", journal_part)
+            journal_part = journal_part.strip(" .,;")
+            journal = journal_part if len(journal_part) > 3 else ""
+
+        return {"title": title, "authors": authors, "journal": journal,
+                "url": url, "hashtags": hashtags}
+
     def _fetch_paper_content(self, url: str) -> str:
         """Attempt to fetch abstract or full text from a paper URL."""
+        if any(host in url for host in _BOOKSTORE_HOSTS):
+            return ""
         try:
             soup = self.get(url, retries=1)
             if soup is None:
                 return ""
 
-            # Try common abstract selectors used by journal sites
             abstract_selectors = [
                 "div.abstract", "section.abstract", "#abstract",
                 ".abstractSection", ".article-section__abstract",
@@ -243,14 +282,12 @@ class CompassionateMindscraper(BaseScraper):
                     if len(text.split()) >= 20:
                         return text
 
-            # Fallback: look for meta description (most papers have it)
             meta = soup.find("meta", attrs={"name": "description"})
             if meta and meta.get("content"):
                 desc = meta["content"].strip()
                 if len(desc.split()) >= 15:
                     return desc
 
-            # Fallback: DC.description (used by some publishers)
             meta_dc = soup.find("meta", attrs={"name": "DC.description"})
             if meta_dc and meta_dc.get("content"):
                 return meta_dc["content"].strip()
