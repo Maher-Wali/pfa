@@ -3,13 +3,22 @@
 ## Overview
 
 A **Retrieval-Augmented Generation (RAG)** system for mental health information.
-Given a user question, the system retrieves relevant passages from two curated knowledge bases and passes them to a local LLM to generate a grounded, accurate answer.
+Given a user question, the system retrieves relevant passages from the clinical knowledge base, passes them through a **draft → critique → revise** self-refinement pipeline, and returns a grounded, high-quality answer.
 
-The system is split into **4 sequential stages**:
+The system exposes two specialised agents:
+
+| Agent | Purpose | Index |
+|---|---|---|
+| `VirtualTherapyAgent` | Conversational mental health companion with safety monitoring | `mental-health-clinical` (DB1) |
+| `ContentCreationAgent` | Blog posts, captions, informational content creation | `mental-health-clinical` (DB1) |
+
+> DB2 (therapy techniques index) is reserved for future use.
+
+The full lifecycle is split into **4 sequential stages**, plus an **agent layer** on top:
 
 ```
-Stage 1          Stage 2              Stage 3           Stage 4
-Scraping    →    Preprocessing   →    Indexing     →    Retrieval + LLM
+Stage 1          Stage 2              Stage 3           Stage 4            Agent Layer
+Scraping    →    Preprocessing   →    Indexing     →    Retrieval     →    Agents + Web/CLI
 ```
 
 ---
@@ -19,92 +28,90 @@ Scraping    →    Preprocessing   →    Indexing     →    Retrieval + LLM
 ```
 pfa/
 ├── scraping/                        # Stage 1 — data collection
-│   ├── run_db1.py                   # Runner: executes all DB1 scrapers
-│   ├── run_db2.py                   # Runner: executes all DB2 scrapers
+│   ├── run_db1.py
+│   ├── run_db2.py
 │   ├── utils/
 │   │   ├── common.py                # BaseScraper (HTTP, retries, saving)
-│   │   └── pdf_extractor.py         # PDF download + text extraction utility
+│   │   └── pdf_extractor.py
 │   ├── db1_clinical/                # Clinical knowledge scrapers
-│   │   ├── nhs.py                   # NHS Mental Health Conditions
-│   │   ├── nice.py                  # NICE Clinical Guidelines
-│   │   ├── nimh.py                  # NIMH Health Topics
-│   │   ├── who_mhgap.py             # WHO mhGAP Intervention Guide
-│   │   ├── mind_uk.py               # Mind UK
-│   │   ├── mental_health_foundation.py
-│   │   ├── beyond_blue.py           # Beyond Blue (Australia)
-│   │   ├── mayo_clinic.py           # Mayo Clinic Diseases & Conditions
-│   │   └── helpguide.py
-│   └── db2_therapy/                 # Therapy technique scrapers
-│       ├── therapist_aid.py
-│       ├── getselfhelp.py
-│       ├── anxiety_canada.py
-│       ├── act_mindfully.py
-│       ├── self_compassion.py
-│       ├── positive_psychology.py
-│       ├── dbt_selfhelp.py
-│       ├── iapt.py
-│       └── simply_psychology.py
+│   │   ├── nhs.py, nice.py, nimh.py, who_mhgap.py
+│   │   ├── mind_uk.py, mental_health_foundation.py
+│   │   ├── beyond_blue.py, mayo_clinic.py, helpguide.py
+│   └── db2_therapy/                 # Therapy technique scrapers (future)
+│       └── ...
 │
-├── pipeline/                        # Stage 2 & 3 — preprocessing + indexing
-│   ├── prepare_db1.py               # Clean, chunk, prefix DB1 raw records
-│   ├── prepare_db2.py               # Clean, LLM-enrich, chunk DB2 records
-│   ├── build_vectors.py             # Embed chunks and upsert into Pinecone
-│   └── utils.py                     # clean_text, sentence_chunk, prefix builders
+├── pipeline/                        # Stage 2 & 3
+│   ├── prepare_db1.py
+│   ├── prepare_db2.py
+│   ├── build_vectors.py
+│   └── utils.py
 │
-├── retrieval/                       # Stage 4 — query-time retrieval & generation
-│   ├── rag_pipeline.py              # MentalHealthRAG: main orchestrator class
+├── retrieval/                       # Stage 4 — query-time retrieval
+│   ├── rag_pipeline.py              # MentalHealthRAG orchestrator
 │   ├── hybrid_retriever.py          # BM25 + dense hybrid search
 │   ├── query_router.py              # Keyword-based DB router
 │   └── rrf_rerank.py                # RRF fusion + CrossEncoder reranking
 │
+├── agents/                          # Agent layer
+│   ├── therapy_agent.py             # VirtualTherapyAgent
+│   ├── content_agent.py             # ContentCreationAgent
+│   ├── rag.py                       # RAGStore wrapper + context formatting
+│   ├── classifier.py                # MentalSafetyClassifier (HuggingFace)
+│   ├── prompts.py                   # System prompts for all agent roles
+│   ├── llm.py                       # LLMClient (LM Studio / Anthropic)
+│   ├── database.py                  # ConversationDB (SQLite)
+│   ├── config.py                    # Settings (env vars / .env)
+│   ├── web_app.py                   # FastAPI web interface
+│   └── cli.py                       # Terminal interface
+│
+├── session/
+│   ├── users.py                     # UserStore — accounts, profiles (SQLite)
+│   └── store.py                     # SessionStore — sessions, turns (SQLite)
+│
+├── templates/                       # Jinja2 HTML templates
+├── static/                          # CSS / JS assets
+│
 ├── data/
 │   ├── raw/
-│   │   ├── db1_clinical/            # Output of Stage 1 DB1 scrapers
-│   │   │   ├── nhs/nhs_clinical.json
-│   │   │   ├── nimh/nimh_clinical.json
-│   │   │   ├── mayo_clinic/mayo_clinic_clinical.json
-│   │   │   └── ...
-│   │   └── db2_therapy/             # Output of Stage 1 DB2 scrapers
-│   │       └── ...
+│   │   ├── db1_clinical/
+│   │   └── db2_therapy/
 │   └── processed/
-│       ├── db1_chunks.json          # Output of prepare_db1.py
-│       └── db2_chunks.json          # Output of prepare_db2.py
+│       ├── db1_chunks.json
+│       └── db2_chunks.json
 │
-├── test_retrieval.py                # RAG vs bare-LLM comparison script
-├── requirements.txt                 # Full pinned dependencies
-└── scraping/requirements.txt        # Scraping-only dependencies
+├── test_retrieval.py
+├── requirements.txt
+└── scraping/requirements.txt
 ```
 
 ---
 
-## Stage 1 — Scraping
+## Stages 1–3 — Scraping, Preprocessing, Indexing
+
+These stages are unchanged from the original pipeline. See the **Stage 1**, **Stage 2**, and **Stage 3** sections below for details. Their outputs feed into the agent layer at runtime.
+
+### Stage 1 — Scraping
 
 **Entry points:** `scraping/run_db1.py`, `scraping/run_db2.py`
 
-### Two knowledge bases
+#### Two knowledge bases
 
 | | DB1 — Clinical Knowledge | DB2 — Therapy Techniques |
 |---|---|---|
-| **Question answered** | What is this disorder? | How do I manage it? |
-| **Content** | Symptoms, causes, risk factors, diagnosis, treatment | CBT/DBT/ACT exercises, coping skills, worksheets |
-| **Sources** | NHS, NICE, NIMH, WHO, Mind UK, MHF, Beyond Blue, Mayo Clinic | Therapist Aid, GetSelfHelp, ACT Mindfully, DBT Self Help, etc. |
-| **Runner** | `scraping/run_db1.py` | `scraping/run_db2.py` |
-| **Output** | `data/raw/db1_clinical/<source>/` | `data/raw/db2_therapy/<source>/` |
+| **Content** | Symptoms, causes, risk factors, diagnosis, treatment | CBT/DBT/ACT exercises, coping skills |
+| **Sources** | NHS, NICE, NIMH, WHO, Mind UK, MHF, Beyond Blue, Mayo Clinic | Therapist Aid, GetSelfHelp, ACT Mindfully, etc. |
+| **Status** | Active (both agents retrieve from this) | Scraped; indexing deferred |
 
-### BaseScraper (`scraping/utils/common.py`)
+#### BaseScraper (`scraping/utils/common.py`)
 
-All scrapers inherit from `BaseScraper`. It provides:
-
-- **`get(url)`** — HTTP GET with 3 retries, exponential backoff (5s, 10s, 15s), rotating User-Agent headers, 20s timeout. Returns a `BeautifulSoup` object or `None`.
+- **`get(url)`** — HTTP GET with 3 retries, exponential backoff, rotating User-Agent, 20s timeout.
 - **`download_bytes(url)`** — Raw binary download for PDFs.
-- **`save(records, filename)`** — Serialises a list of dicts to JSON under `data/raw/<db>/<source>/`.
-- **`strip_boilerplate(soup, selectors)`** — Removes nav, footer, ads and other non-content elements in-place.
+- **`save(records, filename)`** — Serialises records to JSON under `data/raw/<db>/<source>/`.
+- **`strip_boilerplate(soup, selectors)`** — Removes nav/footer/ads in-place.
 - **`clean(text)`** — Collapses whitespace, strips `[edit]` markers.
-- Rate limiting: random delay of 1.5–3.5s between every request (`_wait()`).
+- Rate limiting: random delay of 1.5–3.5s between requests.
 
-### DB1 scraper record schema
-
-Every DB1 scraper produces records of this shape:
+#### DB1 scraper record schema
 
 ```json
 {
@@ -119,165 +126,61 @@ Every DB1 scraper produces records of this shape:
 }
 ```
 
-**`section` values** used across DB1 scrapers:
+`section` values: `overview`, `symptoms`, `causes`, `risk_factors`, `diagnosis`, `treatment`, `self_help`, `when_to_seek_help`, `living_with`, `other` (filtered out in pipeline).
 
-| Value | Meaning |
-|---|---|
-| `overview` | General description / what the condition is |
-| `symptoms` | Signs and symptoms |
-| `causes` | Causes and contributing factors |
-| `risk_factors` | Who is at risk |
-| `diagnosis` | How it is diagnosed |
-| `treatment` | Treatment options (medication, therapy) |
-| `self_help` | Coping strategies, lifestyle changes |
-| `when_to_seek_help` | When and how to get professional help |
-| `living_with` | Managing day-to-day life |
-| `other` | Boilerplate, links, promotions — filtered out in pipeline |
+#### Mayo Clinic scraper
 
-### Mayo Clinic scraper (`scraping/db1_clinical/mayo_clinic.py`)
-
-Mayo Clinic blocks standard HTTP requests via Cloudflare WAF (TLS fingerprint inspection). This scraper overrides the inherited `get()` method to use **`curl_cffi`** with `impersonate="chrome124"`, which replicates Chrome's TLS handshake and bypasses the 403.
-
-- 19 conditions covered, each with 2 sub-pages (`symptoms-causes`, `diagnosis-treatment`)
-- Only sections in `{symptoms, causes, risk_factors, diagnosis, treatment, self_help}` are kept (`KEEP_SECTIONS`)
-- URLs are hardcoded because Mayo Clinic appends opaque numeric IDs (e.g. `syc-20356007`) that cannot be derived from slugs
-
-### DB2 scraper record schema
-
-```json
-{
-  "technique_name":    "Progressive Muscle Relaxation",
-  "modality":          "relaxation",
-  "raw_content":       "PMR involves tensing and releasing...",
-  "source":            "Therapist Aid",
-  "source_url":        "https://...",
-  "target_conditions": [],
-  "steps":             null,
-  "when_to_use":       null,
-  "difficulty":        null,
-  "estimated_time":    null,
-  "last_scraped":      "2026-04-16"
-}
-```
-
-The `steps`, `when_to_use`, `difficulty`, and `estimated_time` fields are `null` at scrape time — they are populated by LLM enrichment in Stage 2.
+Overrides `get()` to use **`curl_cffi`** with `impersonate="chrome124"` to bypass Cloudflare WAF TLS fingerprint inspection. 19 conditions, 2 sub-pages each.
 
 ---
 
-## Stage 2 — Preprocessing
+### Stage 2 — Preprocessing
 
 **Entry points:** `pipeline/prepare_db1.py`, `pipeline/prepare_db2.py`
 
-### DB1 preparation (`pipeline/prepare_db1.py`)
+1. Load raw JSON → skip records under 40 words → clean text → sentence-chunk (~200 words, 30-word overlap) → prepend context prefix → save processed chunks.
+2. DB2 adds an **LLM enrichment pass** (Claude Haiku) to fill structured fields (`steps`, `when_to_use`, `difficulty`, `estimated_time`). Pass `--no-llm` to skip.
 
-1. Loads all JSON files under `data/raw/db1_clinical/` recursively.
-2. Skips records with fewer than 40 words after cleaning.
-3. Cleans text with `clean_text()` (encoding artefact removal, whitespace normalisation).
-4. Chunks each record's content with `sentence_chunk()` into ~200-word overlapping segments.
-5. Prepends a **context prefix** to each chunk.
-6. Saves to `data/processed/db1_chunks.json`.
-
-### DB2 preparation (`pipeline/prepare_db2.py`)
-
-Same steps as DB1, plus an **LLM enrichment pass** using Claude Haiku (`claude-haiku-4-5`):
-
-- Sends each record's `raw_content` to Claude with a structured extraction prompt.
-- Claude fills in `steps`, `when_to_use`, `target_conditions`, `difficulty`, `estimated_time`.
-- A **summary chunk** is built from these structured fields (compact, scannable).
-- Both summary chunk + prose chunks are emitted per technique.
-
-Run with `--no-llm` to skip enrichment (for testing without an API key).
-
-### Shared utilities (`pipeline/utils.py`)
-
-**`clean_text(text)`**
-Strips encoding artefacts common in scraped sources (UTF-8/Latin-1 mangling, em-dash corruption), removes `[edit]` markers, collapses whitespace.
-
-**`sentence_chunk(text, target_words=200, overlap_words=30)`**
-Splits text into overlapping chunks that respect sentence boundaries:
-1. Splits text into sentences using a regex heuristic (boundary: `.!?` followed by uppercase).
-2. Greedily accumulates sentences until the next sentence would exceed `target_words`.
-3. Starts the next chunk by replaying the last `overlap_words` worth of sentences (so context is not lost at chunk boundaries).
-4. Chunks shorter than 30 words are merged into the previous one.
-
-**`db1_prefix(condition, section, source, chunk)`**
+**`db1_prefix`** format:
 ```
 Condition: Depression | Section: symptoms | Source: Mayo Clinic
 <chunk text>
 ```
-Without this prefix, identical sentences scraped for different conditions would receive identical embedding vectors. The prefix shifts each vector into the correct clinical neighbourhood.
-
-**`db2_prefix(technique, modality, source, chunk)`**
-```
-Technique: Progressive Muscle Relaxation | Modality: relaxation | Source: Therapist Aid
-<chunk text>
-```
-
-### Chunk schema (both DBs)
-
-```json
-{
-  "text": "Condition: Depression | Section: symptoms | Source: NHS\nFeelings of sadness...",
-  "metadata": {
-    "condition":   "Depression",
-    "section":     "symptoms",
-    "source":      "NHS",
-    "source_url":  "https://...",
-    "icd11_code":  "6A70",
-    "chunk_index": 0
-  }
-}
-```
 
 ---
 
-## Stage 3 — Vector Indexing
+### Stage 3 — Vector Indexing
 
 **Entry point:** `pipeline/build_vectors.py`
 
-### Embedding model
+- Embedding model: **`BAAI/bge-base-en-v1.5`** (768-dim, L2-normalised)
+- Pinecone serverless indexes (AWS us-east-1, cosine metric):
 
-**`BAAI/bge-base-en-v1.5`** — a 768-dimension English embedding model, fast and well-suited for retrieval tasks. Embeddings are **L2-normalised** so cosine similarity reduces to dot product.
-
-### Pinecone indexes
-
-Vectors are stored in **Pinecone serverless indexes** (AWS us-east-1, cosine metric).
-
-| Index name | Dimension | Key metadata fields |
+| Index name | Dimension | Status |
 |---|---|---|
-| `mental-health-clinical` | 768 | `condition`, `section`, `source`, `icd11_code`, `text` |
-| `mental-health-therapy` | 768 | `technique_name`, `modality`, `chunk_type`, `text` |
+| `mental-health-clinical` | 768 | Active — both agents |
+| `mental-health-therapy` | 768 | Built; not yet queried |
 
-The `text` metadata field stores the original chunk text so the retriever can reconstruct documents at query time without a separate document store.
-
-Chunks are upserted in batches of 100 (Pinecone's recommended limit per call).
-
-### Environment
-
-Requires `PINECONE_API_KEY` to be set:
-```bash
-export PINECONE_API_KEY="your-key"
-```
-
-### Usage
+Chunks are upserted in batches of 100. The `text` metadata field stores chunk text for retrieval without a separate document store.
 
 ```bash
 python pipeline/build_vectors.py              # build both
 python pipeline/build_vectors.py --db db1     # clinical only
-python pipeline/build_vectors.py --db db2     # therapy only
 python pipeline/build_vectors.py --reset      # delete and rebuild
 ```
 
 ---
 
-## Stage 4 — Retrieval & Generation
+## Stage 4 — Retrieval (`retrieval/`)
 
 **Entry point:** `retrieval/rag_pipeline.py` — class `MentalHealthRAG`
 
-### Full query pipeline (7 steps)
+The retrieval pipeline is shared by both agents via the `RAGStore` wrapper (`agents/rag.py`).
+
+### Full retrieval pipeline (5 steps)
 
 ```
-User question
+User question + chat history
      │
      ▼
 1. Query Rewriter (LLM) ──────────► 3 standalone search queries
@@ -292,168 +195,242 @@ User question
 4. RRF Fusion ─────────────────────► merge 3 ranked lists into one
      │
      ▼
-5. CrossEncoder Reranker ──────────► score (query, passage) pairs
+5. CrossEncoder Reranker ──────────► (query, passage) pair scoring
      │
      ▼
-6. Passage Filter ─────────────────► keep sentences sharing ≥2 tokens with query
-     │
-     ▼
-7. LLM ────────────────────────────► context-grounded answer
+Top-k LangChain Document objects
+```
+
+**BM25 weights** are adjusted per agent context:
+- `informational=True` (ContentCreationAgent): `bm25=0.70`, `dense=0.30`
+- `informational=False` (VirtualTherapyAgent): `bm25=0.35`, `dense=0.65`
+
+**BM25 caching:** The retriever pickles the BM25 index and document list to `data/cache/` on first load so subsequent startups do not re-fetch all vectors from Pinecone.
+
+### `RAGStore` (`agents/rag.py`)
+
+Thin wrapper that:
+- Calls `MentalHealthRAG.retrieve()` with chat history and an `llm_func` for query rewriting.
+- `format_context()` formats returned Documents into numbered context blocks (max 1800 chars per doc) for the LLM prompt.
+- `messages_to_history()` converts flat DB message rows into `(user, assistant)` turn pairs expected by the retriever.
+
+---
+
+## Agent Layer (`agents/`)
+
+### Configuration (`agents/config.py`)
+
+All settings are loaded from environment variables (or a `.env` file):
+
+| Setting | Default | Notes |
+|---|---|---|
+| `lm_studio_base_url` | `http://localhost:1234/v1` | LM Studio OpenAI-compatible endpoint |
+| `db1_index_name` | `mental-health-clinical` | Pinecone index for both agents |
+| `db2_index_name` | `mental-health-therapy` | Reserved |
+| `embedding_model` | `BAAI/bge-base-en-v1.5` | |
+| `reranker_model` | `cross-encoder/ms-marco-MiniLM-L-6-v2` | |
+| `classifier_model` | `maherwali/mental-safety-classifier` | Safety classifier |
+| `top_k_docs` | `5` | Retrieved passages per query |
+| `classify_every_n_turns` | `4` | Safety check frequency |
+| `sqlite_db_path` | `conversations.db` | Conversation storage |
+
+---
+
+### LLM Client (`agents/llm.py`)
+
+`LLMClient` wraps the OpenAI Python SDK configured to point at **LM Studio** (local model server). The Anthropic SDK is available as a commented-out alternative.
+
+```python
+invoke_text(llm, system_prompt, user_message) → str
 ```
 
 ---
 
-### Step 1 — Query rewriting (`rag_pipeline.py:_rewrite_queries`)
+### Prompts (`agents/prompts.py`)
 
-The user's question is rewritten into 3 standalone queries using the LLM, incorporating chat history for follow-up questions. Example:
-
-- User asks: *"what about its treatment?"* (after discussing PTSD)
-- Rewritten: *["What is the treatment for PTSD?", "PTSD therapy options", "How is post-traumatic stress disorder treated?"]*
-
-This improves recall by covering multiple phrasings of the same intent.
+| Constant | Used by | Role |
+|---|---|---|
+| `THERAPY_AGENT_SYSTEM` | VirtualTherapyAgent `_draft` | Supportive companion; max 2 suggestions/turn; ends with open question |
+| `CONTENT_CREATOR_SYSTEM` | ContentCreationAgent `_draft` | Professional content writer |
+| `CRITIC_SYSTEM` | Both agents `_critique` | Reviews draft for correctness, safety, relevance, tone |
+| `REVISER_SYSTEM` | Both agents `_revise` | Improves draft based on critique feedback |
+| `SAFE_MODE_SYSTEM` | VirtualTherapyAgent `_safe_mode_response` | Crisis response: grounding, crisis contacts, de-escalation |
 
 ---
 
-### Step 2 — Query routing (`retrieval/query_router.py:route_query`)
+### VirtualTherapyAgent (`agents/therapy_agent.py`)
 
-Keyword-based routing — no LLM needed, fast and deterministic.
+#### Per-turn flow
 
-| Signal in query | Route |
+```
+User message
+     │
+     ├─ store user message (ConversationDB)
+     │
+     ├─ Every N turns: safety classification
+     │       └─ if CRITICAL → safe mode response → store → return
+     │
+     ├─ RAG retrieval (RAGStore.retrieve)
+     │
+     ├─ _draft()   ← system=THERAPY_AGENT_SYSTEM, context injected, user profile injected
+     │
+     ├─ _critique() ← system=CRITIC_SYSTEM, reviews draft
+     │
+     ├─ _revise()  ← system=REVISER_SYSTEM, improves draft using critique
+     │
+     └─ store final answer (with critique + context in metadata)
+```
+
+**User profile personalisation:** The draft prompt includes the user's mood baseline, goals, age, country, job, and relationship status when available.
+
+**Safety classification trigger:** Runs every `classify_every_n_turns` assistant turns. Takes the last 16 messages as a formatted conversation transcript and passes it to the classifier.
+
+---
+
+### ContentCreationAgent (`agents/content_agent.py`)
+
+Same draft → critique → revise pipeline as the therapy agent, without safety classification or user profile personalisation. Uses `informational=True` in RAGStore to favour BM25 (exact keyword matching suits content research queries).
+
+---
+
+### Safety Classifier (`agents/classifier.py`)
+
+`MentalSafetyClassifier` loads **`maherwali/mental-safety-classifier`** from HuggingFace (sequence classification). Runs on GPU if available, CPU otherwise.
+
+Labels returned: `NOT_CRITICAL` | `CONCERNING` | `CRITICAL`
+
+Label normalisation uses fuzzy contains-matching (e.g. any label containing `"CRITICAL"` maps to critical).
+
+When `CRITICAL` is detected, the agent switches to `SAFE_MODE_SYSTEM` prompt and suppresses normal RAG retrieval for that turn.
+
+---
+
+### Conversation Database (`agents/database.py`)
+
+`ConversationDB` — SQLite storage for multi-turn conversations.
+
+**Schema:**
+
+```
+conversations(id, user_id, mode, title, safety_status, created_at, updated_at)
+messages(id, conversation_id, role, content, metadata_json, created_at)
+```
+
+- `role`: `user` | `assistant` | `system`
+- `metadata_json`: stores critique text, retrieved context, safe_mode flag per message
+- `mode`: `virtual_therapy` | `content_creation`
+
+**Key methods:**
+
+| Method | Notes |
 |---|---|
-| Clinical keywords only (symptom, diagnosis, medication, disorder…) | `clinical` |
-| Therapy keywords only (CBT, coping, mindfulness, exercise…) | `therapy` |
-| Both or neither | `both` |
-
-When `"both"` is returned, retrieval runs on both collections and results are merged by RRF.
-
-The `force` parameter lets callers override routing entirely.
-
----
-
-### Step 3 — Hybrid retrieval (`retrieval/hybrid_retriever.py:HybridRetriever`)
-
-Two complementary search methods run per query:
-
-**BM25** (weight 0.65, `rank_bm25` library)
-- Keyword-frequency scoring, runs locally in-memory
-- Strong for exact medical terms, drug names, condition codes
-- Weak for paraphrase and synonyms
-
-**Dense / semantic** (weight 0.35, `BAAI/bge-base-en-v1.5`)
-- Cosine similarity via Pinecone index query
-- Strong for paraphrase, general meaning, synonyms
-- Weaker for rare terminology
-
-At startup, the retriever fetches all documents from Pinecone (via `index.list()` + `index.fetch()`) to build the local BM25 index. Dense search queries Pinecone directly.
-
-Both score arrays are **min-max normalised** then combined:
-```
-final_score = 0.65 × bm25_norm + 0.35 × dense_norm
-```
-
-BM25 is weighted higher because mental health queries tend to contain specific clinical terms where exact keyword matching outperforms semantic similarity.
+| `create_conversation(user_id, mode, title)` | Returns UUID |
+| `add_message(conversation_id, role, content, metadata)` | |
+| `get_recent_messages(conversation_id, limit=12)` | Used to build chat history for RAG |
+| `get_messages(conversation_id)` | All messages (for chat page render) |
+| `list_conversations(user_id, mode)` | Sidebar list |
+| `update_safety_status(conversation_id, status)` | Marks conversation CRITICAL or SAFE |
+| `count_assistant_messages(conversation_id)` | Triggers safety check every N turns |
 
 ---
 
-### Step 4 — RRF fusion (`retrieval/rrf_rerank.py:RerankedRRF.reciprocal_rank_fusion`)
+### User Accounts (`session/users.py`)
 
-Merges the ranked result lists from all 3 rewritten queries into a single ranked list using **Reciprocal Rank Fusion**:
+`UserStore` — SQLite-backed user account and profile store.
 
-```
-score(doc) += 1 / (k + rank)    for each list where doc appears
-```
+**User fields:** `user_id`, `email`, `age`, `mood_baseline` (1–10), `goals` (list), `country`, `job`, `relationship_status`
 
-`k=60` (standard RRF constant). Documents appearing in the top results of multiple queries receive a boosted combined score. Deduplication is by object identity.
+Passwords are hashed with **bcrypt**. Profile fields are updated via `update_profile()` and `update_extracted_fields()` (for LLM-inferred fields in future).
 
 ---
 
-### Step 5 — CrossEncoder reranking (`retrieval/rrf_rerank.py:RerankedRRF.rerank`)
+## Web Interface (`agents/web_app.py`)
 
-Model: **`cross-encoder/ms-marco-MiniLM-L-6-v2`**
+FastAPI application with Jinja2 templates and session-based auth.
 
-Unlike embedding similarity (which scores query and passage independently), a CrossEncoder takes both together as input and outputs a single relevance score. This is much more accurate but too slow to run on the full corpus — it only runs on the top candidates from RRF.
+### Routes
 
-Pairs scored: `[user_query, passage_text]` for each candidate.
+| Method | Path | Description |
+|---|---|---|
+| GET | `/` | Redirect to login or choose-mode |
+| GET/POST | `/register` | Account creation |
+| GET/POST | `/login` | Authentication |
+| GET | `/logout` | Clear session |
+| GET | `/choose-mode` | Agent selection page |
+| GET | `/conversations/{mode}` | List conversations for mode |
+| POST | `/conversations/{mode}/new` | Create conversation, redirect to chat |
+| GET | `/chat/{conversation_id}` | Render chat page |
+| POST | `/chat/{conversation_id}` | Submit message, redirect back |
+| GET/POST | `/profile` | View / update user profile |
+| GET/POST | `/compare` | Side-by-side bare-LLM vs RAG comparison |
 
----
+### Session middleware
 
-### Step 6 — Passage filtering (`rag_pipeline.py:_filter_passages`)
-
-From each retrieved document, keeps only the sentences that share at least 2 tokens with the query. This strips out boilerplate that survived earlier stages (e.g. promotional text, list headers) and produces tight, relevant excerpts for the LLM context.
-
-Each passage is labelled with the most informative metadata field (`condition` for DB1, `technique_name` for DB2).
-
----
-
-### Step 7 — LLM generation (`rag_pipeline.py:MentalHealthRAG.generate_response`)
-
-The top passages are assembled into a context block and sent to the LLM with a strict system instruction:
-
-> *"Answer ONLY using the provided context. If the context does not contain the answer, say 'I cannot find this information in the provided context.'"*
-
-The LLM used is whatever is running in **LM Studio** (local, OpenAI-compatible API at `http://localhost:1234`). The prompt format uses ChatML tokens (`<|im_start|>`, `<|im_end|>`).
-
-The answer and original query are appended to `chat_history` for use in the next turn's query rewriting.
+`SessionMiddleware` (Starlette) with a secret key stored in the app. `request.session["user_id"]` identifies the logged-in user. `require_user()` enforces auth and redirects to `/login` if unauthenticated.
 
 ---
 
-## Running the full pipeline
+## CLI Interface (`agents/cli.py`)
+
+Menu-driven terminal interface. Supports multi-turn conversation with `/back` (return to menu) and `/quit` commands.
+
+---
+
+## Key Design Decisions
+
+| Decision | Rationale |
+|---|---|
+| Draft → critique → revise pipeline | Single-pass LLM answers can be factually wrong or poorly toned; the critic catches issues and the reviser fixes them before the user sees anything |
+| Both agents use clinical index only | DB2 therapy index is built but not yet wired; routing both agents to DB1 simplifies the retrieval path until DB2 is integrated |
+| BM25 weight adjusted per agent | ContentCreationAgent queries are informational (keyword-heavy → 0.70 BM25); VirtualTherapyAgent queries are conversational (paraphrase-heavy → 0.65 dense) |
+| Safety classifier runs every N turns, not every turn | CrossEncoder + safety model + draft/critique/revise are already expensive; batching the classifier every 4 turns keeps latency acceptable without missing escalation |
+| Safety metadata stored per message | Stores `safe_mode`, `critique`, and retrieved `context` in `metadata_json` so the full decision trace is queryable for debugging and audit |
+| BM25 index cached to disk | Fetching all Pinecone vectors at startup is slow; pickling to `data/cache/` means the BM25 index is rebuilt only when the Pinecone data changes |
+| Local LLM via LM Studio | No inference cost, no data leaving the machine, Anthropic SDK wired as a drop-in alternative in `agents/llm.py` |
+| SQLite for conversations | Zero-infrastructure persistence; sufficient for single-instance deployment |
+| Two separate Pinecone indexes | Clinical facts and therapy techniques have different retrieval profiles; separation enables targeted routing when DB2 is activated |
+| Context prefix on chunks | Without it, identical sentences from different conditions get the same vector; the prefix shifts embeddings into the correct clinical neighbourhood |
+| CrossEncoder runs after RRF, not on full corpus | CrossEncoder is accurate but slow; running it only on top RRF candidates gives quality without cost |
+
+---
+
+## Running the System
 
 ### 1 — Install dependencies
 
 ```bash
-# Scraping dependencies
+pip install -r requirements.txt
 pip install -r scraping/requirements.txt
-
-# Pipeline + retrieval dependencies
-pip install pinecone sentence-transformers rank-bm25 langchain-core anthropic openai
 ```
 
-### 2 — Scrape
+### 2 — Environment
 
 ```bash
-cd scraping
-python run_db1.py    # → data/raw/db1_clinical/
-python run_db2.py    # → data/raw/db2_therapy/
+export PINECONE_API_KEY="your-key"
+# Optional: export ANTHROPIC_API_KEY if using Claude as LLM backend
 ```
 
-### 3 — Preprocess
+### 3 — Scrape + preprocess + index (one-time)
 
 ```bash
+cd scraping && python run_db1.py
 python pipeline/prepare_db1.py
-python pipeline/prepare_db2.py                     # requires ANTHROPIC_API_KEY
-python pipeline/prepare_db2.py --no-llm            # skip LLM enrichment
+python pipeline/build_vectors.py --db db1
 ```
 
-### 4 — Build vector indexes
+### 4 — Start LM Studio, load a model, then run
 
 ```bash
-export PINECONE_API_KEY="your-key"
-python pipeline/build_vectors.py
+# Web interface
+uvicorn agents.web_app:app --reload
+
+# CLI
+python -m agents.cli
 ```
 
-### 5 — Test retrieval
+### 5 — Test retrieval in isolation
 
 ```bash
-# Start LM Studio and load a model, then:
-export PINECONE_API_KEY="your-key"
 python test_retrieval.py
 python test_retrieval.py --host http://localhost:1234 --top-k 5
 ```
-
----
-
-## Key design decisions
-
-| Decision | Rationale |
-|---|---|
-| Two separate Pinecone indexes | Clinical facts and therapy techniques have different retrieval profiles; separating them gives better precision and enables targeted routing |
-| Pinecone serverless (not ChromaDB) | Managed cloud infrastructure, no local persistence to maintain, scales automatically |
-| Chunk text stored in Pinecone metadata | Avoids needing a separate document store; the retriever reads text back from the `text` metadata field |
-| Context prefix on chunks | Without it, identical sentences from different conditions get the same vector; the prefix shifts embeddings into the correct clinical neighbourhood (`pipeline/utils.py:db1_prefix`) |
-| BM25 weighted higher than dense (0.65 vs 0.35) | Mental health queries contain specific clinical terms where exact keyword matching outperforms semantic similarity |
-| `curl_cffi` for Mayo Clinic | Cloudflare WAF inspects TLS fingerprints; `curl_cffi` with `impersonate="chrome124"` bypasses the 403 at the TLS handshake level (`scraping/db1_clinical/mayo_clinic.py`) |
-| LLM enrichment for DB2 only | Therapy records need structured fields (steps, difficulty) to be useful; clinical records are already well-structured from authoritative sources |
-| Sentence-boundary chunking with overlap | Avoids splitting mid-sentence; 30-word overlap ensures context is not lost at chunk boundaries (`pipeline/utils.py:sentence_chunk`) |
-| CrossEncoder runs after RRF, not on full corpus | CrossEncoder is accurate but slow; running it only on the top RRF candidates gives quality without cost |
-| Keyword router, no LLM routing | Fast, deterministic, and accurate enough for this two-domain split; LLM routing would add latency and a point of failure on every query |

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="app.diagrams.net" modified="2026-04-27T00:00:00.000Z" agent="Claude" version="21.0.0" type="device">
-  <diagram name="Mental Health LLM Architecture" id="mental-health-llm-arch">
+<mxfile host="app.diagrams.net" modified="2026-05-01T00:00:00.000Z" agent="Claude" version="21.0.0" type="device">
+  <diagram name="Mental Health Agent Architecture" id="mental-health-agent-arch">
     <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
         <!-- TITLE -->
-        <mxCell id="title" value="Mental Health Expert LLM — Inference Architecture"
+        <mxCell id="title" value="Mental Health Agent System — Inference Architecture"
           style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;"
           vertex="1" parent="1">
-          <mxGeometry x="300" y="10" width="700" height="40" as="geometry" />
+          <mxGeometry x="300" y="10" width="900" height="40" as="geometry" />
         </mxCell>
 
         <!-- ===== SHARED TOP ===== -->
@@ -19,254 +19,305 @@
         <mxCell id="node-user" value="User Message"
           style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;"
           vertex="1" parent="1">
-          <mxGeometry x="480" y="65" width="160" height="50" as="geometry" />
+          <mxGeometry x="747" y="65" width="160" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Account Type Router -->
-        <mxCell id="node-account-router" value="Account Type"
+        <!-- Mode Router -->
+        <mxCell id="node-mode-router" value="Mode"
           style="rhombus;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;"
           vertex="1" parent="1">
-          <mxGeometry x="450" y="170" width="220" height="80" as="geometry" />
+          <mxGeometry x="717" y="150" width="220" height="80" as="geometry" />
         </mxCell>
 
-        <!-- Edge: User Message -> Account Type Router -->
+        <!-- Edge: User Message -> Mode Router -->
         <mxCell id="edge-user-router" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
-          edge="1" source="node-user" target="node-account-router" parent="1">
+          edge="1" source="node-user" target="node-mode-router" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- ===== PATIENT BRANCH (LEFT) ===== -->
+        <!-- ===== VIRTUAL THERAPY BRANCH (LEFT) ===== -->
 
-        <mxCell id="label-patient" value="PATIENT"
+        <mxCell id="label-therapy" value="VIRTUAL THERAPY AGENT"
           style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=11;fontColor=#6c8ebf;"
           vertex="1" parent="1">
-          <mxGeometry x="130" y="305" width="100" height="25" as="geometry" />
+          <mxGeometry x="130" y="278" width="220" height="25" as="geometry" />
         </mxCell>
 
         <!-- Safety Classifier -->
-        <mxCell id="node-safety" value="Safety Classifier"
-          style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;"
+        <mxCell id="node-safety" value="Safety Classifier&#xa;(every N turns)"
+          style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;"
           vertex="1" parent="1">
-          <mxGeometry x="140" y="335" width="200" height="80" as="geometry" />
+          <mxGeometry x="130" y="308" width="220" height="80" as="geometry" />
         </mxCell>
 
-        <!-- Edge: Account Router -> Safety Classifier (patient, exits left) -->
-        <mxCell id="edge-router-patient" value="patient"
+        <!-- Edge: Mode Router -> Safety Classifier -->
+        <mxCell id="edge-router-therapy" value="virtual_therapy"
           style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
-          edge="1" source="node-account-router" target="node-safety" parent="1">
+          edge="1" source="node-mode-router" target="node-safety" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Safety Response (crisis branch) -->
-        <mxCell id="node-safety-response" value="Safety Response&#xa;+ Escalation Resources"
+        <!-- Safe Mode Response -->
+        <mxCell id="node-safe-mode" value="Safe Mode Response&#xa;+ Crisis Resources"
           style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;"
           vertex="1" parent="1">
-          <mxGeometry x="385" y="358" width="190" height="50" as="geometry" />
+          <mxGeometry x="380" y="330" width="180" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Edge: Safety Classifier -> Safety Response (crisis, exits right) -->
-        <mxCell id="edge-safety-crisis" value="crisis"
+        <!-- Edge: Safety -> Safe Mode (crisis) -->
+        <mxCell id="edge-safety-crisis" value="CRITICAL"
           style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
-          edge="1" source="node-safety" target="node-safety-response" parent="1">
+          edge="1" source="node-safety" target="node-safe-mode" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Clinical DB (patient) -->
-        <mxCell id="node-clinical-patient" value="Clinical Knowledge DB"
-          style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;"
+        <!-- RAG Retrieval (Therapy) -->
+        <mxCell id="node-rag-therapy" value="RAG Retrieval&#xa;(BM25 ×0.35 + Dense ×0.65)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;"
           vertex="1" parent="1">
-          <mxGeometry x="155" y="475" width="175" height="70" as="geometry" />
+          <mxGeometry x="145" y="440" width="190" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Edge: Safety Classifier -> Clinical DB (safe, exits bottom) -->
-        <mxCell id="edge-safety-clinical" value="safe"
+        <!-- Edge: Safety -> RAG (safe) -->
+        <mxCell id="edge-safety-rag" value="safe"
           style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
-          edge="1" source="node-safety" target="node-clinical-patient" parent="1">
+          edge="1" source="node-safety" target="node-rag-therapy" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- User Profile -->
+        <!-- Draft (Therapy) -->
+        <mxCell id="node-draft-therapy" value="Draft&#xa;(THERAPY_AGENT_SYSTEM)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;fontStyle=1;fontColor=#333333;"
+          vertex="1" parent="1">
+          <mxGeometry x="145" y="535" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Critique (Therapy) -->
+        <mxCell id="node-critique-therapy" value="Critique&#xa;(CRITIC_SYSTEM)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;fontStyle=1;fontColor=#333333;"
+          vertex="1" parent="1">
+          <mxGeometry x="145" y="630" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Revise (Therapy) -->
+        <mxCell id="node-revise-therapy" value="Revise&#xa;(REVISER_SYSTEM)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;fontStyle=1;fontColor=#333333;"
+          vertex="1" parent="1">
+          <mxGeometry x="145" y="725" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Response (Therapy) -->
+        <mxCell id="node-response-therapy" value="Final Response"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;"
+          vertex="1" parent="1">
+          <mxGeometry x="145" y="820" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Therapy vertical pipeline edges -->
+        <mxCell id="edge-rag-draft-t" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-rag-therapy" target="node-draft-therapy" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-draft-critique-t" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-draft-therapy" target="node-critique-therapy" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-critique-revise-t" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-critique-therapy" target="node-revise-therapy" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-revise-response-t" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-revise-therapy" target="node-response-therapy" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Dashed inputs (therapy) -->
+        <mxCell id="node-chat-history-t" value="Chat History"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;dashed=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="10" y="445" width="115" height="40" as="geometry" />
+        </mxCell>
         <mxCell id="node-user-profile" value="User Profile"
           style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;dashed=1;"
           vertex="1" parent="1">
-          <mxGeometry x="10" y="480" width="120" height="40" as="geometry" />
+          <mxGeometry x="10" y="540" width="115" height="40" as="geometry" />
         </mxCell>
 
-        <!-- Chat History (patient) -->
-        <mxCell id="node-history-patient" value="Chat History"
-          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;dashed=1;"
-          vertex="1" parent="1">
-          <mxGeometry x="10" y="535" width="120" height="40" as="geometry" />
-        </mxCell>
-
-        <!-- Companion System Prompt -->
-        <mxCell id="node-companion-prompt" value="Companion&#xa;System Prompt"
-          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;dashed=1;"
-          vertex="1" parent="1">
-          <mxGeometry x="10" y="640" width="140" height="50" as="geometry" />
-        </mxCell>
-
-        <!-- LLM (Patient) -->
-        <mxCell id="node-llm-patient" value="LLM"
-          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=14;fontColor=#333333;"
-          vertex="1" parent="1">
-          <mxGeometry x="170" y="640" width="140" height="50" as="geometry" />
-        </mxCell>
-
-        <!-- Edges into LLM (Patient) -->
-        <mxCell id="edge-clinical-patient-llm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
-          edge="1" source="node-clinical-patient" target="node-llm-patient" parent="1">
+        <mxCell id="edge-history-rag-t" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#d6b656;"
+          edge="1" source="node-chat-history-t" target="node-rag-therapy" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge-profile-llm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#d6b656;"
-          edge="1" source="node-user-profile" target="node-llm-patient" parent="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-history-patient-llm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#d6b656;"
-          edge="1" source="node-history-patient" target="node-llm-patient" parent="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-companion-prompt-llm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#d6b656;"
-          edge="1" source="node-companion-prompt" target="node-llm-patient" parent="1">
+        <mxCell id="edge-profile-draft-t" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#d6b656;"
+          edge="1" source="node-user-profile" target="node-draft-therapy" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- ===== SPECIALIST BRANCH (RIGHT) ===== -->
+        <!-- ===== SHARED CLINICAL DB ===== -->
 
-        <mxCell id="label-specialist" value="SPECIALIST"
-          style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=11;fontColor=#82b366;"
-          vertex="1" parent="1">
-          <mxGeometry x="690" y="305" width="120" height="25" as="geometry" />
-        </mxCell>
-
-        <!-- Clinical DB (specialist) -->
-        <mxCell id="node-clinical-specialist" value="Clinical Knowledge DB"
+        <mxCell id="node-clinical-db" value="Clinical Knowledge DB&#xa;(mental-health-clinical)"
           style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;"
           vertex="1" parent="1">
-          <mxGeometry x="685" y="335" width="175" height="70" as="geometry" />
+          <mxGeometry x="592" y="430" width="195" height="70" as="geometry" />
         </mxCell>
 
-        <!-- Edge: Account Router -> Clinical DB Specialist (specialist, exits right) -->
-        <mxCell id="edge-router-specialist" value="specialist"
-          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
-          edge="1" source="node-account-router" target="node-clinical-specialist" parent="1">
+        <!-- Edges: Clinical DB -> both RAG nodes -->
+        <mxCell id="edge-clinical-rag-t"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="node-clinical-db" target="node-rag-therapy" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-clinical-rag-c"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="node-clinical-db" target="node-rag-content" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Chat History (specialist) -->
-        <mxCell id="node-history-specialist" value="Chat History"
-          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;dashed=1;"
-          vertex="1" parent="1">
-          <mxGeometry x="900" y="340" width="120" height="40" as="geometry" />
-        </mxCell>
-
-        <!-- Informational System Prompt -->
-        <mxCell id="node-info-prompt" value="Informational&#xa;System Prompt"
-          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;dashed=1;"
-          vertex="1" parent="1">
-          <mxGeometry x="900" y="475" width="140" height="50" as="geometry" />
-        </mxCell>
-
-        <!-- LLM (Specialist) -->
-        <mxCell id="node-llm-specialist" value="LLM"
-          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=14;fontColor=#333333;"
-          vertex="1" parent="1">
-          <mxGeometry x="700" y="490" width="140" height="50" as="geometry" />
-        </mxCell>
-
-        <!-- Edges into LLM (Specialist) -->
-        <mxCell id="edge-clinical-specialist-llm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
-          edge="1" source="node-clinical-specialist" target="node-llm-specialist" parent="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-history-specialist-llm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#d6b656;"
-          edge="1" source="node-history-specialist" target="node-llm-specialist" parent="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-info-prompt-llm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#d6b656;"
-          edge="1" source="node-info-prompt" target="node-llm-specialist" parent="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-
-        <!-- ===== THERAPY DB (INACTIVE STUB) ===== -->
-
-        <mxCell id="node-therapy" value="Therapy Techniques DB&#xa;(inactive — future use)"
+        <!-- Therapy DB (inactive stub) -->
+        <mxCell id="node-therapy-db" value="Therapy Techniques DB&#xa;(inactive — future use)"
           style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#aaaaaa;fontStyle=2;fontSize=11;fontColor=#999999;"
           vertex="1" parent="1">
-          <mxGeometry x="425" y="475" width="190" height="70" as="geometry" />
+          <mxGeometry x="592" y="640" width="195" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ===== CONTENT CREATION BRANCH (RIGHT) ===== -->
+
+        <mxCell id="label-content" value="CONTENT CREATION AGENT"
+          style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=11;fontColor=#82b366;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="278" width="230" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- RAG Retrieval (Content) — aligned with therapy RAG at y=440 -->
+        <mxCell id="node-rag-content" value="RAG Retrieval&#xa;(BM25 ×0.70 + Dense ×0.30)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="440" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Edge: Mode Router -> Content RAG -->
+        <mxCell id="edge-router-content" value="content_creation"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
+          edge="1" source="node-mode-router" target="node-rag-content" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Draft (Content) -->
+        <mxCell id="node-draft-content" value="Draft&#xa;(CONTENT_CREATOR_SYSTEM)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;fontStyle=1;fontColor=#333333;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="535" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Critique (Content) -->
+        <mxCell id="node-critique-content" value="Critique&#xa;(CRITIC_SYSTEM)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;fontStyle=1;fontColor=#333333;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="630" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Revise (Content) -->
+        <mxCell id="node-revise-content" value="Revise&#xa;(REVISER_SYSTEM)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;fontStyle=1;fontColor=#333333;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="725" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Response (Content) -->
+        <mxCell id="node-response-content" value="Final Response"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;"
+          vertex="1" parent="1">
+          <mxGeometry x="960" y="820" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Content vertical pipeline edges -->
+        <mxCell id="edge-rag-draft-c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-rag-content" target="node-draft-content" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-draft-critique-c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-draft-content" target="node-critique-content" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-critique-revise-c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-critique-content" target="node-revise-content" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-revise-response-c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-revise-content" target="node-response-content" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Dashed inputs (content) -->
+        <mxCell id="node-chat-history-c" value="Chat History"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;dashed=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="1170" y="445" width="115" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-history-rag-c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#d6b656;"
+          edge="1" source="node-chat-history-c" target="node-rag-content" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
         <!-- ===== NOTES ===== -->
 
-        <!-- Note: Account Type Router -->
+        <!-- Note: Mode Router -->
         <mxCell id="note-router"
-          value="First decision on every request — determined by account type, not query content.&#xa;&#xa;patient: person seeking support → companion pipeline (safety check, user profile, chat history)&#xa;specialist: mental health professional → informational pipeline (no safety check, chat history only)&#xa;&#xa;Stored as user_type on the User model."
+          value="Selects agent pipeline based on mode, not query content.&#xa;&#xa;virtual_therapy → VirtualTherapyAgent: safety check, user profile injection, companion tone, conversational retrieval (dense ×0.65).&#xa;&#xa;content_creation → ContentCreationAgent: no safety check, no profile, informational retrieval (BM25 ×0.70). No extra steps before RAG."
           style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f3e8ff;strokeColor=#9673a6;fontSize=10;align=left;"
           vertex="1" parent="1">
-          <mxGeometry x="1090" y="130" width="280" height="130" as="geometry" />
+          <mxGeometry x="1310" y="120" width="290" height="140" as="geometry" />
         </mxCell>
         <mxCell id="edge-note-router" style="dashed=1;endArrow=none;strokeColor=#9673a6;rounded=0;"
-          edge="1" source="node-account-router" target="note-router" parent="1">
+          edge="1" source="node-mode-router" target="note-router" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
         <!-- Note: Safety Classifier -->
         <mxCell id="note-safety"
-          value="Patient branch only — specialist queries skip entirely.&#xa;&#xa;Model: mental-roberta-base + linear classification head, fine-tuned for binary safe / crisis.&#xa;Training: vibhorag101/suicide_prediction_dataset_phr (232k Reddit posts, MIT licensed).&#xa;Loss: cross-entropy, crisis class weighted 3× (optimises recall over accuracy).&#xa;Freeze: bottom 8 transformer layers, fine-tune top 4 + head.&#xa;&#xa;Fallback: any exception → crisis. Never fail open."
+          value="Therapy branch only. Runs every classify_every_n_turns (default 4) assistant turns — not on every message.&#xa;&#xa;Model: maherwali/mental-safety-classifier (HuggingFace).&#xa;Input: last 16 messages as formatted transcript.&#xa;Labels: NOT_CRITICAL | CONCERNING | CRITICAL.&#xa;&#xa;CRITICAL → safe mode response only; RAG + refinement pipeline skipped for that turn.&#xa;Any exception → treat as CRITICAL (fail-safe, never fail open)."
           style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;"
           vertex="1" parent="1">
-          <mxGeometry x="1090" y="280" width="280" height="160" as="geometry" />
+          <mxGeometry x="1310" y="280" width="290" height="175" as="geometry" />
         </mxCell>
         <mxCell id="edge-note-safety" style="dashed=1;endArrow=none;strokeColor=#e65100;rounded=0;"
           edge="1" source="node-safety" target="note-safety" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
+        <!-- Note: Self-Refinement Pipeline -->
+        <mxCell id="note-refinement"
+          value="Both agents share the same 3-step self-refinement pipeline.&#xa;&#xa;Draft: initial response from LLM given retrieved context (+ user profile for therapy).&#xa;Critique: CRITIC_SYSTEM reviews draft for correctness, safety, relevance, and tone.&#xa;Revise: REVISER_SYSTEM rewrites draft incorporating the critique.&#xa;&#xa;Only the final revised output is shown to the user. Draft and critique are stored in message metadata (metadata_json) for audit and debugging."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1310" y="475" width="290" height="165" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-refinement" style="dashed=1;endArrow=none;strokeColor=#666666;rounded=0;"
+          edge="1" source="node-draft-therapy" target="note-refinement" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
         <!-- Note: Clinical DB -->
         <mxCell id="note-clinical"
-          value="Same underlying index used by both branches.&#xa;&#xa;Sources: NHS, WHO mhGAP, NICE, Mayo Clinic.&#xa;Content: conditions, symptoms, causes, prevalence, coping strategies, self-help sections.&#xa;Retrieval: hybrid BM25 + dense (Pinecone), RRF fusion, CrossEncoder reranking.&#xa;&#xa;Purpose: factual grounding for both companion and informational responses."
+          value="Same Pinecone index (mental-health-clinical) used by both agents.&#xa;&#xa;Sources: NHS, NICE, NIMH, WHO mhGAP, Mayo Clinic, Mind UK, MHF, Beyond Blue.&#xa;Content: conditions, symptoms, causes, risk factors, treatment, coping strategies.&#xa;Retrieval: hybrid BM25 + dense, query rewriting (3 queries), RRF fusion, CrossEncoder reranking.&#xa;BM25 index cached to disk (data/cache/) to avoid re-fetching Pinecone on every startup."
           style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f1f8e9;strokeColor=#558b2f;fontSize=10;align=left;"
           vertex="1" parent="1">
-          <mxGeometry x="1090" y="460" width="280" height="130" as="geometry" />
+          <mxGeometry x="1310" y="660" width="290" height="145" as="geometry" />
         </mxCell>
         <mxCell id="edge-note-clinical" style="dashed=1;endArrow=none;strokeColor=#558b2f;rounded=0;"
-          edge="1" source="node-clinical-patient" target="note-clinical" parent="1">
+          edge="1" source="node-clinical-db" target="note-clinical" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
         <!-- Note: Therapy DB -->
         <mxCell id="note-therapy"
-          value="Inactive. Kept as a stub — will be integrated for a specific patient-side use case, not as a general retrieval source. No queries routed here currently."
+          value="Inactive. Index is built and populated but not yet queried by either agent. Will be integrated for a specific therapy-techniques use case — not as a general retrieval source."
           style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#aaaaaa;fontSize=10;align=left;fontColor=#888888;"
           vertex="1" parent="1">
-          <mxGeometry x="1090" y="610" width="280" height="70" as="geometry" />
+          <mxGeometry x="1310" y="825" width="290" height="75" as="geometry" />
         </mxCell>
         <mxCell id="edge-note-therapy" style="dashed=1;endArrow=none;strokeColor=#aaaaaa;rounded=0;"
-          edge="1" source="node-therapy" target="note-therapy" parent="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-
-        <!-- Note: System Prompts -->
-        <mxCell id="note-prompts"
-          value="Two distinct prompts — same LLM, different behaviour.&#xa;&#xa;Companion (patient): validate emotions first, one open question per turn, no diagnosis, no unsolicited advice, surface professional help for chronic/worsening patterns. Personalised with user profile (age, mood baseline, goals, extracted fields).&#xa;&#xa;Informational (specialist): accuracy-first, grounded in retrieved context only, direct answer then elaboration, no emotional detours."
-          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fffde7;strokeColor=#d6b656;fontSize=10;align=left;"
-          vertex="1" parent="1">
-          <mxGeometry x="1090" y="700" width="280" height="160" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-note-companion-prompt" style="dashed=1;endArrow=none;strokeColor=#d6b656;rounded=0;"
-          edge="1" source="node-companion-prompt" target="note-prompts" parent="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-
-        <!-- Note: User Profile -->
-        <mxCell id="note-profile"
-          value="Patient branch only. Injected into the companion system prompt on every call.&#xa;&#xa;Registration fields: age, mood baseline (1–10), goals, country.&#xa;Passively extracted: job, relationship status (filled from conversation over time).&#xa;&#xa;Excluded from specialist branch — not relevant for clinical lookup."
-          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fffde7;strokeColor=#d6b656;fontSize=10;align=left;"
-          vertex="1" parent="1">
-          <mxGeometry x="1090" y="880" width="280" height="120" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-note-profile" style="dashed=1;endArrow=none;strokeColor=#d6b656;rounded=0;"
-          edge="1" source="node-user-profile" target="note-profile" parent="1">
+          edge="1" source="node-therapy-db" target="note-therapy" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
