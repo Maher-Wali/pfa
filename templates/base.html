@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title or "PFA Agents" }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="navbar">
+    <a href="/choose-mode" class="brand">PFA Agents</a>
+
+    {% if user %}
+    <div class="nav-right">
+        <a href="/compare">Compare</a>
+        <a href="/profile">{{ user.username }}</a>
+        <a href="/logout">Logout</a>
+    </div>
+    {% endif %}
+</nav>
+
+<main class="container">
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

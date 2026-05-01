@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    {% if mode == "content_creation" %}
+    <h1>Content Creation</h1>
+    {% else %}
+    <h1>Virtual Therapy</h1>
+    {% endif %}
+
+    <form method="post" action="/conversations/{{ mode }}/new">
+        <button type="submit">Start new conversation</button>
+    </form>
+</div>
+
+{% if conversations %}
+<div class="conversation-list">
+    {% for conversation in conversations %}
+    <a class="conversation-item" href="/chat/{{ conversation.id }}">
+        <div>
+            <h3>{{ conversation.title }}</h3>
+            <p>{{ conversation.mode }}</p>
+        </div>
+
+        <div class="conversation-meta">
+            <span>{{ conversation.safety_status }}</span>
+            <small>{{ conversation.updated_at }}</small>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <h2>No conversations yet</h2>
+    <p>Start a new conversation to begin.</p>
+</div>
+{% endif %}
+{% endblock %}

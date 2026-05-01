@@ -74,20 +74,19 @@ Output ONLY valid JSON:
 # Passage filter  (same logic as medai — keeps only query-relevant sentences)
 # ---------------------------------------------------------------------------
 
-def _format_passages(docs: List[Document], max_len: int = 500) -> List[str]:
+def _format_passages(docs: List[Document], max_len: int = 10_000) -> List[str]:
     """
     Format reranked documents into labelled context passages.
 
     The CrossEncoder has already selected and ranked the most relevant docs,
     so no further sentence-level filtering is needed — that only discards
-    useful content. Each passage is truncated to max_len characters and
-    labelled with the most informative metadata field.
+    useful content. Passages are passed in full; max_len exists only as a
+    safety ceiling for pathologically large chunks.
     """
     passages = []
     for doc in docs:
         text = doc.page_content.replace("\n", " ").strip()
         if len(text) > max_len:
-            # Truncate at a sentence boundary where possible
             cut = text[:max_len].rfind(". ")
             text = text[: cut + 1] if cut > max_len // 2 else text[:max_len]
         label = (
@@ -156,11 +155,41 @@ class MentalHealthRAG:
     # Main entry point
     # ------------------------------------------------------------------
 
+    def retrieve(
+        self,
+        user_query: str,
+        llm_func: Callable[[str], str],
+        top_k_docs: int = 5,
+        informational: bool = True,
+    ) -> List[Document]:
+        """
+        Run query rewriting + hybrid retrieval + RRF + rerank and return top docs.
+        Stops before the LLM call so callers can use their own generation pipeline.
+        """
+        bm25_w, dense_w = (0.70, 0.30) if informational else (0.35, 0.65)
+
+        rewritten = _rewrite_queries(user_query, self.chat_history, llm_func)
+
+        if self.debug:
+            print(f"Rewritten queries: {rewritten}")
+            print(f"Hybrid weights — BM25={bm25_w}, dense={dense_w}")
+
+        all_lists: List[List[Document]] = []
+        for q in rewritten:
+            docs = self.clinical.hybrid_search(
+                q, k=top_k_docs * 3, bm25_weight=bm25_w, dense_weight=dense_w
+            )
+            all_lists.append(docs)
+
+        fused = self.reranker.reciprocal_rank_fusion(all_lists)
+        return self.reranker.rerank(user_query, fused, top_k=top_k_docs)
+
     def generate_response(
         self,
         user_query: str,
         llm_func: Callable[[str], str],
         top_k_docs: int = 5,
+        informational: bool = True,
     ) -> str:
         """
         Generate a grounded answer for *user_query*.
@@ -174,17 +203,25 @@ class MentalHealthRAG:
             remote LLM (e.g. ``generate_with_qwen25``).
         top_k_docs:
             Number of passages to include in the final context.
+        informational:
+            True  → clinical/factual query: favour BM25 (0.70/0.30).
+            False → emotional/companion query: favour dense (0.35/0.65).
         """
+        bm25_w, dense_w = (0.70, 0.30) if informational else (0.35, 0.65)
+
         # --- 1. Rewrite query ---
         rewritten = _rewrite_queries(user_query, self.chat_history, llm_func)
 
         if self.debug:
             print(f"Rewritten queries: {rewritten}")
+            print(f"Hybrid weights — BM25={bm25_w}, dense={dense_w}")
 
         # --- 2. Retrieve from clinical index ---
         all_lists: List[List[Document]] = []
         for q in rewritten:
-            docs = self.clinical.hybrid_search(q, k=top_k_docs * 3)
+            docs = self.clinical.hybrid_search(
+                q, k=top_k_docs * 3, bm25_weight=bm25_w, dense_weight=dense_w
+            )
             all_lists.append(docs)
 
         # --- 3. Fuse with RRF ---
