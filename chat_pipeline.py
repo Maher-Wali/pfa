@@ -2,21 +2,21 @@ import os
 from dataclasses import dataclass
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from openai import OpenAI
 
-from safety_classifier.classifier import SafetyClassifier
 from retrieval.rag_pipeline import MentalHealthRAG
+from safety_classifier.classifier import SafetyClassifier
 from session.store import SessionStore
 from session.users import User, UserStore
+
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
-# Local model path (kept for offline/development use)
-#CLASSIFIER_PATH = os.path.join(os.path.dirname(__file__), "output/part_4/part_4")
 CLASSIFIER_PATH = "maherwali/mental-safety-classifier"
 
 CRISIS_RESOURCES = """I'm concerned about what you've shared and I want to make sure you're safe.
@@ -27,48 +27,112 @@ Please reach out to a crisis support line right now:
 - Samaritans (UK): 116 123
 - If you are in immediate danger, please call your local emergency services (911, 999, 112).
 
-You don't have to face this alone — a trained counsellor is available right now."""
+You don't have to face this alone. A trained counsellor is available right now."""
 
 SYSTEM_PROMPT_COMPANION = """You are a supportive mental health companion. You are NOT a therapist, psychiatrist, or doctor.
 
 Guidelines:
-- Always acknowledge and validate the person's emotions before offering any information.
-- Ask one open question per turn — never pepper the person with multiple questions.
+- Always acknowledge and validate the person's emotions before offering information.
+- Ask at most one open question per turn.
 - Do not diagnose, label symptoms, or speculate about what condition someone may have.
-- Do not offer unsolicited advice or minimise what the person is feeling.
+- When the person asks for coping help, offer one practical technique or exercise at a time.
+- Ground coping suggestions in the provided therapy context; do not invent steps.
+- If the retrieved context is weak, say so briefly rather than guessing.
+- Do not minimise what the person is feeling.
 - Do not tell someone they "should" feel a certain way.
-- When someone describes chronic or worsening difficulties, gently surface the option of speaking with a professional — this is not reserved only for acute crisis.
-- Ground your responses in the provided context where relevant, but never recite it verbatim.
+- When someone describes chronic or worsening difficulties, gently surface the option of speaking with a professional.
 - Keep responses warm, concise, and human."""
 
 SYSTEM_PROMPT_INFORMATIONAL = """You are a mental health information assistant. You provide clear, accurate answers grounded in the context passages provided.
 
 Guidelines:
 - Answer the question directly and concisely using the provided context.
-- Do not draw on general knowledge — only use information present in the context.
+- Do not draw on general knowledge; only use information present in the context.
 - If the context does not cover the question, say so clearly rather than guessing.
 - Do not add unsolicited emotional support or ask follow-up questions.
 - Use plain language; avoid jargon unless it was in the question."""
 
-# Signals that the message is an information request rather than personal sharing.
 _INFORMATIONAL_STARTERS = {
-    "what", "how", "why", "when", "who", "which", "where",
-    "explain", "describe", "define", "list", "give", "tell",
-    "what's", "what are", "what is", "how do", "how does",
-    "can you explain", "could you explain",
+    "what",
+    "why",
+    "when",
+    "who",
+    "which",
+    "where",
+    "explain",
+    "describe",
+    "define",
+    "list",
+    "tell",
+    "what's",
 }
 
+_CLINICAL_FACTUAL_PATTERNS = (
+    "what is",
+    "what are",
+    "what causes",
+    "what can cause",
+    "symptoms of",
+    "signs of",
+    "difference between",
+    "how does",
+    "how do you diagnose",
+    "diagnostic criteria",
+    "explain",
+    "define",
+)
 
-def _is_informational(message: str) -> bool:
-    """Return True when the message reads as an information request, not personal sharing."""
-    first = message.strip().lower().split()[0] if message.strip() else ""
-    return first in _INFORMATIONAL_STARTERS
+_THERAPY_ACTION_PATTERNS = (
+    "what can i do",
+    "what should i do",
+    "how do i calm",
+    "how can i calm",
+    "calm down",
+    "help me",
+    "coping",
+    "cope with",
+    "grounding",
+    "breathing",
+    "breath",
+    "exercise",
+    "technique",
+    "strategy",
+    "skill",
+    "self-help",
+    "self help",
+    "mindfulness",
+    "meditation",
+    "cbt exercise",
+    "dbt",
+    "distress tolerance",
+    "thought challenging",
+    "cognitive restructuring",
+    "defusion",
+    "overthinking",
+    "rumination",
+    "racing thoughts",
+    "spiral",
+    "panic right now",
+    "intrusive thoughts",
+)
 
-# LLM config — override with environment variables.
-# Defaults work with LM Studio running locally (Server tab → Start Server).
+_PERSONAL_DISTRESS_PATTERNS = (
+    "i feel",
+    "i am feeling",
+    "i'm feeling",
+    "i keep",
+    "i can't stop",
+    "i cannot stop",
+    "i am overwhelmed",
+    "i'm overwhelmed",
+    "my anxiety",
+    "my thoughts",
+)
+
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "http://localhost:1234/v1")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "lm-studio")
-LLM_MODEL = os.environ.get("LLM_MODEL", "")  # empty = auto-detect first loaded model
+LLM_MODEL = os.environ.get("LLM_MODEL", "")
+
 
 # ---------------------------------------------------------------------------
 # Response type
@@ -120,10 +184,62 @@ def _get_user_store() -> UserStore:
     return _user_store
 
 
+def _get_llm_client() -> OpenAI:
+    global _llm_client, LLM_MODEL
+    if _llm_client is None:
+        _llm_client = OpenAI(base_url=LLM_BASE_URL, api_key=LLM_API_KEY)
+        if not LLM_MODEL:
+            LLM_MODEL = _llm_client.models.list().data[0].id
+            print(f"LM Studio model: {LLM_MODEL}")
+    return _llm_client
+
+
+# ---------------------------------------------------------------------------
+# Routing and prompt context
+# ---------------------------------------------------------------------------
+
+
+def _contains_any(text: str, patterns: tuple[str, ...]) -> bool:
+    return any(pattern in text for pattern in patterns)
+
+
+def _route_retrieval_mode(message: str) -> str:
+    """
+    Route only after crisis interception has already run.
+
+    Personal coping, coaching, and intervention requests use therapy MGPRAG.
+    Factual mental-health questions use clinical Self-RAG.
+    """
+    text = " ".join(message.strip().lower().split())
+    if not text:
+        return "clinical"
+
+    if _contains_any(text, _THERAPY_ACTION_PATTERNS):
+        return "therapy"
+
+    if _contains_any(text, _PERSONAL_DISTRESS_PATTERNS):
+        return "therapy"
+
+    if _contains_any(text, _CLINICAL_FACTUAL_PATTERNS):
+        return "clinical"
+
+    first = text.split()[0]
+    if first in _INFORMATIONAL_STARTERS:
+        return "clinical"
+
+    padded = f" {text} "
+    return "therapy" if any(token in padded for token in (" i ", " me ", " my ")) else "clinical"
+
+
+def _is_informational(message: str) -> bool:
+    """Compatibility helper used by the Streamlit comparison view."""
+    return _route_retrieval_mode(message) == "clinical"
+
+
 def _build_profile_block(user: User) -> str:
     goals_str = ", ".join(user.goals) if user.goals else "not specified"
     lines = [
-        "User profile (use this to personalise your responses — do not recite these facts back verbatim):",
+        "User profile (use this to personalise your responses; do not recite these facts back verbatim):",
         f"- Age: {user.age}",
         f"- Mood baseline: {user.mood_baseline}/10 (their typical day-to-day level)",
         f"- Goals: {goals_str}",
@@ -135,16 +251,6 @@ def _build_profile_block(user: User) -> str:
     if user.relationship_status:
         lines.append(f"- Relationship status: {user.relationship_status}")
     return "\n".join(lines)
-
-
-def _get_llm_client() -> OpenAI:
-    global _llm_client, LLM_MODEL
-    if _llm_client is None:
-        _llm_client = OpenAI(base_url=LLM_BASE_URL, api_key=LLM_API_KEY)
-        if not LLM_MODEL:
-            LLM_MODEL = _llm_client.models.list().data[0].id
-            print(f"LM Studio model: {LLM_MODEL}")
-    return _llm_client
 
 
 # ---------------------------------------------------------------------------
@@ -170,12 +276,12 @@ def _llm_call(prompt: str, system_prompt: str = SYSTEM_PROMPT_COMPANION) -> str:
 
 
 def create_session(user_id: str) -> str:
-    """Create a new session linked to *user_id* and return its ID."""
+    """Create a new session linked to user_id and return its ID."""
     return _get_session_store().create_session(user_id=user_id)
 
 
 _CLASSIFY_EVERY_N_TURNS: int = 4
-_HISTORY_TURN_LIMIT: int = 6  # 6 turns = ~12 messages
+_HISTORY_TURN_LIMIT: int = 6
 
 
 def run(message: str, session_id: str) -> PipelineResponse:
@@ -198,8 +304,13 @@ def run(message: str, session_id: str) -> PipelineResponse:
             store.append_turn(session_id, message, CRISIS_RESOURCES)
             return PipelineResponse(text=CRISIS_RESOURCES, is_crisis=True)
 
-    is_info = _is_informational(message)
-    base_prompt = SYSTEM_PROMPT_INFORMATIONAL if is_info else SYSTEM_PROMPT_COMPANION
+    retrieval_mode = _route_retrieval_mode(message)
+    is_info = retrieval_mode == "clinical"
+    base_prompt = (
+        SYSTEM_PROMPT_INFORMATIONAL
+        if retrieval_mode == "clinical"
+        else SYSTEM_PROMPT_COMPANION
+    )
 
     user_id = store.get_user_id(session_id)
     user = _get_user_store().get_by_id(user_id) if user_id else None
@@ -214,6 +325,7 @@ def run(message: str, session_id: str) -> PipelineResponse:
         user_query=message,
         llm_func=lambda prompt: _llm_call(prompt, system_prompt),
         informational=is_info,
+        retrieval_mode=retrieval_mode,
     )
 
     store.append_turn(session_id, message, answer)
