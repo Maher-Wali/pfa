@@ -56,13 +56,16 @@ pfa/
 │   ├── therapy_agent.py             # VirtualTherapyAgent
 │   ├── content_agent.py             # ContentCreationAgent
 │   ├── rag.py                       # RAGStore wrapper + context formatting
-│   ├── classifier.py                # MentalSafetyClassifier (HuggingFace)
 │   ├── prompts.py                   # System prompts for all agent roles
 │   ├── llm.py                       # LLMClient (LM Studio / Anthropic)
 │   ├── database.py                  # ConversationDB (SQLite)
 │   ├── config.py                    # Settings (env vars / .env)
 │   ├── web_app.py                   # FastAPI web interface
 │   └── cli.py                       # Terminal interface
+│
+├── safety_classifier/               # Safety classification model
+│   ├── classifier.py                # SafetyClassifier (probability threshold)
+│   └── train.py                     # Training script
 │
 ├── session/
 │   ├── users.py                     # UserStore — accounts, profiles (SQLite)
@@ -189,7 +192,7 @@ User question + chat history
 2. Query Router (keywords) ────────► "clinical" | "therapy" | "both"
      │
      ▼
-3. Hybrid Retriever ───────────────► BM25 (×0.65) + Dense cosine (×0.35)
+3. Hybrid Retriever ───────────────► BM25 + Dense cosine (weights vary by agent)
      │                               runs per rewritten query
      ▼
 4. RRF Fusion ─────────────────────► merge 3 ranked lists into one
@@ -224,15 +227,15 @@ All settings are loaded from environment variables (or a `.env` file):
 
 | Setting | Default | Notes |
 |---|---|---|
-| `lm_studio_base_url` | `http://localhost:1234/v1` | LM Studio OpenAI-compatible endpoint |
+| `llm_base_url` | `http://localhost:1234/v1` | LM Studio OpenAI-compatible endpoint |
 | `db1_index_name` | `mental-health-clinical` | Pinecone index for both agents |
-| `db2_index_name` | `mental-health-therapy` | Reserved |
-| `embedding_model` | `BAAI/bge-base-en-v1.5` | |
-| `reranker_model` | `cross-encoder/ms-marco-MiniLM-L-6-v2` | |
-| `classifier_model` | `maherwali/mental-safety-classifier` | Safety classifier |
+| `db2_index_name` | `mental-health-clinical` | Reserved |
+| `embedding_model_name` | `BAAI/bge-base-en-v1.5` | |
+| `reranker_model_name` | `cross-encoder/ms-marco-MiniLM-L-6-v2` | |
+| `classifier_model_name` | `maherwali/mental-safety-classifier` | Safety classifier |
 | `top_k_docs` | `5` | Retrieved passages per query |
 | `classify_every_n_turns` | `4` | Safety check frequency |
-| `sqlite_db_path` | `conversations.db` | Conversation storage |
+| `sqlite_db_path` | `data/conversations.sqlite3` | Conversation storage |
 
 ---
 
@@ -293,15 +296,13 @@ Same draft → critique → revise pipeline as the therapy agent, without safety
 
 ---
 
-### Safety Classifier (`agents/classifier.py`)
+### Safety Classifier (`safety_classifier/classifier.py`)
 
-`MentalSafetyClassifier` loads **`maherwali/mental-safety-classifier`** from HuggingFace (sequence classification). Runs on GPU if available, CPU otherwise.
+`SafetyClassifier` loads **`maherwali/mental-safety-classifier`** from HuggingFace (sequence classification). Runs on GPU if available, CPU otherwise.
 
-Labels returned: `NOT_CRITICAL` | `CONCERNING` | `CRITICAL`
+The classifier returns a **boolean** via `is_crisis(text) -> bool`. It computes `softmax` over the model logits and returns `True` when the probability of the crisis class (`index 1`) meets or exceeds a threshold of **0.6**. Any exception during inference is treated as a crisis (fail-safe — never fail open).
 
-Label normalisation uses fuzzy contains-matching (e.g. any label containing `"CRITICAL"` maps to critical).
-
-When `CRITICAL` is detected, the agent switches to `SAFE_MODE_SYSTEM` prompt and suppresses normal RAG retrieval for that turn.
+When `is_crisis` returns `True`, the agent switches to `SAFE_MODE_SYSTEM` prompt and suppresses normal RAG retrieval for that turn.
 
 ---
 
@@ -313,11 +314,11 @@ When `CRITICAL` is detected, the agent switches to `SAFE_MODE_SYSTEM` prompt and
 
 ```
 conversations(id, user_id, mode, title, safety_status, created_at, updated_at)
-messages(id, conversation_id, role, content, metadata_json, created_at)
+messages(id, conversation_id, role, content, metadata, created_at)
 ```
 
 - `role`: `user` | `assistant` | `system`
-- `metadata_json`: stores critique text, retrieved context, safe_mode flag per message
+- `metadata`: stores critique text, retrieved context, safe_mode flag per message (JSON-serialised)
 - `mode`: `virtual_therapy` | `content_creation`
 
 **Key methods:**
@@ -384,7 +385,7 @@ Menu-driven terminal interface. Supports multi-turn conversation with `/back` (r
 | Both agents use clinical index only | DB2 therapy index is built but not yet wired; routing both agents to DB1 simplifies the retrieval path until DB2 is integrated |
 | BM25 weight adjusted per agent | ContentCreationAgent queries are informational (keyword-heavy → 0.70 BM25); VirtualTherapyAgent queries are conversational (paraphrase-heavy → 0.65 dense) |
 | Safety classifier runs every N turns, not every turn | CrossEncoder + safety model + draft/critique/revise are already expensive; batching the classifier every 4 turns keeps latency acceptable without missing escalation |
-| Safety metadata stored per message | Stores `safe_mode`, `critique`, and retrieved `context` in `metadata_json` so the full decision trace is queryable for debugging and audit |
+| Safety metadata stored per message | Stores `safe_mode`, `critique`, and retrieved `context` in `metadata` (JSON) so the full decision trace is queryable for debugging and audit |
 | BM25 index cached to disk | Fetching all Pinecone vectors at startup is slow; pickling to `data/cache/` means the BM25 index is rebuilt only when the Pinecone data changes |
 | Local LLM via LM Studio | No inference cost, no data leaving the machine, Anthropic SDK wired as a drop-in alternative in `agents/llm.py` |
 | SQLite for conversations | Zero-infrastructure persistence; sufficient for single-instance deployment |

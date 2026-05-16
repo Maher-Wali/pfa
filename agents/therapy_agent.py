@@ -11,6 +11,7 @@ from agents.prompts import (
     THERAPY_AGENT_SYSTEM,
 )
 from agents.rag import RAGStore, format_context, messages_to_history
+from chat_pipeline import _route_retrieval_mode
 from session.users import User, UserStore
 
 
@@ -47,7 +48,8 @@ class VirtualTherapyAgent:
         self.llm = build_llm(self.settings, temperature=0.35)
 
         self.rag = RAGStore(
-            index_name=self.settings.db2_index_name,
+            index_name=self.settings.db1_index_name,
+            therapy_index_name=self.settings.db2_index_name,
             embedding_model_name=self.settings.embedding_model_name,
             reranker_model_name=self.settings.reranker_model_name,
             debug=debug,
@@ -119,10 +121,11 @@ class VirtualTherapyAgent:
         history = messages_to_history(recent_messages)
         llm_func = lambda prompt: invoke_text(self.llm, "", prompt)
 
+        retrieval_mode = _route_retrieval_mode(user_input)
         docs = self.rag.retrieve(
             query=user_input,
             top_k=self.settings.top_k_docs,
-            informational=False,
+            retrieval_mode=retrieval_mode,
             history=history,
             llm_func=llm_func,
         )
@@ -151,14 +154,32 @@ class VirtualTherapyAgent:
             critique=critique,
         )
 
+        rag_docs = [
+            {
+                "source": (
+                    doc.metadata.get("technique_name")
+                    or doc.metadata.get("source")
+                    or doc.metadata.get("title")
+                    or doc.metadata.get("condition")
+                    or f"Doc {i}"
+                ),
+                "text": doc.page_content.replace("\n", " ").strip()[:400],
+            }
+            for i, doc in enumerate(docs, 1)
+        ]
+
         self.db.add_message(
             conversation_id=conversation_id,
             role="assistant",
             content=final_answer,
             metadata={
                 "safe_mode": False,
+                "retrieval_mode": retrieval_mode,
+                "therapy_plan": self.rag._rag._last_therapy_plan,
+                "self_rag": self.rag._rag._last_self_rag,
+                "draft": draft,
                 "critique": critique,
-                "rag_context": context,
+                "rag_docs": rag_docs,
             },
         )
 
@@ -176,7 +197,7 @@ class VirtualTherapyAgent:
         docs = self.rag.retrieve(
             query=user_input,
             top_k=self.settings.top_k_docs,
-            informational=False,
+            retrieval_mode=_route_retrieval_mode(user_input),
             history=[],
             llm_func=llm_func,
         )
@@ -188,7 +209,8 @@ class VirtualTherapyAgent:
         passages = [
             {
                 "source": (
-                    doc.metadata.get("source")
+                    doc.metadata.get("technique_name")
+                    or doc.metadata.get("source")
                     or doc.metadata.get("title")
                     or doc.metadata.get("condition")
                     or f"Doc {i}"

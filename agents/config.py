@@ -20,7 +20,7 @@ class Settings:
     # anthropic_model: str = "claude-3-5-sonnet-latest"
 
     db1_index_name: str = "mental-health-clinical"
-    db2_index_name: str = "mental-health-clinical"
+    db2_index_name: str = "mental-health-therapy"
 
     classifier_model_name: str = "maherwali/mental-safety-classifier"
 
@@ -45,7 +45,7 @@ def get_settings() -> Settings:
         # anthropic_model=os.getenv("ANTHROPIC_MODEL", "claude-3-5-sonnet-latest"),
 
         db1_index_name=os.getenv("DB1_INDEX_NAME", "mental-health-clinical"),
-        db2_index_name=os.getenv("DB2_INDEX_NAME", "mental-health-clinical"),
+        db2_index_name=os.getenv("DB2_INDEX_NAME", "mental-health-therapy"),
 
         classifier_model_name=os.getenv(
             "CLASSIFIER_MODEL_NAME",

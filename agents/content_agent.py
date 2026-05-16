@@ -21,6 +21,7 @@ class ContentCreationAgent:
 
         self.rag = RAGStore(
             index_name=self.settings.db1_index_name,
+            therapy_index_name=self.settings.db1_index_name,
             embedding_model_name=self.settings.embedding_model_name,
             reranker_model_name=self.settings.reranker_model_name,
             debug=debug,
@@ -62,7 +63,7 @@ class ContentCreationAgent:
         docs = self.rag.retrieve(
             query=user_input,
             top_k=self.settings.top_k_docs,
-            informational=True,
+            retrieval_mode="clinical",
             history=history,
             llm_func=llm_func,
         )
@@ -85,13 +86,29 @@ class ContentCreationAgent:
             critique=critique,
         )
 
+        rag_docs = [
+            {
+                "source": (
+                    doc.metadata.get("technique_name")
+                    or doc.metadata.get("source")
+                    or doc.metadata.get("title")
+                    or doc.metadata.get("condition")
+                    or f"Doc {i}"
+                ),
+                "text": doc.page_content.replace("\n", " ").strip()[:400],
+            }
+            for i, doc in enumerate(docs, 1)
+        ]
+
         self.db.add_message(
             conversation_id=conversation_id,
             role="assistant",
             content=final_answer,
             metadata={
+                "retrieval_mode": "clinical",
+                "draft": draft,
                 "critique": critique,
-                "rag_context": context,
+                "rag_docs": rag_docs,
             },
         )
 

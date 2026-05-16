@@ -44,5 +44,126 @@
             <button type="submit">Send</button>
         </form>
     </section>
+
+    <aside class="debug-panel">
+        <h3 class="debug-title">Debug</h3>
+
+        {% if debug %}
+
+        <div class="debug-row">
+            <span class="debug-label">Agent</span>
+            <span class="debug-value debug-badge">{{ conversation.mode }}</span>
+        </div>
+
+        {% if debug.retrieval_mode %}
+        <div class="debug-row">
+            <span class="debug-label">Route</span>
+            <span class="debug-value debug-badge debug-badge--{{ debug.retrieval_mode }}">{{ debug.retrieval_mode }}</span>
+        </div>
+        {% endif %}
+
+        {% if debug.safe_mode %}
+        <div class="debug-row">
+            <span class="debug-label">Safe mode</span>
+            <span class="debug-value debug-badge debug-badge--crisis">ACTIVE</span>
+        </div>
+        {% endif %}
+
+        {% if debug.therapy_plan %}
+        <details class="debug-section">
+            <summary>Therapy Plan (MGPRAG)</summary>
+            <div class="debug-block">
+                {% if debug.therapy_plan.problem %}
+                <div class="debug-field"><span>Problem</span><p>{{ debug.therapy_plan.problem }}</p></div>
+                {% endif %}
+                {% if debug.therapy_plan.intent %}
+                <div class="debug-field"><span>Intent</span><p>{{ debug.therapy_plan.intent }}</p></div>
+                {% endif %}
+                {% if debug.therapy_plan.emotional_state %}
+                <div class="debug-field"><span>Emotional state</span><p>{{ debug.therapy_plan.emotional_state }}</p></div>
+                {% endif %}
+                {% if debug.therapy_plan.candidate_techniques %}
+                <div class="debug-field"><span>Techniques</span><p>{{ debug.therapy_plan.candidate_techniques | join(", ") }}</p></div>
+                {% endif %}
+                {% if debug.therapy_plan.candidate_modalities %}
+                <div class="debug-field"><span>Modalities</span><p>{{ debug.therapy_plan.candidate_modalities | join(", ") }}</p></div>
+                {% endif %}
+                {% if debug.therapy_plan.search_queries %}
+                <div class="debug-field"><span>Search queries</span>
+                    <ul class="debug-list">
+                    {% for q in debug.therapy_plan.search_queries %}
+                        <li>{{ q }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </details>
+        {% endif %}
+
+        {% if debug.self_rag %}
+        <details class="debug-section">
+            <summary>Self-RAG Check</summary>
+            <div class="debug-block">
+                <div class="debug-field">
+                    <span>Sufficient</span>
+                    <p>
+                        {% if debug.self_rag.final.sufficient %}
+                        <span class="debug-badge debug-badge--ok">yes</span>
+                        {% else %}
+                        <span class="debug-badge debug-badge--warn">no</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="debug-field">
+                    <span>Retried</span>
+                    <p>{{ "yes" if debug.self_rag.retried else "no" }}</p>
+                </div>
+                {% if debug.self_rag.final.reason %}
+                <div class="debug-field"><span>Reason</span><p>{{ debug.self_rag.final.reason }}</p></div>
+                {% endif %}
+                {% if debug.self_rag.final.missing_concepts %}
+                <div class="debug-field"><span>Missing concepts</span><p>{{ debug.self_rag.final.missing_concepts | join(", ") }}</p></div>
+                {% endif %}
+            </div>
+        </details>
+        {% endif %}
+
+        {% if debug.rag_docs %}
+        <details class="debug-section">
+            <summary>Retrieved Docs ({{ debug.rag_docs | length }})</summary>
+            <div class="debug-block">
+                {% for doc in debug.rag_docs %}
+                <div class="debug-doc">
+                    <strong>{{ doc.source }}</strong>
+                    <p>{{ doc.text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </details>
+        {% endif %}
+
+        {% if debug.draft %}
+        <details class="debug-section">
+            <summary>Draft</summary>
+            <div class="debug-block">
+                <p class="debug-pre">{{ debug.draft }}</p>
+            </div>
+        </details>
+        {% endif %}
+
+        {% if debug.critique %}
+        <details class="debug-section">
+            <summary>Critique</summary>
+            <div class="debug-block">
+                <p class="debug-pre">{{ debug.critique }}</p>
+            </div>
+        </details>
+        {% endif %}
+
+        {% else %}
+        <p class="debug-empty">Send a message to see debug info here.</p>
+        {% endif %}
+    </aside>
 </div>
 {% endblock %}

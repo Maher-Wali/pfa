@@ -275,7 +275,7 @@
 
         <!-- Note: Safety Classifier -->
         <mxCell id="note-safety"
-          value="Therapy branch only. Runs every classify_every_n_turns (default 4) assistant turns — not on every message.&#xa;&#xa;Model: maherwali/mental-safety-classifier (HuggingFace).&#xa;Input: last 16 messages as formatted transcript.&#xa;Labels: NOT_CRITICAL | CONCERNING | CRITICAL.&#xa;&#xa;CRITICAL → safe mode response only; RAG + refinement pipeline skipped for that turn.&#xa;Any exception → treat as CRITICAL (fail-safe, never fail open)."
+          value="Therapy branch only. Runs every classify_every_n_turns (default 4) assistant turns — not on every message.&#xa;&#xa;Model: maherwali/mental-safety-classifier (HuggingFace).&#xa;Class: SafetyClassifier (safety_classifier/classifier.py).&#xa;Input: last 16 messages as formatted transcript.&#xa;Output: boolean — P(crisis class) ≥ 0.6 threshold.&#xa;&#xa;True → safe mode response only; RAG + refinement pipeline skipped for that turn.&#xa;Any exception → treat as crisis (fail-safe, never fail open)."
           style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;"
           vertex="1" parent="1">
           <mxGeometry x="1310" y="280" width="290" height="175" as="geometry" />
@@ -287,7 +287,7 @@
 
         <!-- Note: Self-Refinement Pipeline -->
         <mxCell id="note-refinement"
-          value="Both agents share the same 3-step self-refinement pipeline.&#xa;&#xa;Draft: initial response from LLM given retrieved context (+ user profile for therapy).&#xa;Critique: CRITIC_SYSTEM reviews draft for correctness, safety, relevance, and tone.&#xa;Revise: REVISER_SYSTEM rewrites draft incorporating the critique.&#xa;&#xa;Only the final revised output is shown to the user. Draft and critique are stored in message metadata (metadata_json) for audit and debugging."
+          value="Both agents share the same 3-step self-refinement pipeline.&#xa;&#xa;Draft: initial response from LLM given retrieved context (+ user profile for therapy).&#xa;Critique: CRITIC_SYSTEM reviews draft for correctness, safety, relevance, and tone.&#xa;Revise: REVISER_SYSTEM rewrites draft incorporating the critique.&#xa;&#xa;Only the final revised output is shown to the user. Draft and critique are stored in message metadata (JSON) for audit and debugging."
           style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;"
           vertex="1" parent="1">
           <mxGeometry x="1310" y="475" width="290" height="165" as="geometry" />

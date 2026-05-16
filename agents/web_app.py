@@ -234,10 +234,16 @@ def chat_page(request: Request, conversation_id: str):
 
     messages = db.get_messages(conversation_id)
 
+    last_debug = {}
+    for msg in reversed(messages):
+        if msg["role"] == "assistant":
+            last_debug = msg.get("metadata") or {}
+            break
+
     return templates.TemplateResponse(
         request,
         "chat.html",
-        {"user": user, "conversation": conversation, "messages": messages},
+        {"user": user, "conversation": conversation, "messages": messages, "debug": last_debug},
     )
 
 
