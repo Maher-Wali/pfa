@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from agents.config import Settings, get_settings
+from agents.utils import strip_dashes
 from agents.database import ConversationDB
 from agents.llm import build_llm, invoke_text
 from agents.prompts import CONTENT_CREATOR_SYSTEM, CRITIC_SYSTEM, REVISER_SYSTEM
@@ -79,12 +80,12 @@ class ContentCreationAgent:
             context=context,
             draft=draft,
         )
-        final_answer = self._revise(
+        final_answer = strip_dashes(self._revise(
             user_input=user_input,
             context=context,
             draft=draft,
             critique=critique,
-        )
+        ))
 
         rag_docs = [
             {

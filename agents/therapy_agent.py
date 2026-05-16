@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from agents.config import Settings, get_settings
+from agents.utils import strip_dashes
 from safety_classifier.classifier import SafetyClassifier
 from agents.database import ConversationDB
 from agents.llm import build_llm, invoke_text
@@ -147,12 +148,12 @@ class VirtualTherapyAgent:
             draft=draft,
         )
 
-        final_answer = self._revise(
+        final_answer = strip_dashes(self._revise(
             user_input=user_input,
             context=context,
             draft=draft,
             critique=critique,
-        )
+        ))
 
         rag_docs = [
             {
