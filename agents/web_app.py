@@ -12,12 +12,23 @@ from agents.database import ConversationDB
 from agents.llm import invoke_text
 from agents.prompts import CONTENT_CREATOR_SYSTEM, THERAPY_AGENT_SYSTEM
 from agents.therapy_agent import VirtualTherapyAgent
+from services.image_generation import (
+    ImageGenerationError,
+    ImagePromptOptimizationError,
+    generate_image,
+    optimize_image_prompt,
+)
+from services.support_plan_service import SupportPlanService
 from session.users import User, UserStore
 
+
+IMAGE_GENERATION_MODE_KEY = "image_generation_mode"
+IMAGE_GENERATION_CONVERSATION_KEY = "image_generation_conversation_id"
 
 settings = get_settings()
 db = ConversationDB(settings.sqlite_db_path)
 user_store = UserStore()
+support_plan_service = SupportPlanService()
 
 content_agent = ContentCreationAgent(settings=settings, db=db)
 therapy_agent = VirtualTherapyAgent(settings=settings, db=db)
@@ -46,6 +57,8 @@ def _user_dict(user: User) -> dict:
         "country": user.country,
         "job": user.job,
         "relationship_status": user.relationship_status,
+        "phone_number": user.phone_number,
+        "whatsapp_opt_in": user.whatsapp_opt_in,
     }
 
 
@@ -66,6 +79,31 @@ def require_user(request: Request):
         return RedirectResponse("/login", status_code=303)
 
     return user
+
+
+def _image_generation_mode_active(request: Request, conversation_id: str) -> bool:
+    return (
+        bool(request.session.get(IMAGE_GENERATION_MODE_KEY))
+        and request.session.get(IMAGE_GENERATION_CONVERSATION_KEY) == conversation_id
+    )
+
+
+def _activate_image_generation_mode(request: Request, conversation_id: str) -> None:
+    request.session[IMAGE_GENERATION_MODE_KEY] = True
+    request.session[IMAGE_GENERATION_CONVERSATION_KEY] = conversation_id
+
+
+def _reset_image_generation_mode(request: Request) -> None:
+    request.session[IMAGE_GENERATION_MODE_KEY] = False
+    request.session.pop(IMAGE_GENERATION_CONVERSATION_KEY, None)
+
+
+def _agent_for_mode(mode: str):
+    if mode == "content_creation":
+        return content_agent
+    if mode == "virtual_therapy":
+        return therapy_agent
+    raise ValueError(f"Unsupported conversation mode: {mode}")
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -92,6 +130,8 @@ def register(
     request: Request,
     username: str = Form(...),
     password: str = Form(...),
+    phone_number: str = Form(...),
+    whatsapp_opt_in: str | None = Form(None),
 ):
     username = username.strip()
 
@@ -110,12 +150,17 @@ def register(
         )
 
     try:
-        user = user_store.create_user(email=username, password=password)
-    except ValueError:
+        user = user_store.create_user(
+            email=username,
+            password=password,
+            phone_number=phone_number,
+            whatsapp_opt_in=whatsapp_opt_in == "yes",
+        )
+    except ValueError as exc:
         return templates.TemplateResponse(
             request,
             "register.html",
-            {"error": "This username already exists."},
+            {"error": str(exc)},
         )
 
     request.session["user_id"] = user.user_id
@@ -237,8 +282,32 @@ def chat_page(request: Request, conversation_id: str):
     return templates.TemplateResponse(
         request,
         "chat.html",
-        {"user": user, "conversation": conversation, "messages": messages},
+        {
+            "user": user,
+            "conversation": conversation,
+            "messages": messages,
+            "image_generation_mode": _image_generation_mode_active(
+                request,
+                conversation_id,
+            ),
+        },
     )
+
+
+@app.post("/chat/{conversation_id}/image-mode")
+def activate_image_mode(request: Request, conversation_id: str):
+    user = require_user(request)
+
+    if isinstance(user, RedirectResponse):
+        return user
+
+    conversation = db.get_conversation(conversation_id)
+
+    if not conversation or conversation["user_id"] != user["id"]:
+        return RedirectResponse("/choose-mode", status_code=303)
+
+    _activate_image_generation_mode(request, conversation_id)
+    return RedirectResponse(f"/chat/{conversation_id}", status_code=303)
 
 
 @app.get("/profile", response_class=HTMLResponse)
@@ -261,6 +330,8 @@ def profile_save(
     age: str = Form(""),
     job: str = Form(""),
     relationship_status: str = Form(""),
+    phone_number: str = Form(""),
+    whatsapp_opt_in: str | None = Form(None),
 ):
     user = require_user(request)
 
@@ -284,6 +355,20 @@ def profile_save(
         job=job.strip() or None,
         relationship_status=relationship_status.strip() or None,
     )
+    try:
+        user_store.update_whatsapp_settings(
+            user["id"],
+            phone_number=phone_number,
+            whatsapp_opt_in=whatsapp_opt_in == "yes",
+        )
+        if whatsapp_opt_in != "yes":
+            support_plan_service.disable_active_plan(user["id"])
+    except ValueError as exc:
+        return templates.TemplateResponse(
+            request,
+            "profile.html",
+            {"user": user, "saved": False, "error": str(exc)},
+        )
 
     updated = user_store.get_by_id(user["id"])
     return templates.TemplateResponse(
@@ -350,6 +435,61 @@ def compare_run(
     )
 
 
+def _respond_with_generated_image(
+    conversation_id: str,
+    conversation: dict,
+    user_input: str,
+) -> None:
+    recent_messages = db.get_recent_messages(conversation_id, limit=12)
+    db.add_message(
+        conversation_id=conversation_id,
+        role="user",
+        content=user_input,
+    )
+
+    agent = _agent_for_mode(conversation["mode"])
+
+    try:
+        final_prompt = optimize_image_prompt(
+            llm=agent.llm,
+            recent_messages=recent_messages,
+            user_image_request=user_input,
+        )
+    except ImagePromptOptimizationError as exc:
+        db.add_message(
+            conversation_id=conversation_id,
+            role="assistant",
+            content=str(exc),
+            metadata={"image_generation_error": True},
+        )
+        return
+
+    try:
+        generated = generate_image(final_prompt)
+    except ImageGenerationError as exc:
+        db.add_message(
+            conversation_id=conversation_id,
+            role="assistant",
+            content=str(exc),
+            metadata={
+                "image_generation_error": True,
+                "image_prompt": final_prompt,
+            },
+        )
+        return
+
+    db.add_message(
+        conversation_id=conversation_id,
+        role="assistant",
+        content="Generated image",
+        metadata={
+            "image_data_url": generated.data_url,
+            "image_prompt": generated.prompt,
+            "image_model": generated.model,
+        },
+    )
+
+
 @app.post("/chat/{conversation_id}")
 def chat_send(
     request: Request,
@@ -369,6 +509,18 @@ def chat_send(
     message = message.strip()
 
     if not message:
+        return RedirectResponse(f"/chat/{conversation_id}", status_code=303)
+
+    if _image_generation_mode_active(request, conversation_id):
+        try:
+            _respond_with_generated_image(
+                conversation_id=conversation_id,
+                conversation=conversation,
+                user_input=message,
+            )
+        finally:
+            _reset_image_generation_mode(request)
+
         return RedirectResponse(f"/chat/{conversation_id}", status_code=303)
 
     if conversation["mode"] == "content_creation":

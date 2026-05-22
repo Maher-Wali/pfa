@@ -233,6 +233,7 @@ All settings are loaded from environment variables (or a `.env` file):
 | `top_k_docs` | `5` | Retrieved passages per query |
 | `classify_every_n_turns` | `4` | Safety check frequency |
 | `sqlite_db_path` | `conversations.db` | Conversation storage |
+| `IMAGE_GENERATION_KEY` | none | Hugging Face token for optional FLUX.1-dev image generation |
 
 ---
 

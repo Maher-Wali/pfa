@@ -29,15 +29,19 @@ def _bootstrap(conn: sqlite3.Connection) -> None:
             goals               TEXT NOT NULL DEFAULT '[]',
             job                 TEXT,
             relationship_status TEXT,
+            phone_number        TEXT,
+            whatsapp_opt_in     INTEGER NOT NULL DEFAULT 0,
             created_at          REAL NOT NULL,
             updated_at          REAL NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS sessions (
-            session_id  TEXT PRIMARY KEY,
-            user_id     TEXT,
-            created_at  REAL NOT NULL,
-            last_active REAL NOT NULL,
+            session_id                 TEXT PRIMARY KEY,
+            user_id                    TEXT,
+            created_at                 REAL NOT NULL,
+            last_active                REAL NOT NULL,
+            consecutive_crisis_count   INTEGER NOT NULL DEFAULT 0,
+            last_crisis_detected_at    REAL,
             FOREIGN KEY (user_id) REFERENCES users(user_id)
         );
 
@@ -53,7 +57,58 @@ def _bootstrap(conn: sqlite3.Connection) -> None:
         CREATE INDEX IF NOT EXISTS idx_turns_session ON turns(session_id);
         CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
     """)
+    _ensure_column(conn, "users", "phone_number", "TEXT")
+    _ensure_column(
+        conn,
+        "users",
+        "whatsapp_opt_in",
+        "INTEGER NOT NULL DEFAULT 0",
+    )
+    _ensure_column(
+        conn,
+        "sessions",
+        "consecutive_crisis_count",
+        "INTEGER NOT NULL DEFAULT 0",
+    )
+    _ensure_column(conn, "sessions", "last_crisis_detected_at", "REAL")
+    conn.executescript("""
+        CREATE TABLE IF NOT EXISTS support_plans (
+            plan_id              TEXT PRIMARY KEY,
+            user_id              TEXT NOT NULL,
+            active               INTEGER NOT NULL DEFAULT 1,
+            current_day          INTEGER NOT NULL DEFAULT 0,
+            total_days           INTEGER NOT NULL DEFAULT 30,
+            mode                 TEXT NOT NULL,
+            started_at           REAL NOT NULL,
+            last_sent_at         REAL,
+            completed_at         REAL,
+            provider_message_ids TEXT NOT NULL DEFAULT '[]',
+            created_at           REAL NOT NULL,
+            updated_at           REAL NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(user_id)
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_support_plans_user
+            ON support_plans(user_id);
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_support_plans_active_user
+            ON support_plans(user_id)
+            WHERE active = 1;
+    """)
     conn.commit()
+
+
+def _ensure_column(
+    conn: sqlite3.Connection,
+    table: str,
+    column: str,
+    definition: str,
+) -> None:
+    existing = {
+        row["name"]
+        for row in conn.execute(f"PRAGMA table_info({table})").fetchall()
+    }
+    if column not in existing:
+        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
 
 
 class SessionStore:
@@ -150,6 +205,46 @@ class SessionStore:
                 "SELECT user_id FROM sessions WHERE session_id = ?", (session_id,)
             ).fetchone()
         return row["user_id"] if row else None
+
+    # ------------------------------------------------------------------
+    # Crisis tracking
+    # ------------------------------------------------------------------
+
+    def increment_crisis_count(self, session_id: str) -> int:
+        now = time.time()
+        with self._open() as conn:
+            conn.execute(
+                "UPDATE sessions "
+                "SET consecutive_crisis_count = consecutive_crisis_count + 1, "
+                "last_crisis_detected_at = ?, last_active = ? "
+                "WHERE session_id = ?",
+                (now, now, session_id),
+            )
+            row = conn.execute(
+                "SELECT consecutive_crisis_count FROM sessions WHERE session_id = ?",
+                (session_id,),
+            ).fetchone()
+            conn.commit()
+        return int(row["consecutive_crisis_count"]) if row else 0
+
+    def reset_crisis_count(self, session_id: str) -> None:
+        with self._open() as conn:
+            conn.execute(
+                "UPDATE sessions "
+                "SET consecutive_crisis_count = 0, last_crisis_detected_at = NULL, "
+                "last_active = ? "
+                "WHERE session_id = ?",
+                (time.time(), session_id),
+            )
+            conn.commit()
+
+    def get_crisis_count(self, session_id: str) -> int:
+        with self._open() as conn:
+            row = conn.execute(
+                "SELECT consecutive_crisis_count FROM sessions WHERE session_id = ?",
+                (session_id,),
+            ).fetchone()
+        return int(row["consecutive_crisis_count"]) if row else 0
 
     def delete_session(self, session_id: str) -> None:
         with self._open() as conn:

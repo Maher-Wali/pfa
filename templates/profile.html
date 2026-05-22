@@ -40,6 +40,17 @@
             {% endfor %}
         </select>
 
+        <label>WhatsApp phone number</label>
+        <input type="text" name="phone_number"
+               value="{{ user.phone_number or '' }}"
+               placeholder="+216xxxxxxxx">
+
+        <label style="display:flex; gap:8px; align-items:flex-start; margin-top:12px;">
+            <input type="checkbox" name="whatsapp_opt_in" value="yes"
+                   {% if user.whatsapp_opt_in %}checked{% endif %}>
+            <span>Enable optional WhatsApp check-ins</span>
+        </label>
+
         <button type="submit">Save profile</button>
     </form>
 

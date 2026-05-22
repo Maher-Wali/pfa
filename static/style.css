@@ -251,9 +251,38 @@ button:hover {
     white-space: pre-wrap;
 }
 
+.message-image {
+    display: block;
+    max-width: 100%;
+    border-radius: 14px;
+    margin-top: 10px;
+}
+
+.chat-tools {
+    padding: 14px 20px 0;
+    border-top: 1px solid #ececec;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.image-mode-form {
+    gap: 0;
+}
+
+.image-mode-button {
+    background: #334155;
+}
+
+.image-mode-indicator {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
 .chat-form {
     padding: 20px;
-    border-top: 1px solid #ececec;
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 14px;

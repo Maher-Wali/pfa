@@ -91,10 +91,24 @@ def _auth_sidebar():
             goals_raw = st.text_area("Goals (one per line)", key="reg_goals",
                                      placeholder="manage anxiety\nreduce isolation")
             country = st.text_input("Country (optional)", key="reg_country")
+            phone_number = st.text_input(
+                "WhatsApp phone number",
+                key="reg_phone",
+                placeholder="+216xxxxxxxx",
+                help="Use E.164 format, including the + and country code.",
+            )
+            whatsapp_opt_in = st.checkbox(
+                "I agree to receive optional WhatsApp check-ins if repeated crisis language is detected.",
+                key="reg_whatsapp_opt_in",
+            )
             if st.button("Create account"):
                 goals = [g.strip() for g in goals_raw.splitlines() if g.strip()]
                 if not goals:
                     st.error("Enter at least one goal.")
+                elif not phone_number.strip():
+                    st.error("Enter a WhatsApp phone number in E.164 format.")
+                elif not whatsapp_opt_in:
+                    st.error("Confirm WhatsApp consent to create the account.")
                 else:
                     from session.users import UserStore
                     try:
@@ -105,6 +119,8 @@ def _auth_sidebar():
                             mood_baseline=mood,
                             goals=goals,
                             country=country or None,
+                            phone_number=phone_number,
+                            whatsapp_opt_in=whatsapp_opt_in,
                         )
                         _init_session(user)
                         st.success("Account created!")
@@ -254,6 +270,9 @@ def _profile_tab():
         st.markdown("**Registration fields**")
         st.metric("Age", user.age)
         st.metric("Mood baseline", f"{user.mood_baseline}/10")
+        if user.phone_number:
+            st.write(f"WhatsApp: {user.phone_number}")
+        st.write(f"WhatsApp check-ins: {'enabled' if user.whatsapp_opt_in else 'disabled'}")
         if user.country:
             st.write(f"Country: {user.country}")
         st.write("**Goals**")
@@ -281,6 +300,36 @@ def _profile_tab():
     with st.expander("Profile block injected into system prompt"):
         from chat_pipeline import _build_profile_block
         st.text(_build_profile_block(user))
+
+    with st.expander("WhatsApp check-in settings"):
+        from session.users import UserStore
+
+        phone = st.text_input(
+            "WhatsApp phone number",
+            value=user.phone_number or "",
+            key="profile_phone",
+            placeholder="+216xxxxxxxx",
+        )
+        opt_in = st.checkbox(
+            "Enable optional WhatsApp check-ins",
+            value=user.whatsapp_opt_in,
+            key="profile_whatsapp_opt_in",
+        )
+        if st.button("Save WhatsApp settings"):
+            try:
+                UserStore().update_whatsapp_settings(
+                    user.user_id,
+                    phone_number=phone,
+                    whatsapp_opt_in=opt_in,
+                )
+                if not opt_in:
+                    from services.support_plan_service import SupportPlanService
+                    SupportPlanService().disable_active_plan(user.user_id)
+                st.session_state["user"] = UserStore().get_by_id(user.user_id)
+                st.success("WhatsApp settings updated.")
+                st.rerun()
+            except ValueError as e:
+                st.error(str(e))
 
 
 # ---------------------------------------------------------------------------
