@@ -27,6 +27,7 @@ class RAGStore:
         self,
         query: str,
         top_k: int = 5,
+        informational: bool = True,
         retrieval_mode: str = "clinical",
         history: List[Tuple[str, str]] | None = None,
         llm_func: Callable[[str], str] | None = None,
@@ -37,9 +38,28 @@ class RAGStore:
                 user_query=query,
                 llm_func=llm_func,
                 top_k_docs=top_k,
+                informational=informational,
                 retrieval_mode=retrieval_mode,
             )
         return self._rag.clinical.hybrid_search(query, k=top_k)
+
+    def retrieve_selfrag(
+        self,
+        query: str,
+        top_k: int = 5,
+        informational: bool = True,
+        llm_func: Callable[[str], str] | None = None,
+    ) -> tuple[List[Document], dict]:
+        if llm_func is None:
+            raise ValueError("llm_func is required for selfrag retrieval")
+        self._rag.chat_history = []
+        docs, state = self._rag._clinical_selfrag_docs(
+            user_query=query,
+            llm_func=llm_func,
+            top_k_docs=top_k,
+            informational=informational,
+        )
+        return docs, state
 
 
 def messages_to_history(messages: list[dict]) -> list[tuple[str, str]]:

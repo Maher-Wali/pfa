@@ -9,6 +9,8 @@ from agents.rag import RAGStore, format_context, messages_to_history
 
 
 class ContentCreationAgent:
+    INFORMATIONAL = True  # keyword-heavy queries suit BM25-dominant retrieval
+
     def __init__(
         self,
         settings: Settings | None = None,
@@ -64,6 +66,7 @@ class ContentCreationAgent:
         docs = self.rag.retrieve(
             query=user_input,
             top_k=self.settings.top_k_docs,
+            informational=self.INFORMATIONAL,
             retrieval_mode="clinical",
             history=history,
             llm_func=llm_func,
@@ -126,7 +129,7 @@ class ContentCreationAgent:
         docs = self.rag.retrieve(
             query=user_input,
             top_k=self.settings.top_k_docs,
-            informational=True,
+            informational=self.INFORMATIONAL,
             history=[],
             llm_func=llm_func,
         )
@@ -149,6 +152,40 @@ class ContentCreationAgent:
         ]
 
         return {"answer": answer, "passages": passages, "critique": critique}
+
+    def compare_selfrag(self, user_input: str) -> dict:
+        """Same as compare() but retrieval uses the Self-RAG sufficiency-check loop."""
+        llm_func = lambda prompt: invoke_text(self.llm, "", prompt)
+        docs, selfrag_state = self.rag.retrieve_selfrag(
+            query=user_input,
+            top_k=self.settings.top_k_docs,
+            informational=self.INFORMATIONAL,
+            llm_func=llm_func,
+        )
+        context = format_context(docs)
+        draft = self._draft(user_input=user_input, context=context, recent_messages=[])
+        critique = self._critique(user_input=user_input, context=context, draft=draft)
+        answer = self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+
+        passages = [
+            {
+                "source": (
+                    doc.metadata.get("source")
+                    or doc.metadata.get("title")
+                    or doc.metadata.get("condition")
+                    or f"Doc {i}"
+                ),
+                "text": doc.page_content.replace("\n", " ").strip()[:600],
+            }
+            for i, doc in enumerate(docs, 1)
+        ]
+
+        return {
+            "answer": answer,
+            "passages": passages,
+            "critique": critique,
+            "selfrag_state": selfrag_state,
+        }
 
     def _draft(
         self,

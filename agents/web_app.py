@@ -337,7 +337,17 @@ def compare_run(
     agent = content_agent if mode == "content_creation" else therapy_agent
 
     bare_answer = invoke_text(agent.llm, system, message)
-    rag_result = agent.compare(message)
+
+    conv_id = agent.create_conversation(user_id=user["id"])
+    rag_response = agent.respond(user_id=user["id"], user_input=message, conversation_id=conv_id)
+    conv_messages = db.get_messages(conv_id)
+    last_meta = next(
+        (m.get("metadata") or {} for m in reversed(conv_messages) if m["role"] == "assistant"),
+        {},
+    )
+    rag_passages = last_meta.get("rag_docs", [])
+
+    selfrag_result = agent.compare_selfrag(message)
 
     return templates.TemplateResponse(
         request,
@@ -348,9 +358,13 @@ def compare_run(
                 "message": message,
                 "mode": mode,
                 "bare": bare_answer,
-                "rag": rag_result["answer"],
-                "passages": rag_result["passages"],
-                "critique": rag_result["critique"],
+                "rag": rag_response["answer"],
+                "passages": rag_passages,
+                "critique": rag_response.get("critique", ""),
+                "selfrag": selfrag_result["answer"],
+                "selfrag_passages": selfrag_result["passages"],
+                "selfrag_critique": selfrag_result["critique"],
+                "selfrag_state": selfrag_result["selfrag_state"],
             },
         },
     )
