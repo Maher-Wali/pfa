@@ -11,28 +11,30 @@ from agents.prompts import (
     SAFE_MODE_SYSTEM,
     THERAPY_AGENT_SYSTEM,
 )
+from agents.profile_extractor import extract_profile
 from agents.rag import RAGStore, format_context, messages_to_history
 from chat_pipeline import _route_retrieval_mode
 from session.users import User, UserStore
+
+_EXTRACT_EVERY_INCOMPLETE = 10
+_EXTRACT_EVERY_COMPLETE = 20
 
 
 def _build_profile_block(user: User) -> str | None:
     if not user:
         return None
-    goals_str = ", ".join(user.goals) if user.goals else "not specified"
-    lines = [
-        "User profile (use this to personalise your responses — do not recite these facts back verbatim):",
-        f"- Mood baseline: {user.mood_baseline}/10",
-        f"- Goals: {goals_str}",
-    ]
+    lines = ["User profile (use this to personalise your responses — do not recite these facts back verbatim):"]
+    goals_str = ", ".join(user.goals) if user.goals else None
+    if goals_str:
+        lines.append(f"- Goals: {goals_str}")
     if user.age:
         lines.append(f"- Age: {user.age}")
-    if user.country:
-        lines.append(f"- Country: {user.country}")
     if user.job:
         lines.append(f"- Job: {user.job}")
     if user.relationship_status:
         lines.append(f"- Relationship status: {user.relationship_status}")
+    if len(lines) == 1:
+        return None
     return "\n".join(lines)
 
 
@@ -187,6 +189,8 @@ class VirtualTherapyAgent:
             },
         )
 
+        self._maybe_extract_profile(user_id=user_id, conversation_id=conversation_id)
+
         return {
             "conversation_id": conversation_id,
             "mode": "virtual_therapy",
@@ -261,6 +265,19 @@ class VirtualTherapyAgent:
             "critique": critique,
             "selfrag_state": selfrag_state,
         }
+
+    def _maybe_extract_profile(self, user_id: str, conversation_id: str) -> None:
+        total = self.db.count_assistant_messages(conversation_id)
+        if total < _EXTRACT_EVERY_INCOMPLETE:
+            return
+        user = self.user_store.get_by_id(user_id)
+        interval = _EXTRACT_EVERY_COMPLETE if (user and user.profile_complete) else _EXTRACT_EVERY_INCOMPLETE
+        if total % interval != 0:
+            return
+        messages = self.db.get_recent_messages(conversation_id=conversation_id, limit=20)
+        extracted = extract_profile(self.llm, messages)
+        if extracted:
+            self.user_store.update_extracted_fields(user_id=user_id, **extracted)
 
     def _draft(
         self,

@@ -41,9 +41,7 @@ def _user_dict(user: User) -> dict:
         "username": user.email,
         "email": user.email,
         "age": user.age,
-        "mood_baseline": user.mood_baseline,
         "goals": user.goals,
-        "country": user.country,
         "job": user.job,
         "relationship_status": user.relationship_status,
     }
@@ -244,58 +242,6 @@ def chat_page(request: Request, conversation_id: str):
         request,
         "chat.html",
         {"user": user, "conversation": conversation, "messages": messages, "debug": last_debug},
-    )
-
-
-@app.get("/profile", response_class=HTMLResponse)
-def profile_page(request: Request):
-    user = require_user(request)
-
-    if isinstance(user, RedirectResponse):
-        return user
-
-    return templates.TemplateResponse(
-        request,
-        "profile.html",
-        {"user": user, "saved": False},
-    )
-
-
-@app.post("/profile", response_class=HTMLResponse)
-def profile_save(
-    request: Request,
-    age: str = Form(""),
-    job: str = Form(""),
-    relationship_status: str = Form(""),
-):
-    user = require_user(request)
-
-    if isinstance(user, RedirectResponse):
-        return user
-
-    age_int: int | None = None
-    if age.strip():
-        try:
-            age_int = int(age.strip())
-        except ValueError:
-            return templates.TemplateResponse(
-                request,
-                "profile.html",
-                {"user": user, "saved": False, "error": "Age must be a number."},
-            )
-
-    user_store.update_profile(
-        user_id=user["id"],
-        age=age_int,
-        job=job.strip() or None,
-        relationship_status=relationship_status.strip() or None,
-    )
-
-    updated = user_store.get_by_id(user["id"])
-    return templates.TemplateResponse(
-        request,
-        "profile.html",
-        {"user": _user_dict(updated), "saved": True},
     )
 
 
