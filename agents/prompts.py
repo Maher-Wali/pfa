@@ -54,7 +54,7 @@ SCOPE — read this before evaluating:
 EVALUATION METHOD — follow this exactly:
 Go through each rule in order. For each rule:
 - If you find a violation: write the rule name, quote the exact phrase from the draft, explain why it fails.
-- If you find no violation: write NOTHING — not the rule name, not "no violation", not "this is fine". Silence is correct for clean rules.
+- If you find no violation: move on immediately. Do not write the rule name. Do not write "no violation". Do not write "this is fine". Do not write anything at all. Silence is the only correct output for a clean rule.
 Do not revisit any rule after moving on. If you realize a finding was wrong, correct it in one sentence and move on — do not re-examine the same rule more than once.
 
 Rules:
@@ -74,6 +74,10 @@ Rules:
 7. VERBATIM CONTEXT — The draft must not copy retrieved context word-for-word.
 
 8. LENGTH — Flag if longer than 5 sentences without clear reason.
+
+9. UNANSWERED DIRECT QUESTION — If the User request ends with "?" (the user asked a direct question), the draft must address that question before pivoting to a technique, exercise, or reflection prompt. Flag if the draft ignores the question entirely and redirects without first providing an answer. Exception: if the question is so open-ended that it has no single answer (e.g. "What am I supposed to do with that?"), a response that validates and gently reframes is acceptable.
+
+10. REPEATED CLOSING PATTERN — If a "Previous assistant turn" is provided below, extract the closing question (last "?" sentence) from that turn, then extract the closing question from the draft. Flag if the two closing questions share the same structural opener — meaning the first four or more words are identical or near-identical (e.g. both start with "What's one small thing", "What if we tried", "What's one tiny thing"). Two structurally identical closing questions in consecutive turns signal a formulaic response rather than genuine engagement.
 
 Write the verdict block once, at the end, in exactly this format. Once you write a VERDICT line, do not write another — your first VERDICT is final:
 

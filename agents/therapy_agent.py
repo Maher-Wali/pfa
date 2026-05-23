@@ -259,10 +259,15 @@ class VirtualTherapyAgent:
             profile_block=profile_block,
         )
 
+        last_assistant = next(
+            (m["content"] for m in reversed(recent_messages) if m["role"] == "assistant"),
+            None,
+        )
         critique = self._critique(
             user_input=user_input,
             context=context,
             draft=draft,
+            prev_assistant=last_assistant,
         )
 
         final_answer = strip_dashes(_strip_double_closing_question(self._revise(
@@ -452,14 +457,16 @@ Respond supportively and practically.
         user_input: str,
         context: str,
         draft: str,
+        prev_assistant: str | None = None,
     ) -> str:
+        prev_section = f"\nPrevious assistant turn:\n{prev_assistant}\n" if prev_assistant else ""
         prompt = f"""
 User request:
 {user_input}
 
 Retrieved context:
 {context}
-
+{prev_section}
 Draft answer:
 {draft}
 """.strip()
