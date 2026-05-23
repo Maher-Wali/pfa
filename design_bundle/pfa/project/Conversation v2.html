@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Companion — Conversation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F2;
+    --surface: #FFFFFF;
+    --surface-muted: #F0EDE8;
+    --border: #E2DDD7;
+
+    --primary: #7A9E87;
+    --primary-dark: #5C8270;
+    --primary-light: #EAF2ED;
+
+    --accent: #B08BA5;
+    --accent-light: #F3EDF6;
+
+    --user-bubble: #EAF2ED;
+
+    --crisis: #E8A87C;
+    --crisis-bg: #FBEEE2;
+    --crisis-border: #C97E50;
+
+    --text-primary: #2D2926;
+    --text-secondary: #6B6560;
+    --text-muted: #9E9791;
+
+    --agent-ink: #1F1B17;       /* slightly deeper for the serif voice */
+
+    --radius-bubble: 20px;
+    --radius-input: 18px;
+    --shadow-soft: 0 2px 12px rgba(0,0,0,0.06);
+
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --t-slow: 280ms;
+    --t-med: 220ms;
+
+    --sidebar-w: 260px;
+
+    --sans: "Nunito", Inter, system-ui, -apple-system, sans-serif;
+    --serif: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+  }
+  button { font-family: inherit; cursor: pointer; }
+  textarea { font-family: inherit; }
+
+  /* ─── Layout ────────────────────────────────────────────── */
+
+  .app {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+  }
+
+  /* ─── Sidebar (hidden by default) ───────────────────────── */
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-w);
+    height: 100vh;
+    background: var(--surface-muted);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 22px 14px 16px;
+    gap: 14px;
+    transform: translateX(calc(-1 * var(--sidebar-w)));
+    transition: transform 340ms var(--ease);
+    z-index: 30;
+  }
+  body.sidebar-open .sidebar { transform: translateX(0); }
+
+  .sidebar-scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(31,27,23,0.18);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 340ms var(--ease);
+    z-index: 20;
+  }
+  body.sidebar-open .sidebar-scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* the quiet handle the sidebar lives behind */
+  .sidebar-handle {
+    position: fixed;
+    top: 22px;
+    left: 22px;
+    z-index: 40;
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: var(--text-muted);
+    transition: background var(--t-med) var(--ease), color var(--t-med) var(--ease);
+  }
+  .sidebar-handle:hover {
+    background: rgba(0,0,0,0.04);
+    color: var(--text-secondary);
+  }
+  .sidebar-handle svg { width: 18px; height: 18px; }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px 2px 36px; /* leave room for the close handle */
+  }
+  .brand-name {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.2px;
+    color: var(--text-primary);
+  }
+
+  .new-conversation {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-weight: 600;
+    font-size: 14.5px;
+    transition: background var(--t-med) var(--ease), transform var(--t-med) var(--ease);
+  }
+  .new-conversation:hover { background: var(--primary-dark); }
+  .new-conversation:active { transform: translateY(1px); }
+
+  .history-label {
+    color: var(--text-muted);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    padding: 4px 8px 0;
+    font-weight: 600;
+  }
+
+  .history {
+    flex: 1;
+    overflow-y: auto;
+    margin: 0 -4px;
+    padding: 2px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    scrollbar-width: thin;
+    scrollbar-color: #d8d2cb transparent;
+  }
+  .history::-webkit-scrollbar { width: 6px; }
+  .history::-webkit-scrollbar-thumb { background: #d8d2cb; border-radius: 3px; }
+
+  .history-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 9px 10px;
+    border-radius: 10px;
+    color: var(--text-primary);
+    transition: background var(--t-med) var(--ease);
+  }
+  .history-item:hover { background: rgba(0,0,0,0.03); }
+  .history-item.active { background: var(--primary-light); }
+
+  .history-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.35;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .history-time {
+    display: block;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background var(--t-med) var(--ease);
+  }
+  .profile:hover { background: rgba(0,0,0,0.03); }
+  .avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12.5px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .profile-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .profile-meta {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.2;
+  }
+
+  /* ─── Conversation area ─────────────────────────────────── */
+
+  .conversation {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .conv-header {
+    padding: 22px 24px 6px;
+    text-align: center;
+  }
+  .conv-title {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    margin: 0;
+  }
+
+  .messages-wrap {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d8d2cb transparent;
+  }
+  .messages-wrap::-webkit-scrollbar { width: 8px; }
+  .messages-wrap::-webkit-scrollbar-thumb { background: #d8d2cb; border-radius: 4px; }
+
+  .messages {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 64px 24px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+
+  .turn {
+    display: flex;
+    flex-direction: column;
+  }
+  .turn.user { align-items: flex-end; }
+  .turn.agent { align-items: stretch; }
+
+  /* ── User bubble (kept — feelings are claimed/contained) ─ */
+  .turn.user .bubble {
+    position: relative;
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: var(--radius-bubble);
+    background: var(--user-bubble);
+    border-bottom-right-radius: 4px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    animation: fadeUp var(--t-slow) var(--ease) both;
+  }
+
+  /* ── Agent bubble ───────────────────────────────────── */
+  .turn.agent .agent-voice {
+    position: relative;
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: var(--radius-bubble);
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+    color: var(--text-primary);
+    font-size: 15.5px;
+    line-height: 1.6;
+    animation: fadeUp var(--t-slow) var(--ease) both;
+  }
+  .turn.agent .agent-voice p { margin: 0; }
+  .turn.agent .agent-voice p + p { margin-top: 14px; }
+
+  /* sentences fade in one at a time for new replies */
+  .turn.agent .agent-voice .s {
+    opacity: 1;
+    transition: opacity 700ms var(--ease), filter 700ms var(--ease);
+  }
+  .turn.agent .agent-voice .s.streaming {
+    opacity: 0;
+    filter: blur(2px);
+  }
+  .turn.agent .agent-voice .s.shown {
+    opacity: 1;
+    filter: blur(0);
+  }
+
+
+  /* ── Crisis: stays distinct (still amber, slightly softer) ─ */
+  .crisis-prelude {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 4px 0 10px;
+  }
+  .turn.agent .agent-voice.crisis {
+    background: var(--crisis-bg);
+    border: 1px solid var(--crisis-border);
+    color: var(--text-primary);
+  }
+  .crisis-inline-link {
+    color: #6F3F22;
+    border-bottom: 1px solid rgba(111,63,34,0.4);
+    text-decoration: none;
+    font-weight: 500;
+    transition: border-color var(--t-med) var(--ease);
+  }
+  .crisis-inline-link:hover { border-bottom-color: rgba(111,63,34,0.9); }
+
+  /* typing indicator (sits where the agent voice would be) */
+  .typing {
+    display: inline-flex;
+    gap: 6px;
+    padding: 8px 0;
+    align-items: center;
+  }
+  .typing .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #c2cdc6;
+    animation: pulse 1.4s var(--ease) infinite;
+  }
+  .typing .dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+    40%           { opacity: 1;   transform: translateY(-2px); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Composer (floating, no footer bar) ─────────────────── */
+
+  .composer-wrap {
+    background: transparent;
+  }
+  .composer {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 8px 24px 22px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .input-shell {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-input);
+    padding: 12px 14px;
+    box-shadow: var(--shadow-soft);
+    transition: border-color var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+  }
+  .input-shell:focus-within {
+    border-color: #cfd9d2;
+    box-shadow: 0 0 0 3px rgba(122,158,135,0.12), var(--shadow-soft);
+  }
+
+  .composer textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 15.5px;
+    line-height: 1.55;
+    max-height: calc(1.55em * 5);
+    overflow-y: auto;
+  }
+  .composer textarea::placeholder { color: var(--text-muted); }
+
+  .send {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow-soft);
+    transition: background var(--t-med) var(--ease), transform var(--t-med) var(--ease), opacity var(--t-med) var(--ease);
+    flex-shrink: 0;
+  }
+  .send:hover:not(:disabled) { background: var(--primary-dark); }
+  .send:active { transform: translateY(1px); }
+  .send:disabled { opacity: 0.4; cursor: default; }
+  .send svg { width: 18px; height: 18px; }
+
+</style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Quiet handle (collapsed sidebar) -->
+    <button class="sidebar-handle" id="sidebarToggle" type="button" aria-label="Open conversations">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M4 7h16"/>
+        <path d="M4 12h16"/>
+        <path d="M4 17h16"/>
+      </svg>
+    </button>
+
+    <div class="sidebar-scrim" id="sidebarScrim" aria-hidden="true"></div>
+
+    <!-- ───── Sidebar ───── -->
+    <aside class="sidebar" aria-label="Conversation history">
+      <div class="brand">
+        <div class="brand-name">Companion</div>
+      </div>
+
+      <button class="new-conversation" type="button">New conversation</button>
+
+      <div class="history-label">Recent</div>
+
+      <div class="history" role="list">
+        <button class="history-item active" role="listitem">
+          <p class="history-title">Feeling overwhelmed at work</p>
+          <span class="history-time">Just now</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Sleep has been off again</p>
+          <span class="history-time">Yesterday</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Sunday afternoon check-in</p>
+          <span class="history-time">3 days ago</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Talking to my sister again</p>
+          <span class="history-time">Last week</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Letting go of the deadline</p>
+          <span class="history-time">Last week</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Why mornings feel heavy</p>
+          <span class="history-time">2 weeks ago</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Small wins this week</p>
+          <span class="history-time">3 weeks ago</span>
+        </button>
+      </div>
+
+      <button class="profile" type="button">
+        <div class="avatar" aria-hidden="true">M</div>
+        <div>
+          <div class="profile-name">Maya R.</div>
+          <div class="profile-meta">Profile &amp; settings</div>
+        </div>
+      </button>
+    </aside>
+
+    <!-- ───── Conversation ───── -->
+    <main class="conversation">
+      <div class="messages-wrap" id="messagesWrap">
+        <div class="messages" id="messages">
+
+          <!-- Agent opener -->
+          <div class="turn agent">
+            <div class="agent-voice">
+              <p>Hi Maya. It's good to see you here again. How are you arriving today — what's most on your mind?</p>
+            </div>
+          </div>
+
+          <!-- User -->
+          <div class="turn user">
+            <div class="bubble">
+              <p>Honestly, I'm a bit fried. I had three back-to-back meetings this morning and I haven't even started the thing I actually need to finish today.</p>
+            </div>
+          </div>
+
+          <!-- Agent -->
+          <div class="turn agent">
+            <div class="agent-voice">
+              <p>That sounds like a lot already, and the day is still in front of you. When you say "fried" — does that feel more like exhaustion, or more like the kind of buzzy, can't-sit-still tension?</p>
+            </div>
+          </div>
+
+          <!-- User -->
+          <div class="turn user">
+            <div class="bubble">
+              <p>The buzzy kind. My chest feels tight and I keep refreshing my email instead of just opening the doc.</p>
+            </div>
+          </div>
+
+          <!-- Agent (multi-paragraph) -->
+          <div class="turn agent">
+            <div class="agent-voice">
+              <p>Thank you for noticing that — the email-refreshing is a really honest signal. Your nervous system is asking for a small offramp before it can settle into focused work.</p>
+              <p>Would you be willing to try one minute of slower breathing with me before we look at the doc together? No pressure if it doesn't feel right.</p>
+            </div>
+          </div>
+
+          <!-- User -->
+          <div class="turn user">
+            <div class="bubble">
+              <p>Yeah, ok. Sometimes it just feels like nothing I do is going to be enough and I should just stop trying.</p>
+            </div>
+          </div>
+
+          <!-- Crisis response -->
+          <div class="turn agent">
+            <p class="crisis-prelude">I want to make sure you're safe.</p>
+            <div class="agent-voice crisis">
+              <p>What you said matters, and I want to slow down with it for a moment. When you say "stop trying," I'd like to gently check in — are you having any thoughts of hurting yourself, or of not wanting to be here?</p>
+              <p>Whatever the answer is, you're not in trouble, and you don't have to figure it out alone. If at any point it feels heavier than what we can hold here, <a href="#" class="crisis-inline-link">988</a> is a good place to talk to a person.</p>
+            </div>
+          </div>
+
+          <!-- User -->
+          <div class="turn user">
+            <div class="bubble">
+              <p>No, nothing like that. Just frustrated with myself. Sorry, I didn't mean to make it sound that big.</p>
+            </div>
+          </div>
+
+          <!-- Agent -->
+          <div class="turn agent">
+            <div class="agent-voice">
+              <p>You don't have to apologise — I'd rather pause and check than miss it. Frustration with yourself on a morning like this makes a lot of sense. Want to start with that one minute of breathing, and then look at the doc one small piece at a time?</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Composer -->
+      <div class="composer-wrap">
+        <div class="composer">
+          <div class="input-shell">
+            <textarea id="composer" rows="1" placeholder="Write something…" aria-label="Message"></textarea>
+          </div>
+          <button class="send" id="sendBtn" type="button" aria-label="Send" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12l14 0"/>
+              <path d="M13 6l6 6-6 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+  // ── Sidebar toggle ─────────────────────────────────────────
+  const toggle = document.getElementById('sidebarToggle');
+  const scrim  = document.getElementById('sidebarScrim');
+  function openSidebar()  { document.body.classList.add('sidebar-open'); }
+  function closeSidebar() { document.body.classList.remove('sidebar-open'); }
+  toggle.addEventListener('click', () => {
+    if (document.body.classList.contains('sidebar-open')) closeSidebar(); else openSidebar();
+  });
+  scrim.addEventListener('click', closeSidebar);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
+
+  // ── Composer: auto-grow + send + streaming reply ──────────
+  const ta        = document.getElementById('composer');
+  const sendBtn   = document.getElementById('sendBtn');
+  const messages  = document.getElementById('messages');
+  const wrap      = document.getElementById('messagesWrap');
+
+  function autosize() {
+    ta.style.height = 'auto';
+    const lineHeight = parseFloat(getComputedStyle(ta).lineHeight);
+    const max = lineHeight * 5;
+    ta.style.height = Math.min(ta.scrollHeight, max) + 'px';
+  }
+
+  function updateState() {
+    sendBtn.disabled = ta.value.trim().length === 0;
+    autosize();
+  }
+
+  ta.addEventListener('input', updateState);
+  ta.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+  });
+  sendBtn.addEventListener('click', send);
+
+  function scrollToBottom() {
+    wrap.scrollTo({ top: wrap.scrollHeight, behavior: 'smooth' });
+  }
+
+  function appendUser(text) {
+    const t = document.createElement('div');
+    t.className = 'turn user';
+    t.innerHTML = `<div class="bubble"><p></p></div>`;
+    t.querySelector('p').textContent = text;
+    messages.appendChild(t);
+    scrollToBottom();
+  }
+
+  // Split a paragraph into sentence-ish chunks (keeps trailing punctuation,
+  // tolerates em-dashes and ellipses). Each chunk keeps its leading whitespace.
+  function splitSentences(text) {
+    const out = [];
+    const re = /[^.!?…]+[.!?…]+["')\]]*|\s*[^.!?…]+$/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const seg = m[0];
+      if (seg.trim().length) out.push(seg);
+    }
+    return out;
+  }
+
+  // Build an empty agent-voice block and pre-populate sentence spans
+  // so layout is final from the start; then reveal one at a time.
+  function appendAgentStreaming(paragraphs) {
+    const t = document.createElement('div');
+    t.className = 'turn agent';
+    const voice = document.createElement('div');
+    voice.className = 'agent-voice';
+    t.appendChild(voice);
+    messages.appendChild(t);
+
+    // first: typing dots
+    const typing = document.createElement('span');
+    typing.className = 'typing';
+    typing.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    voice.appendChild(typing);
+    scrollToBottom();
+
+    // schedule: pause, then replace dots with the first sentence, fade rest in
+    const allSentences = []; // [{paraIdx, span}]
+    setTimeout(() => {
+      voice.removeChild(typing);
+
+      paragraphs.forEach((paraText, pi) => {
+        const p = document.createElement('p');
+        voice.appendChild(p);
+        const sents = splitSentences(paraText);
+        sents.forEach(s => {
+          const span = document.createElement('span');
+          span.className = 's streaming';
+          span.textContent = s;
+          p.appendChild(span);
+          allSentences.push(span);
+        });
+      });
+
+      // reveal one by one with gentle pauses
+      let i = 0;
+      const reveal = () => {
+        if (i >= allSentences.length) return;
+        const span = allSentences[i++];
+        span.classList.remove('streaming');
+        span.classList.add('shown');
+        scrollToBottom();
+        // delay scales with sentence length, slower than reading speed
+        const len = span.textContent.trim().length;
+        const delay = Math.min(2600, Math.max(900, 55 * len));
+        setTimeout(reveal, delay);
+      };
+      reveal();
+    }, 1800); // longer "thinking" beat before words appear
+  }
+
+  const replyBank = [
+    ["Thank you for sharing that.", "Let's stay with it for a moment — what part of it feels loudest right now?"],
+    ["I hear you. That sounds tender.", "Is there a small thing that usually helps, even a little?"],
+    ["That's a lot to carry.", "You don't have to make sense of it all at once. We can take it slowly."],
+    ["Mm. Take your time.", "I'm right here whenever you want to keep going."]
+  ];
+  let replyIdx = 0;
+
+  function send() {
+    const text = ta.value.trim();
+    if (!text) return;
+    appendUser(text);
+    ta.value = '';
+    updateState();
+    const reply = replyBank[replyIdx % replyBank.length];
+    replyIdx++;
+    // join into one paragraph composed of sentence segments
+    appendAgentStreaming([reply.join(' ')]);
+  }
+
+  // ── History selection ───────────────────────────────────────
+  document.querySelectorAll('.history-item').forEach(h => {
+    h.addEventListener('click', () => {
+      document.querySelectorAll('.history-item').forEach(x => x.classList.remove('active'));
+      h.classList.add('active');
+    });
+  });
+
+  // initial sizing + scroll
+  updateState();
+  scrollToBottom();
+</script>
+</body>
+</html>

@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F2;
+    --surface: #FFFFFF;
+    --surface-muted: #F0EDE8;
+    --border: #E2DDD7;
+    --primary: #7A9E87;
+    --primary-dark: #5C8270;
+    --primary-light: #EAF2ED;
+    --accent: #B08BA5;
+    --accent-light: #F3EDF6;
+    --user-bubble: #EAF2ED;
+    --crisis-bg: #FBEEE2;
+    --crisis-border: #C97E50;
+    --text-primary: #2D2926;
+    --text-secondary: #6B6560;
+    --text-muted: #9E9791;
+    --radius-bubble: 20px;
+    --radius-input: 18px;
+    --shadow-soft: 0 2px 12px rgba(0,0,0,0.06);
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --t-slow: 280ms;
+    --t-med: 220ms;
+    --sidebar-w: 260px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: "Nunito", Inter, system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  button { font-family: inherit; cursor: pointer; }
+  textarea { font-family: inherit; }
+
+  .app { position: relative; height: 100vh; width: 100%; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: var(--sidebar-w);
+    height: 100vh;
+    background: var(--surface-muted);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 22px 14px 16px;
+    gap: 14px;
+    transform: translateX(calc(-1 * var(--sidebar-w)));
+    transition: transform 340ms var(--ease);
+    z-index: 30;
+  }
+  body.sidebar-open .sidebar { transform: translateX(0); }
+
+  .sidebar-scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(31,27,23,0.18);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 340ms var(--ease);
+    z-index: 20;
+  }
+  body.sidebar-open .sidebar-scrim { opacity: 1; pointer-events: auto; }
+
+  .sidebar-handle {
+    position: fixed;
+    top: 22px; left: 22px;
+    z-index: 40;
+    background: transparent;
+    border: none;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: var(--text-muted);
+    transition: background var(--t-med) var(--ease), color var(--t-med) var(--ease);
+  }
+  .sidebar-handle:hover { background: rgba(0,0,0,0.04); color: var(--text-secondary); }
+  .sidebar-handle svg { width: 18px; height: 18px; }
+
+  .brand { display: flex; align-items: center; padding: 4px 8px 2px 36px; }
+  .brand-name { font-weight: 600; font-size: 15px; letter-spacing: 0.2px; color: var(--text-primary); }
+
+  .sidebar-new-btn {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-weight: 600;
+    font-size: 14.5px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    transition: background var(--t-med) var(--ease), transform var(--t-med) var(--ease);
+  }
+  .sidebar-new-btn:hover { background: var(--primary-dark); }
+  .sidebar-new-btn:active { transform: translateY(1px); }
+
+  .history-label {
+    color: var(--text-muted);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    padding: 4px 8px 0;
+    font-weight: 600;
+  }
+
+  .history {
+    flex: 1;
+    overflow-y: auto;
+    margin: 0 -4px;
+    padding: 2px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    scrollbar-width: thin;
+    scrollbar-color: #d8d2cb transparent;
+  }
+  .history::-webkit-scrollbar { width: 6px; }
+  .history::-webkit-scrollbar-thumb { background: #d8d2cb; border-radius: 3px; }
+
+  .history-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 9px 10px;
+    border-radius: 10px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background var(--t-med) var(--ease);
+  }
+  .history-item:hover { background: rgba(0,0,0,0.03); }
+  .history-item.active { background: var(--primary-light); }
+  .history-title { font-size: 14px; font-weight: 500; line-height: 1.35; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    text-decoration: none;
+    transition: background var(--t-med) var(--ease);
+  }
+  .profile-btn:hover { background: rgba(0,0,0,0.03); }
+  .avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12.5px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .profile-name { font-size: 13.5px; font-weight: 600; line-height: 1.2; }
+  .profile-meta { font-size: 11.5px; color: var(--text-muted); line-height: 1.2; }
+
+  /* ── Conversation ── */
+  .conversation {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .messages-wrap {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d8d2cb transparent;
+  }
+  .messages-wrap::-webkit-scrollbar { width: 8px; }
+  .messages-wrap::-webkit-scrollbar-thumb { background: #d8d2cb; border-radius: 4px; }
+
+  .messages {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 64px 24px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .turn { display: flex; flex-direction: column; }
+  .turn.user { align-items: flex-end; }
+  .turn.agent { align-items: stretch; }
+
+  .turn.user .bubble {
+    position: relative;
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: var(--radius-bubble);
+    background: var(--user-bubble);
+    border-bottom-right-radius: 4px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--text-primary);
+  }
+  .turn.user .bubble p { margin: 0; }
+
+  .turn.agent .agent-voice {
+    position: relative;
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: var(--radius-bubble);
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+    color: var(--text-primary);
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+  .turn.agent .agent-voice p { margin: 0; }
+  .turn.agent .agent-voice p + p { margin-top: 14px; }
+
+  /* Only newly sent/received elements animate — applied via JS */
+  .entering {
+    animation: fadeUp 600ms cubic-bezier(.22,.61,.36,1) both;
+  }
+
+  /* Crisis card */
+  .crisis-prelude { font-size: 13px; color: var(--text-secondary); margin: 4px 0 10px; }
+  .turn.agent .agent-voice.crisis {
+    background: var(--crisis-bg);
+    border: 1px solid var(--crisis-border);
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 80px 24px 24px;
+    color: var(--text-secondary);
+  }
+  .empty-state p { margin: 0; font-size: 15px; }
+
+  /* Typing indicator */
+  .typing-turn { align-items: stretch; }
+  .typing-shell {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 14px 16px;
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-bubble);
+    border-bottom-left-radius: 4px;
+    max-width: 85%;
+  }
+  .typing-shell .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #c8d4cc;
+    animation: breathe 2.4s cubic-bezier(.4,0,.6,1) infinite;
+  }
+  .typing-shell .dot:nth-child(2) { animation-delay: 0.55s; }
+  .typing-shell .dot:nth-child(3) { animation-delay: 1.1s; }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.25; transform: scale(0.85); }
+    50%       { opacity: 1;    transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Composer ── */
+  .composer-wrap { background: transparent; }
+  .composer {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 8px 24px 22px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .input-shell {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-input);
+    padding: 12px 14px;
+    box-shadow: var(--shadow-soft);
+    transition: border-color var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+  }
+  .input-shell:focus-within {
+    border-color: #cfd9d2;
+    box-shadow: 0 0 0 3px rgba(122,158,135,0.12), var(--shadow-soft);
+  }
+  .composer textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 15.5px;
+    line-height: 1.55;
+    max-height: calc(1.55em * 5);
+    overflow-y: auto;
+  }
+  .composer textarea::placeholder { color: var(--text-muted); }
+
+  .send {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow-soft);
+    transition: background var(--t-med) var(--ease), transform var(--t-med) var(--ease), opacity var(--t-med) var(--ease);
+    flex-shrink: 0;
+  }
+  .send:hover:not(:disabled) { background: var(--primary-dark); }
+  .send:active { transform: translateY(1px); }
+  .send:disabled { opacity: 0.4; cursor: default; }
+  .send svg { width: 18px; height: 18px; }
+
+  .privacy-line { text-align: center; font-size: 11.5px; color: var(--text-muted); padding: 0 24px 6px; }
+
+  /* ── Debug panel ── */
+  .debug-panel {
+    position: fixed;
+    top: 0; right: 0;
+    width: 300px;
+    height: 100vh;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(300px);
+    transition: transform 340ms var(--ease);
+    z-index: 30;
+    overflow: hidden;
+  }
+  body.debug-open .debug-panel { transform: translateX(0); }
+
+  .debug-scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(31,27,23,0.12);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 340ms var(--ease);
+    z-index: 20;
+  }
+  body.debug-open .debug-scrim { opacity: 1; pointer-events: auto; }
+
+  .debug-toggle {
+    position: fixed;
+    top: 22px; right: 22px;
+    z-index: 40;
+    background: transparent;
+    border: none;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: var(--text-muted);
+    transition: background var(--t-med) var(--ease), color var(--t-med) var(--ease);
+  }
+  .debug-toggle:hover { background: rgba(0,0,0,0.04); color: var(--text-secondary); }
+  .debug-toggle svg { width: 16px; height: 16px; }
+
+  .debug-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 16px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .debug-header-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.3px; }
+
+  .debug-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px 24px;
+    scrollbar-width: thin;
+    scrollbar-color: #d8d2cb transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .debug-body::-webkit-scrollbar { width: 5px; }
+  .debug-body::-webkit-scrollbar-thumb { background: #d8d2cb; border-radius: 3px; }
+
+  .debug-empty-msg { font-size: 13px; color: var(--text-muted); padding: 8px 0; }
+
+  /* Badges */
+  .dbadge {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--surface-muted);
+    color: var(--text-secondary);
+  }
+  .dbadge--crisis  { background: #FBEEE2; color: #7A4020; }
+  .dbadge--ok      { background: var(--primary-light); color: var(--primary-dark); }
+  .dbadge--warn    { background: #FFF3CD; color: #7A6010; }
+  .dbadge--clinical { background: #EAF2ED; color: #3d6b50; }
+  .dbadge--hybrid  { background: #EDE8F5; color: #5a3d8a; }
+
+  .debug-kv {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    font-size: 12.5px;
+  }
+  .debug-kv:last-child { border-bottom: none; }
+  .debug-key { color: var(--text-muted); flex-shrink: 0; min-width: 68px; }
+  .debug-val { color: var(--text-primary); }
+
+  .debug-details {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .debug-details summary {
+    cursor: pointer;
+    padding: 9px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    list-style: none;
+    background: var(--surface-muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+  .debug-details summary::-webkit-details-marker { display: none; }
+  .debug-details summary::after { content: "›"; font-size: 14px; color: var(--text-muted); transition: transform var(--t-med) var(--ease); }
+  .debug-details[open] summary::after { transform: rotate(90deg); }
+  .debug-details-body { padding: 10px 12px; font-size: 12.5px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 8px; }
+
+  .debug-field { display: flex; flex-direction: column; gap: 3px; }
+  .debug-field > span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+  .debug-field > p { margin: 0; line-height: 1.5; color: var(--text-primary); white-space: pre-wrap; word-break: break-word; }
+
+  .debug-doc { padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .debug-doc:last-child { border-bottom: none; }
+  .debug-doc strong { font-size: 11.5px; color: var(--text-secondary); }
+  .debug-doc p { margin: 4px 0 0; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+  <div class="app">
+
+    <button class="sidebar-handle" id="sidebarToggle" type="button" aria-label="Open conversations">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>
+      </svg>
+    </button>
+
+    <div class="sidebar-scrim" id="sidebarScrim" aria-hidden="true"></div>
+
+    <aside class="sidebar" aria-label="Conversation history">
+      <div class="brand">
+        <div class="brand-name">Companion</div>
+      </div>
+
+      <form method="post" action="/v2/conversations/{{ conversation.mode }}/new" style="margin:0">
+        <button class="sidebar-new-btn" type="submit">New conversation</button>
+      </form>
+
+      <div class="history-label">Recent</div>
+
+      <div class="history" role="list">
+        {% for conv in sidebar_conversations %}
+        <a class="history-item {% if conv.id == conversation.id %}active{% endif %}"
+           href="/v2/chat/{{ conv.id }}"
+           role="listitem">
+          <p class="history-title">{{ conv.title or "Conversation" }}</p>
+        </a>
+        {% else %}
+        <span style="font-size:13px;color:var(--text-muted);padding:8px 10px;display:block">No conversations yet</span>
+        {% endfor %}
+      </div>
+
+      <a class="profile-btn" href="/v2/conversations">
+        <div class="avatar" aria-hidden="true">{{ user.username[0]|upper }}</div>
+        <div>
+          <div class="profile-name">{{ user.username }}</div>
+          <div class="profile-meta">All conversations</div>
+        </div>
+      </a>
+    </aside>
+
+    <!-- ── Debug toggle ── -->
+    <button class="debug-toggle" id="debugToggle" type="button" aria-label="Toggle debug panel" title="Debug">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a4 4 0 0 1 4 4v1h1a2 2 0 0 1 2 2v2l2 1v2l-2 1v2a2 2 0 0 1-2 2h-1v1a4 4 0 0 1-8 0v-1H6a2 2 0 0 1-2-2v-2l-2-1v-2l2-1V8a2 2 0 0 1 2-2h1V6a4 4 0 0 1 4-4z"/>
+        <line x1="12" y1="10" x2="12" y2="14"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </button>
+
+    <div class="debug-scrim" id="debugScrim" aria-hidden="true"></div>
+
+    <!-- ── Debug panel ── -->
+    <aside class="debug-panel" aria-label="Debug info">
+      <div class="debug-header">
+        <span class="debug-header-title">Debug</span>
+        <button class="debug-toggle" id="debugClose" type="button" aria-label="Close debug" style="position:static;width:24px;height:24px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="debug-body">
+
+        {% if debug %}
+
+        {% if debug.retrieval_mode %}
+        <div class="debug-kv">
+          <span class="debug-key">Route</span>
+          <span class="debug-val"><span class="dbadge dbadge--{{ debug.retrieval_mode }}">{{ debug.retrieval_mode }}</span></span>
+        </div>
+        {% endif %}
+
+        {% if debug.safe_mode %}
+        <div class="debug-kv">
+          <span class="debug-key">Safe mode</span>
+          <span class="debug-val"><span class="dbadge dbadge--crisis">ACTIVE</span></span>
+        </div>
+        {% endif %}
+
+        {% if debug.therapy_plan %}
+        <details class="debug-details">
+          <summary>Therapy Plan</summary>
+          <div class="debug-details-body">
+            {% if debug.therapy_plan.problem %}
+            <div class="debug-field"><span>Problem</span><p>{{ debug.therapy_plan.problem }}</p></div>
+            {% endif %}
+            {% if debug.therapy_plan.intent %}
+            <div class="debug-field"><span>Intent</span><p>{{ debug.therapy_plan.intent }}</p></div>
+            {% endif %}
+            {% if debug.therapy_plan.emotional_state %}
+            <div class="debug-field"><span>Emotional state</span><p>{{ debug.therapy_plan.emotional_state }}</p></div>
+            {% endif %}
+            {% if debug.therapy_plan.candidate_techniques %}
+            <div class="debug-field"><span>Techniques</span><p>{{ debug.therapy_plan.candidate_techniques | join(", ") }}</p></div>
+            {% endif %}
+            {% if debug.therapy_plan.candidate_modalities %}
+            <div class="debug-field"><span>Modalities</span><p>{{ debug.therapy_plan.candidate_modalities | join(", ") }}</p></div>
+            {% endif %}
+            {% if debug.therapy_plan.search_queries %}
+            <div class="debug-field"><span>Search queries</span>
+              <ul style="margin:4px 0 0;padding-left:14px;display:flex;flex-direction:column;gap:3px;">
+                {% for q in debug.therapy_plan.search_queries %}<li>{{ q }}</li>{% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+          </div>
+        </details>
+        {% endif %}
+
+        {% if debug.self_rag %}
+        <details class="debug-details">
+          <summary>Self-RAG Check</summary>
+          <div class="debug-details-body">
+            <div class="debug-field">
+              <span>Sufficient</span>
+              <p>{% if debug.self_rag.final.sufficient %}<span class="dbadge dbadge--ok">yes</span>{% else %}<span class="dbadge dbadge--warn">no</span>{% endif %}</p>
+            </div>
+            <div class="debug-field"><span>Retried</span><p>{{ "yes" if debug.self_rag.retried else "no" }}</p></div>
+            {% if debug.self_rag.final.reason %}
+            <div class="debug-field"><span>Reason</span><p>{{ debug.self_rag.final.reason }}</p></div>
+            {% endif %}
+            {% if debug.self_rag.final.missing_concepts %}
+            <div class="debug-field"><span>Missing concepts</span><p>{{ debug.self_rag.final.missing_concepts | join(", ") }}</p></div>
+            {% endif %}
+          </div>
+        </details>
+        {% endif %}
+
+        {% if debug.rag_docs %}
+        <details class="debug-details">
+          <summary>Retrieved Docs ({{ debug.rag_docs | length }})</summary>
+          <div class="debug-details-body">
+            {% for doc in debug.rag_docs %}
+            <div class="debug-doc">
+              <strong>{{ doc.source }}</strong>
+              <p>{{ doc.text }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </details>
+        {% endif %}
+
+        {% if debug.draft %}
+        <details class="debug-details">
+          <summary>Draft</summary>
+          <div class="debug-details-body">
+            <div class="debug-field"><p>{{ debug.draft }}</p></div>
+          </div>
+        </details>
+        {% endif %}
+
+        {% if debug.critique %}
+        <details class="debug-details">
+          <summary>Critique</summary>
+          <div class="debug-details-body">
+            <div class="debug-field"><p>{{ debug.critique }}</p></div>
+          </div>
+        </details>
+        {% endif %}
+
+        {% else %}
+        <p class="debug-empty-msg">Send a message to see debug info here.</p>
+        {% endif %}
+
+        {% if conversation.mode == "virtual_therapy" %}
+        <details class="debug-details" {% if user.age or user.job or user.relationship_status or user.goals %}open{% endif %} style="margin-top:10px;">
+          <summary>Extracted Profile</summary>
+          <div class="debug-details-body">
+            {% if user.age %}<div class="debug-field"><span>Age</span><p>{{ user.age }}</p></div>{% endif %}
+            {% if user.job %}<div class="debug-field"><span>Job</span><p>{{ user.job }}</p></div>{% endif %}
+            {% if user.relationship_status %}<div class="debug-field"><span>Relationship</span><p>{{ user.relationship_status }}</p></div>{% endif %}
+            {% if user.goals %}<div class="debug-field"><span>Goals</span><p>{{ user.goals | join(", ") }}</p></div>{% endif %}
+            {% if not user.age and not user.job and not user.relationship_status and not user.goals %}
+            <p class="debug-empty-msg">No profile data yet.</p>
+            {% endif %}
+          </div>
+        </details>
+        {% endif %}
+
+      </div>
+    </aside>
+
+    <main class="conversation">
+      <div class="messages-wrap" id="messagesWrap">
+        <div class="messages" id="messages">
+
+          {% if messages %}
+            {% for msg in messages %}
+              {% if msg.role == "user" %}
+              <div class="turn user">
+                <div class="bubble"><p>{{ msg.content }}</p></div>
+              </div>
+              {% else %}
+              <div class="turn agent">
+                {% if conversation.mode == "virtual_therapy" and msg.content is defined and "stop trying" in msg.content|lower %}
+                <p class="crisis-prelude">I want to make sure you're safe.</p>
+                {% endif %}
+                <div class="agent-voice">
+                  {% for para in msg.content.split('\n\n') %}
+                    {% if para.strip() %}
+                    <p>{{ para.strip() }}</p>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <div class="empty-state">
+              <p>I'm here when you're ready.</p>
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+      <div class="composer-wrap">
+        <div class="composer">
+          <div class="input-shell">
+            <textarea id="composer" rows="1" placeholder="Write something…" aria-label="Message"></textarea>
+          </div>
+          <button class="send" id="sendBtn" type="button" aria-label="Send" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12l14 0"/><path d="M13 6l6 6-6 6"/>
+            </svg>
+          </button>
+        </div>
+        <p class="privacy-line">Only you see this</p>
+      </div>
+    </main>
+  </div>
+
+<script>
+  // ── Sidebar ─────────────────────────────────────────────────
+  const toggle = document.getElementById('sidebarToggle');
+  const scrim  = document.getElementById('sidebarScrim');
+  toggle.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+  scrim.addEventListener('click',  () => document.body.classList.remove('sidebar-open'));
+
+  // ── Debug panel ─────────────────────────────────────────────
+  const debugToggle = document.getElementById('debugToggle');
+  const debugClose  = document.getElementById('debugClose');
+  const debugScrim  = document.getElementById('debugScrim');
+  debugToggle.addEventListener('click', () => document.body.classList.toggle('debug-open'));
+  debugClose.addEventListener('click',  () => document.body.classList.remove('debug-open'));
+  debugScrim.addEventListener('click',  () => document.body.classList.remove('debug-open'));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.body.classList.remove('sidebar-open');
+      document.body.classList.remove('debug-open');
+    }
+  });
+
+  // ── Composer state ──────────────────────────────────────────
+  const ta       = document.getElementById('composer');
+  const sendBtn  = document.getElementById('sendBtn');
+  const messages = document.getElementById('messages');
+  const wrap     = document.getElementById('messagesWrap');
+  let   sending  = false;
+
+  function autosize() {
+    ta.style.height = 'auto';
+    const lh = parseFloat(getComputedStyle(ta).lineHeight);
+    ta.style.height = Math.min(ta.scrollHeight, lh * 5) + 'px';
+  }
+  function updateState() {
+    sendBtn.disabled = sending || ta.value.trim().length === 0;
+    autosize();
+  }
+  function scrollToBottom() {
+    wrap.scrollTo({ top: wrap.scrollHeight, behavior: 'smooth' });
+  }
+
+  ta.addEventListener('input', updateState);
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); trySend(); }
+  });
+  sendBtn.addEventListener('click', trySend);
+
+  // ── Optimistic send ─────────────────────────────────────────
+  function trySend() {
+    const text = ta.value.trim();
+    if (!text || sending) return;
+    sending = true;
+
+    // Remove the "I'm here when you're ready" empty state if present
+    const empty = messages.querySelector('.empty-state');
+    if (empty) empty.remove();
+
+    // 1. Append user bubble immediately with enter animation
+    const userTurn = document.createElement('div');
+    userTurn.className = 'turn user';
+    userTurn.innerHTML = '<div class="bubble entering"><p></p></div>';
+    userTurn.querySelector('p').textContent = text;
+    messages.appendChild(userTurn);
+    scrollToBottom();
+
+    // 2. Clear textarea
+    ta.value = '';
+    updateState();
+
+    // 3. Show typing indicator after a short pause so the user bubble
+    //    lands first before the agent "starts thinking"
+    let typingTurn = null;
+    const typingTimer = setTimeout(() => {
+      typingTurn = document.createElement('div');
+      typingTurn.className = 'turn agent typing-turn';
+      typingTurn.innerHTML =
+        '<div class="typing-shell entering">' +
+          '<span class="dot"></span>' +
+          '<span class="dot"></span>' +
+          '<span class="dot"></span>' +
+        '</div>';
+      messages.appendChild(typingTurn);
+      scrollToBottom();
+    }, 380);
+
+    // 4. POST to backend — let fetch follow the redirect and
+    //    reload when the round-trip finishes
+    const body = new FormData();
+    body.append('message', text);
+
+    fetch('/v2/chat/{{ conversation.id }}', { method: 'POST', body })
+      .then(() => { location.reload(); })
+      .catch(() => {
+        // On error, remove optimistic UI and restore composer
+        clearTimeout(typingTimer);
+        userTurn.remove();
+        if (typingTurn) typingTurn.remove();
+        sending = false;
+        ta.value = text;
+        updateState();
+        ta.focus();
+      });
+  }
+
+  updateState();
+  wrap.scrollTo({ top: wrap.scrollHeight });
+</script>
+</body>
+</html>

@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Companion — Compare agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F2;
+    --surface: #FFFFFF;
+    --surface-muted: #F0EDE8;
+    --border: #E2DDD7;
+    --primary: #7A9E87;
+    --primary-dark: #5C8270;
+    --primary-light: #EAF2ED;
+    --accent: #B08BA5;
+    --accent-light: #F3EDF6;
+    --user-bubble: #EAF2ED;
+    --text-primary: #2D2926;
+    --text-secondary: #6B6560;
+    --text-muted: #9E9791;
+    --radius-bubble: 20px;
+    --radius-input: 18px;
+    --shadow-soft: 0 2px 12px rgba(0,0,0,0.06);
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --t-med: 220ms;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: "Nunito", Inter, system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    overflow: {% if result %}auto{% else %}hidden{% endif %};
+  }
+  button { font-family: inherit; cursor: pointer; }
+  textarea { font-family: inherit; }
+
+  .app {
+    min-height: 100vh;
+    {% if not result %}height: 100vh;{% endif %}
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Top bar ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    flex-shrink: 0;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .back-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13.5px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: background var(--t-med) var(--ease), color var(--t-med) var(--ease);
+  }
+  .back-link:hover { background: rgba(0,0,0,0.04); color: var(--text-secondary); }
+  .page-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  .avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12.5px;
+    display: grid;
+    place-items: center;
+  }
+
+  /* ── Mode switch ── */
+  .mode-area {
+    display: flex;
+    justify-content: center;
+    padding: 24px 28px 0;
+  }
+  .mode-switch {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--surface-muted);
+    border-radius: 999px;
+    padding: 4px;
+    gap: 2px;
+  }
+  .mode-pill {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 600;
+    transition: background var(--t-med) var(--ease), color var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+  }
+  .mode-pill.active {
+    background: var(--surface);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .mode-pill:disabled { cursor: default; }
+
+  /* ── Initial composer stage ── */
+  .composer-stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 28px 48px;
+  }
+  .composer-hint { font-size: 15px; color: var(--text-secondary); margin: 0 0 20px; text-align: center; }
+
+  .composer {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .input-shell {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-input);
+    padding: 12px 14px;
+    box-shadow: var(--shadow-soft);
+    transition: border-color var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+  }
+  .input-shell:focus-within {
+    border-color: #cfd9d2;
+    box-shadow: 0 0 0 3px rgba(122,158,135,0.12), var(--shadow-soft);
+  }
+  .composer textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 15.5px;
+    line-height: 1.55;
+    max-height: calc(1.55em * 5);
+    overflow-y: auto;
+  }
+  .composer textarea::placeholder { color: var(--text-muted); }
+
+  .send {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow-soft);
+    transition: background var(--t-med) var(--ease), transform var(--t-med) var(--ease), opacity var(--t-med) var(--ease);
+    flex-shrink: 0;
+  }
+  .send:hover:not(:disabled) { background: var(--primary-dark); }
+  .send:active { transform: translateY(1px); }
+  .send:disabled { opacity: 0.4; cursor: default; }
+  .send svg { width: 18px; height: 18px; }
+
+  /* ── Results ── */
+  .results-wrap {
+    padding: 32px 28px 48px;
+    max-width: 1240px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .user-turn {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+  .user-bubble {
+    max-width: 620px;
+    padding: 12px 16px;
+    border-radius: var(--radius-bubble);
+    background: var(--user-bubble);
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+  .user-bubble p { margin: 0; }
+
+  .agent-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 40px;
+  }
+  .agent-col { display: flex; flex-direction: column; gap: 10px; }
+
+  .agent-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 0 6px;
+  }
+  .swatch { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .agent-col[data-voice="bare"]    .swatch { background: #9E9791; }
+  .agent-col[data-voice="rag"]     .swatch { background: var(--primary); }
+  .agent-col[data-voice="selfrag"] .swatch { background: var(--accent); }
+
+  .agent-voice {
+    padding: 14px 16px;
+    border-radius: var(--radius-bubble);
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+    color: var(--text-primary);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .agent-voice p { margin: 0; }
+  .agent-voice p + p { margin-top: 10px; }
+
+  .passages-block {
+    background: var(--surface-muted);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .passages-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .passage-item { margin: 0 0 6px; padding-left: 8px; border-left: 2px solid var(--border); }
+  .passage-item:last-child { margin-bottom: 0; }
+
+  .critique-block { font-size: 12.5px; color: var(--text-muted); font-style: italic; padding: 4px 6px; }
+
+  .selfrag-state {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--accent-light);
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  /* ── Try another composer ── */
+  .results-composer {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 28px 48px;
+    width: 100%;
+  }
+
+  /* ── Optimistic animations ── */
+  .entering {
+    animation: fadeUp 600ms cubic-bezier(.22,.61,.36,1) both;
+  }
+  /* Stagger the three columns so they don't pop in identically */
+  .agent-col:nth-child(2) .entering { animation-delay: 80ms; }
+  .agent-col:nth-child(3) .entering { animation-delay: 160ms; }
+
+  /* Typing dots — slow breathe matching the chat page */
+  .typing-shell {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 2px;
+  }
+  .typing-shell .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #c8d4cc;
+    animation: breathe 2.4s cubic-bezier(.4,0,.6,1) infinite;
+  }
+  .typing-shell .dot:nth-child(2) { animation-delay: 0.55s; }
+  .typing-shell .dot:nth-child(3) { animation-delay: 1.1s; }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.25; transform: scale(0.85); }
+    50%       { opacity: 1;    transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 880px) {
+    .agent-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="app" id="app">
+
+    <div class="topbar">
+      <div class="topbar-left">
+        <a class="back-link" href="/v2/conversations">← Back</a>
+        <span class="page-title">Compare agents</span>
+      </div>
+      <span class="avatar" aria-hidden="true">{{ user.username[0]|upper }}</span>
+    </div>
+
+    {% if not result %}
+    <!-- ── Initial state ── -->
+    <div class="mode-area" id="modeArea">
+      <div class="mode-switch" role="tablist" aria-label="Mode" id="modeSwitch">
+        <button class="mode-pill active" role="tab" data-mode="virtual_therapy" aria-selected="true">Therapy</button>
+        <button class="mode-pill" role="tab" data-mode="content_creation" aria-selected="false">Content</button>
+      </div>
+    </div>
+
+    <div class="composer-stage" id="composerStage">
+      <p class="composer-hint">Send a message to see how the three agents respond differently.</p>
+      <div class="composer">
+        <div class="input-shell">
+          <textarea id="ta" rows="1" placeholder="Write something…" aria-label="Message"></textarea>
+        </div>
+        <button class="send" id="sendBtn" type="button" aria-label="Send" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12l14 0"/><path d="M13 6l6 6-6 6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    {% else %}
+    <!-- ── Results ── -->
+    <div class="results-wrap">
+
+      <div style="display:flex;justify-content:center;margin-bottom:28px;">
+        <div class="mode-switch">
+          <button class="mode-pill {% if result.mode == 'virtual_therapy' %}active{% endif %}" disabled>Therapy</button>
+          <button class="mode-pill {% if result.mode == 'content_creation' %}active{% endif %}" disabled>Content</button>
+        </div>
+      </div>
+
+      <div class="user-turn">
+        <div class="user-bubble entering"><p>{{ result.message }}</p></div>
+      </div>
+
+      <div class="agent-row">
+
+        <div class="agent-col" data-voice="bare">
+          <div class="agent-label"><span class="swatch"></span>Bare</div>
+          <div class="agent-voice entering">
+            {% for para in result.bare.split('\n\n') %}
+              {% if para.strip() %}<p>{{ para.strip() }}</p>{% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="agent-col" data-voice="rag">
+          <div class="agent-label"><span class="swatch"></span>RAG-Enhanced</div>
+          <div class="agent-voice entering">
+            {% for para in result.rag.split('\n\n') %}
+              {% if para.strip() %}<p>{{ para.strip() }}</p>{% endif %}
+            {% endfor %}
+          </div>
+          {% if result.passages %}
+          <div class="passages-block">
+            <div class="passages-label">Retrieved passages</div>
+            {% for p in result.passages[:3] %}
+            <p class="passage-item">{{ p[:180] }}{% if p|length > 180 %}…{% endif %}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% if result.critique %}
+          <p class="critique-block">{{ result.critique }}</p>
+          {% endif %}
+        </div>
+
+        <div class="agent-col" data-voice="selfrag">
+          <div class="agent-label"><span class="swatch"></span>Self-RAG</div>
+          <div class="agent-voice entering">
+            {% if result.selfrag_state %}
+            <span class="selfrag-state">{{ result.selfrag_state }}</span>
+            {% endif %}
+            {% for para in result.selfrag.split('\n\n') %}
+              {% if para.strip() %}<p>{{ para.strip() }}</p>{% endif %}
+            {% endfor %}
+          </div>
+          {% if result.selfrag_passages %}
+          <div class="passages-block">
+            <div class="passages-label">Retrieved passages</div>
+            {% for p in result.selfrag_passages[:3] %}
+            <p class="passage-item">{{ p[:180] }}{% if p|length > 180 %}…{% endif %}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% if result.selfrag_critique %}
+          <p class="critique-block">{{ result.selfrag_critique }}</p>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Try another ── -->
+    <div class="results-composer">
+      <div class="composer">
+        <div class="input-shell">
+          <textarea id="ta" rows="1" placeholder="Try another message…" aria-label="Message" data-mode="{{ result.mode }}"></textarea>
+        </div>
+        <button class="send" id="sendBtn" type="button" aria-label="Send" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12l14 0"/><path d="M13 6l6 6-6 6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    {% endif %}
+
+  </div><!-- /.app -->
+
+<script>
+  const app     = document.getElementById('app');
+  const ta      = document.getElementById('ta');
+  const sendBtn = document.getElementById('sendBtn');
+  let   sending = false;
+
+  // ── Mode tracking (initial state only) ──────────────────────
+  let currentMode = {% if result %}'{{ result.mode }}'{% else %}'virtual_therapy'{% endif %};
+
+  {% if not result %}
+  const pills = document.querySelectorAll('#modeSwitch .mode-pill');
+  pills.forEach(p => {
+    p.addEventListener('click', () => {
+      pills.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
+      p.classList.add('active');
+      p.setAttribute('aria-selected', 'true');
+      currentMode = p.dataset.mode;
+    });
+  });
+  {% else %}
+  // In results view the mode is fixed on the textarea data attr
+  if (ta && ta.dataset.mode) currentMode = ta.dataset.mode;
+  {% endif %}
+
+  // ── Composer state ───────────────────────────────────────────
+  function autosize() {
+    if (!ta) return;
+    ta.style.height = 'auto';
+    const lh = parseFloat(getComputedStyle(ta).lineHeight);
+    ta.style.height = Math.min(ta.scrollHeight, lh * 5) + 'px';
+  }
+  function updateState() {
+    if (!ta || !sendBtn) return;
+    sendBtn.disabled = sending || ta.value.trim().length === 0;
+    autosize();
+  }
+
+  if (ta) {
+    ta.addEventListener('input', updateState);
+    ta.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); trySend(); }
+    });
+  }
+  if (sendBtn) sendBtn.addEventListener('click', trySend);
+  updateState();
+
+  // ── Optimistic loading state ─────────────────────────────────
+  function buildLoadingState(text, mode) {
+    const modeLabel = mode === 'virtual_therapy' ? 'Therapy' : 'Content';
+    const otherLabel = mode === 'virtual_therapy' ? 'Content' : 'Therapy';
+
+    // Remove everything after the topbar
+    const topbar = app.querySelector('.topbar');
+    while (app.lastChild !== topbar) app.removeChild(app.lastChild);
+
+    // Unlock scroll
+    document.body.style.overflow = 'auto';
+    app.style.height = '';
+
+    function typingDots() {
+      return '<div class="typing-shell"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>';
+    }
+
+    const wrap = document.createElement('div');
+    wrap.className = 'results-wrap';
+    wrap.innerHTML = `
+      <div style="display:flex;justify-content:center;margin-bottom:28px;">
+        <div class="mode-switch">
+          <button class="mode-pill ${mode !== 'content_creation' ? 'active' : ''}" disabled>${mode === 'virtual_therapy' ? modeLabel : otherLabel}</button>
+          <button class="mode-pill ${mode === 'content_creation' ? 'active' : ''}" disabled>${mode === 'content_creation' ? modeLabel : otherLabel}</button>
+        </div>
+      </div>
+      <div class="user-turn">
+        <div class="user-bubble entering"><p></p></div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-col" data-voice="bare">
+          <div class="agent-label"><span class="swatch"></span>Bare</div>
+          <div class="agent-voice entering">${typingDots()}</div>
+        </div>
+        <div class="agent-col" data-voice="rag">
+          <div class="agent-label"><span class="swatch"></span>RAG-Enhanced</div>
+          <div class="agent-voice entering">${typingDots()}</div>
+        </div>
+        <div class="agent-col" data-voice="selfrag">
+          <div class="agent-label"><span class="swatch"></span>Self-RAG</div>
+          <div class="agent-voice entering">${typingDots()}</div>
+        </div>
+      </div>`;
+    wrap.querySelector('.user-bubble p').textContent = text;
+    app.appendChild(wrap);
+  }
+
+  // ── Send ─────────────────────────────────────────────────────
+  function trySend() {
+    if (!ta) return;
+    const text = ta.value.trim();
+    if (!text || sending) return;
+    sending = true;
+    updateState();
+
+    buildLoadingState(text, currentMode);
+
+    const body = new FormData();
+    body.append('message', text);
+    body.append('mode', currentMode);
+
+    fetch('/v2/compare', { method: 'POST', body })
+      .then(r => r.text())
+      .then(html => {
+        // Replace the whole document with the server-rendered result page.
+        // Scripts in the new page will execute normally.
+        document.open();
+        document.write(html);
+        document.close();
+      })
+      .catch(() => location.reload());
+  }
+</script>
+</body>
+</html>

@@ -330,7 +330,9 @@ class VirtualTherapyAgent:
         context = format_context(docs)
         draft = self._draft(user_input=user_input, context=context, recent_messages=[])
         critique = self._critique(user_input=user_input, context=context, draft=draft)
-        answer = self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+        answer = strip_dashes(_strip_double_closing_question(
+            self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+        ))
 
         passages = [
             {
@@ -360,7 +362,9 @@ class VirtualTherapyAgent:
         context = format_context(docs)
         draft = self._draft(user_input=user_input, context=context, recent_messages=[])
         critique = self._critique(user_input=user_input, context=context, draft=draft)
-        answer = self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+        answer = strip_dashes(_strip_double_closing_question(
+            self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+        ))
 
         passages = [
             {

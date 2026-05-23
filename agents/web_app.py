@@ -373,3 +373,245 @@ def chat_send(
         )
 
     return RedirectResponse(f"/chat/{conversation_id}", status_code=303)
+
+
+# ── V2 routes (new design) ────────────────────────────────────────────────────
+
+@app.get("/v2", response_class=HTMLResponse)
+def v2_home(request: Request):
+    user = current_user(request)
+    if user:
+        return RedirectResponse("/v2/conversations", status_code=303)
+    return RedirectResponse("/v2/login", status_code=303)
+
+
+@app.get("/v2/login", response_class=HTMLResponse)
+def v2_login_page(request: Request):
+    return templates.TemplateResponse(request, "v2/login.html", {"error": None})
+
+
+@app.post("/v2/login")
+def v2_login(
+    request: Request,
+    username: str = Form(...),
+    password: str = Form(...),
+):
+    user = user_store.authenticate(email=username.strip(), password=password)
+    if not user:
+        return templates.TemplateResponse(
+            request,
+            "v2/login.html",
+            {"error": "Invalid username or password."},
+        )
+    request.session["user_id"] = user.user_id
+    return RedirectResponse("/v2/conversations", status_code=303)
+
+
+@app.get("/v2/register", response_class=HTMLResponse)
+def v2_register_page(request: Request):
+    return templates.TemplateResponse(request, "v2/register.html", {"error": None})
+
+
+@app.post("/v2/register")
+def v2_register(
+    request: Request,
+    username: str = Form(...),
+    password: str = Form(...),
+):
+    username = username.strip()
+    if len(username) < 3:
+        return templates.TemplateResponse(
+            request,
+            "v2/register.html",
+            {"error": "Username must contain at least 3 characters."},
+        )
+    if len(password) < 6:
+        return templates.TemplateResponse(
+            request,
+            "v2/register.html",
+            {"error": "Password must contain at least 6 characters."},
+        )
+    try:
+        user = user_store.create_user(email=username, password=password)
+    except ValueError:
+        return templates.TemplateResponse(
+            request,
+            "v2/register.html",
+            {"error": "This username already exists."},
+        )
+    request.session["user_id"] = user.user_id
+    return RedirectResponse("/v2/conversations", status_code=303)
+
+
+@app.get("/v2/conversations", response_class=HTMLResponse)
+def v2_conversations(request: Request, mode: str = "virtual_therapy"):
+    user = require_user(request)
+    if isinstance(user, RedirectResponse):
+        return RedirectResponse("/v2/login", status_code=303)
+
+    if mode not in {"content_creation", "virtual_therapy"}:
+        mode = "virtual_therapy"
+
+    therapy_conversations = db.list_conversations(user_id=user["id"], mode="virtual_therapy")
+    content_conversations = db.list_conversations(user_id=user["id"], mode="content_creation")
+
+    return templates.TemplateResponse(
+        request,
+        "v2/conversations.html",
+        {
+            "user": user,
+            "active_mode": mode,
+            "therapy_conversations": therapy_conversations,
+            "content_conversations": content_conversations,
+        },
+    )
+
+
+@app.post("/v2/conversations/{mode}/new")
+def v2_new_conversation(request: Request, mode: str):
+    user = require_user(request)
+    if isinstance(user, RedirectResponse):
+        return RedirectResponse("/v2/login", status_code=303)
+
+    if mode == "content_creation":
+        conversation_id = content_agent.create_conversation(
+            user_id=user["id"],
+            title="Content Creation Chat",
+        )
+    elif mode == "virtual_therapy":
+        conversation_id = therapy_agent.create_conversation(
+            user_id=user["id"],
+            title="Virtual Therapy Chat",
+        )
+    else:
+        return RedirectResponse("/v2/conversations", status_code=303)
+
+    return RedirectResponse(f"/v2/chat/{conversation_id}", status_code=303)
+
+
+@app.get("/v2/chat/{conversation_id}", response_class=HTMLResponse)
+def v2_chat_page(request: Request, conversation_id: str):
+    user = require_user(request)
+    if isinstance(user, RedirectResponse):
+        return RedirectResponse("/v2/login", status_code=303)
+
+    conversation = db.get_conversation(conversation_id)
+    if not conversation or conversation["user_id"] != user["id"]:
+        return RedirectResponse("/v2/conversations", status_code=303)
+
+    messages = db.get_messages(conversation_id)
+    sidebar_conversations = db.list_conversations(user_id=user["id"], mode=conversation["mode"])
+
+    last_debug = {}
+    for msg in reversed(messages):
+        if msg["role"] == "assistant":
+            last_debug = msg.get("metadata") or {}
+            break
+
+    return templates.TemplateResponse(
+        request,
+        "v2/chat.html",
+        {
+            "user": user,
+            "conversation": conversation,
+            "messages": messages,
+            "sidebar_conversations": sidebar_conversations,
+            "debug": last_debug,
+        },
+    )
+
+
+@app.post("/v2/chat/{conversation_id}")
+def v2_chat_send(
+    request: Request,
+    conversation_id: str,
+    message: str = Form(...),
+):
+    user = require_user(request)
+    if isinstance(user, RedirectResponse):
+        return RedirectResponse("/v2/login", status_code=303)
+
+    conversation = db.get_conversation(conversation_id)
+    if not conversation or conversation["user_id"] != user["id"]:
+        return RedirectResponse("/v2/conversations", status_code=303)
+
+    message = message.strip()
+    if not message:
+        return RedirectResponse(f"/v2/chat/{conversation_id}", status_code=303)
+
+    if conversation["mode"] == "content_creation":
+        content_agent.respond(
+            user_id=user["id"],
+            user_input=message,
+            conversation_id=conversation_id,
+        )
+    elif conversation["mode"] == "virtual_therapy":
+        therapy_agent.respond(
+            user_id=user["id"],
+            user_input=message,
+            conversation_id=conversation_id,
+        )
+
+    return RedirectResponse(f"/v2/chat/{conversation_id}", status_code=303)
+
+
+@app.get("/v2/compare", response_class=HTMLResponse)
+def v2_compare_page(request: Request):
+    user = require_user(request)
+    if isinstance(user, RedirectResponse):
+        return RedirectResponse("/v2/login", status_code=303)
+
+    return templates.TemplateResponse(
+        request,
+        "v2/compare.html",
+        {"user": user, "result": None},
+    )
+
+
+@app.post("/v2/compare", response_class=HTMLResponse)
+def v2_compare_run(
+    request: Request,
+    message: str = Form(...),
+    mode: str = Form(...),
+):
+    user = require_user(request)
+    if isinstance(user, RedirectResponse):
+        return RedirectResponse("/v2/login", status_code=303)
+
+    message = message.strip()
+    if not message or mode not in {"content_creation", "virtual_therapy"}:
+        return templates.TemplateResponse(
+            request,
+            "v2/compare.html",
+            {"user": user, "result": None},
+        )
+
+    system = CONTENT_CREATOR_SYSTEM if mode == "content_creation" else THERAPY_AGENT_SYSTEM
+    agent = content_agent if mode == "content_creation" else therapy_agent
+
+    def _passage_text(p) -> str:
+        return p["text"] if isinstance(p, dict) else str(p)
+
+    bare_answer = invoke_text(agent.llm, system, message)
+    rag_result = agent.compare(message)
+    selfrag_result = agent.compare_selfrag(message)
+
+    return templates.TemplateResponse(
+        request,
+        "v2/compare.html",
+        {
+            "user": user,
+            "result": {
+                "message": message,
+                "mode": mode,
+                "bare": bare_answer,
+                "rag": rag_result["answer"],
+                "passages": [_passage_text(p) for p in rag_result["passages"]],
+                "critique": rag_result.get("critique", ""),
+                "selfrag": selfrag_result["answer"],
+                "selfrag_passages": [_passage_text(p) for p in selfrag_result["passages"]],
+                "selfrag_critique": selfrag_result.get("critique", ""),
+                "selfrag_state": selfrag_result.get("selfrag_state", ""),
+            },
+        },
+    )

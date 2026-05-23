@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Companion — Compare voices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F2;
+    --surface: #FFFFFF;
+    --surface-muted: #F0EDE8;
+    --border: #E2DDD7;
+
+    --primary: #7A9E87;
+    --primary-dark: #5C8270;
+    --primary-light: #EAF2ED;
+
+    --accent: #B08BA5;
+    --accent-light: #F3EDF6;
+
+    --user-bubble: #EAF2ED;
+
+    --crisis: #E8A87C;
+    --crisis-bg: #FBEEE2;
+    --crisis-border: #C97E50;
+
+    --text-primary: #2D2926;
+    --text-secondary: #6B6560;
+    --text-muted: #9E9791;
+
+    --radius-bubble: 20px;
+    --radius-input: 18px;
+    --shadow-soft: 0 2px 12px rgba(0,0,0,0.06);
+
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --t-slow: 280ms;
+    --t-med: 220ms;
+
+    --sidebar-w: 260px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: "Nunito", Inter, system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+  }
+  button { font-family: inherit; cursor: pointer; }
+  textarea { font-family: inherit; }
+
+  /* ─── Layout ────────────────────────────────────────────── */
+
+  .app { position: relative; height: 100vh; width: 100%; }
+
+  /* ─── Sidebar handle ────────────────────────────────────── */
+  .sidebar-handle {
+    position: fixed;
+    top: 22px;
+    left: 22px;
+    z-index: 40;
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: var(--text-muted);
+    transition: background var(--t-med) var(--ease), color var(--t-med) var(--ease);
+  }
+  .sidebar-handle:hover {
+    background: rgba(0,0,0,0.04);
+    color: var(--text-secondary);
+  }
+  .sidebar-handle svg { width: 18px; height: 18px; }
+
+  /* ─── Conversation area ─────────────────────────────────── */
+
+  .conversation {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .messages-wrap {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d8d2cb transparent;
+  }
+  .messages-wrap::-webkit-scrollbar { width: 8px; }
+  .messages-wrap::-webkit-scrollbar-thumb { background: #d8d2cb; border-radius: 4px; }
+
+  .messages {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 64px 28px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  /* ── User turn (centered) ─────────────────────────────── */
+  .turn.user {
+    display: flex;
+    justify-content: center;
+  }
+  .turn.user .bubble {
+    position: relative;
+    max-width: 620px;
+    padding: 12px 16px;
+    border-radius: var(--radius-bubble);
+    background: var(--user-bubble);
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    animation: fadeUp var(--t-slow) var(--ease) both;
+  }
+  .turn.user .bubble p { margin: 0; }
+
+  /* ── Agent row: three columns ─────────────────────────── */
+  .agent-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .agent-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .agent-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 0 6px;
+  }
+  .agent-label .swatch {
+    width: 8px; height: 8px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .agent-col[data-voice="reflective"] .swatch { background: var(--primary); }
+  .agent-col[data-voice="grounded"]   .swatch { background: var(--accent); }
+  .agent-col[data-voice="practical"]  .swatch { background: #C9A86B; }
+
+  .agent-voice {
+    position: relative;
+    padding: 14px 16px;
+    border-radius: var(--radius-bubble);
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+    color: var(--text-primary);
+    font-size: 15px;
+    line-height: 1.6;
+    animation: fadeUp var(--t-slow) var(--ease) both;
+  }
+  .agent-voice p { margin: 0; }
+  .agent-voice p + p { margin-top: 10px; }
+
+  /* Sentence streaming */
+  .agent-voice .s {
+    transition: opacity 700ms var(--ease), filter 700ms var(--ease);
+  }
+  .agent-voice .s.streaming { opacity: 0; filter: blur(2px); }
+  .agent-voice .s.shown     { opacity: 1; filter: blur(0); }
+
+  /* "use this" pick affordance */
+  .pick {
+    align-self: flex-start;
+    margin-left: 6px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+    opacity: 0;
+    transition: opacity var(--t-med) var(--ease), color var(--t-med) var(--ease), border-color var(--t-med) var(--ease), background var(--t-med) var(--ease);
+  }
+  .agent-col:hover .pick,
+  .pick.is-selected { opacity: 1; }
+  .pick:hover {
+    color: var(--primary-dark);
+    border-color: rgba(122,158,135,0.4);
+  }
+  .pick.is-selected {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    border-color: rgba(122,158,135,0.4);
+  }
+
+  .agent-col.is-dimmed .agent-voice {
+    opacity: 0.55;
+    transition: opacity var(--t-med) var(--ease);
+  }
+
+  /* Typing dots */
+  .typing {
+    display: inline-flex;
+    gap: 6px;
+    padding: 4px 0;
+    align-items: center;
+  }
+  .typing .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #c2cdc6;
+    animation: pulse 1.4s var(--ease) infinite;
+  }
+  .typing .dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+    40%           { opacity: 1;   transform: translateY(-2px); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Composer ─────────────────────────────────────────── */
+  .composer-wrap { background: transparent; }
+  .composer {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 8px 24px 22px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .input-shell {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-input);
+    padding: 12px 14px;
+    box-shadow: var(--shadow-soft);
+    transition: border-color var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+  }
+  .input-shell:focus-within {
+    border-color: #cfd9d2;
+    box-shadow: 0 0 0 3px rgba(122,158,135,0.12), var(--shadow-soft);
+  }
+  .composer textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 15.5px;
+    line-height: 1.55;
+    max-height: calc(1.55em * 5);
+    overflow-y: auto;
+  }
+  .composer textarea::placeholder { color: var(--text-muted); }
+
+  .send {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow-soft);
+    transition: background var(--t-med) var(--ease), transform var(--t-med) var(--ease), opacity var(--t-med) var(--ease);
+    flex-shrink: 0;
+  }
+  .send:hover:not(:disabled) { background: var(--primary-dark); }
+  .send:active { transform: translateY(1px); }
+  .send:disabled { opacity: 0.4; cursor: default; }
+  .send svg { width: 18px; height: 18px; }
+
+  /* responsive — stack columns on narrow screens */
+  @media (max-width: 880px) {
+    .agent-row { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+  <div class="app">
+
+    <button class="sidebar-handle" type="button" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>
+      </svg>
+    </button>
+
+    <main class="conversation">
+      <div class="messages-wrap" id="messagesWrap">
+        <div class="messages" id="messages">
+
+          <!-- ── User turn ─────────────────────────────────── -->
+          <div class="turn user">
+            <div class="bubble">
+              <p>Honestly, I'm a bit fried. I had three back-to-back meetings this morning and I haven't even started the thing I actually need to finish today.</p>
+            </div>
+          </div>
+
+          <!-- ── Three agent responses ────────────────────── -->
+          <div class="agent-row">
+            <div class="agent-col" data-voice="reflective">
+              <div class="agent-label"><span class="swatch"></span>Reflective</div>
+              <div class="agent-voice">
+                <p>That sounds like a lot already, and the day is still in front of you. When you say "fried" — does that feel more like exhaustion, or more like the kind of buzzy, can't-sit-still tension?</p>
+              </div>
+              <button class="pick" type="button">Continue with this</button>
+            </div>
+
+            <div class="agent-col" data-voice="grounded">
+              <div class="agent-label"><span class="swatch"></span>Grounded</div>
+              <div class="agent-voice">
+                <p>Before we look at the task, let's notice the body for a second. Where are you carrying the morning right now — chest, shoulders, jaw? You don't have to fix it. Just naming it counts.</p>
+              </div>
+              <button class="pick" type="button">Continue with this</button>
+            </div>
+
+            <div class="agent-col" data-voice="practical">
+              <div class="agent-label"><span class="swatch"></span>Practical</div>
+              <div class="agent-voice">
+                <p>Three back-to-back is a lot. Let's not try to start the whole thing. What's the smallest possible first move — opening the doc, writing one sentence, sketching an outline? We can pick from there.</p>
+              </div>
+              <button class="pick" type="button">Continue with this</button>
+            </div>
+          </div>
+
+          <!-- ── User turn ─────────────────────────────────── -->
+          <div class="turn user">
+            <div class="bubble">
+              <p>The buzzy kind. My chest feels tight and I keep refreshing my email instead of just opening the doc.</p>
+            </div>
+          </div>
+
+          <!-- ── Three agent responses ────────────────────── -->
+          <div class="agent-row">
+            <div class="agent-col" data-voice="reflective">
+              <div class="agent-label"><span class="swatch"></span>Reflective</div>
+              <div class="agent-voice">
+                <p>Thank you for noticing that. The email-refreshing is a really honest signal — your nervous system is asking for a small offramp before it can settle into focused work.</p>
+              </div>
+              <button class="pick" type="button">Continue with this</button>
+            </div>
+
+            <div class="agent-col" data-voice="grounded">
+              <div class="agent-label"><span class="swatch"></span>Grounded</div>
+              <div class="agent-voice">
+                <p>The tight chest makes sense — it's a held breath looking for somewhere to go. Try this: in for four, hold for two, out for six. One round. I'll wait.</p>
+              </div>
+              <button class="pick" type="button">Continue with this</button>
+            </div>
+
+            <div class="agent-col" data-voice="practical">
+              <div class="agent-label"><span class="swatch"></span>Practical</div>
+              <div class="agent-voice">
+                <p>Close the email tab for ten minutes. Open the doc and write a single rough sentence — even a bad one. Momentum first, quality after. Want me to set a soft timer?</p>
+              </div>
+              <button class="pick" type="button">Continue with this</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Composer -->
+      <div class="composer-wrap">
+        <div class="composer">
+          <div class="input-shell">
+            <textarea id="composer" rows="1" placeholder="Write something…" aria-label="Message"></textarea>
+          </div>
+          <button class="send" id="sendBtn" type="button" aria-label="Send" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12l14 0"/><path d="M13 6l6 6-6 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+  // ── Composer ───────────────────────────────────────────────
+  const ta       = document.getElementById('composer');
+  const sendBtn  = document.getElementById('sendBtn');
+  const messages = document.getElementById('messages');
+  const wrap     = document.getElementById('messagesWrap');
+
+  function autosize() {
+    ta.style.height = 'auto';
+    const lh = parseFloat(getComputedStyle(ta).lineHeight);
+    ta.style.height = Math.min(ta.scrollHeight, lh * 5) + 'px';
+  }
+  function updateState() {
+    sendBtn.disabled = ta.value.trim().length === 0;
+    autosize();
+  }
+  ta.addEventListener('input', updateState);
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+  });
+  sendBtn.addEventListener('click', send);
+
+  function scrollToBottom() {
+    wrap.scrollTo({ top: wrap.scrollHeight, behavior: 'smooth' });
+  }
+
+  function splitSentences(text) {
+    const out = [];
+    const re = /[^.!?…]+[.!?…]+["')\]]*|\s*[^.!?…]+$/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const seg = m[0];
+      if (seg.trim().length) out.push(seg);
+    }
+    return out;
+  }
+
+  function appendUser(text) {
+    const t = document.createElement('div');
+    t.className = 'turn user';
+    t.innerHTML = `<div class="bubble"><p></p></div>`;
+    t.querySelector('p').textContent = text;
+    messages.appendChild(t);
+    scrollToBottom();
+  }
+
+  // Streaming reveal inside an already-mounted .agent-voice
+  function streamInto(voiceEl, paragraphs, startDelay) {
+    const dots = document.createElement('span');
+    dots.className = 'typing';
+    dots.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    voiceEl.appendChild(dots);
+
+    const allSpans = [];
+    setTimeout(() => {
+      voiceEl.removeChild(dots);
+      paragraphs.forEach(paraText => {
+        const p = document.createElement('p');
+        voiceEl.appendChild(p);
+        splitSentences(paraText).forEach(s => {
+          const span = document.createElement('span');
+          span.className = 's streaming';
+          span.textContent = s;
+          p.appendChild(span);
+          allSpans.push(span);
+        });
+      });
+      let i = 0;
+      const reveal = () => {
+        if (i >= allSpans.length) return;
+        const span = allSpans[i++];
+        span.classList.remove('streaming');
+        span.classList.add('shown');
+        scrollToBottom();
+        const len = span.textContent.trim().length;
+        const delay = Math.min(2600, Math.max(900, 55 * len));
+        setTimeout(reveal, delay);
+      };
+      reveal();
+    }, startDelay);
+  }
+
+  // Three voices with distinct angles for the same user message
+  const voiceBank = {
+    reflective: [
+      ["Thank you for sharing that. Let's stay with it for a moment — what part of it feels loudest right now?"],
+      ["I hear you. That sounds tender. Is there a piece of it you want to say more about?"],
+      ["That makes a lot of sense. You don't have to make sense of it all at once."],
+    ],
+    grounded: [
+      ["Notice your feet on the floor for a breath. You don't have to do anything with what you said yet — just let it land."],
+      ["Where is that feeling living in your body right now? Sometimes it helps to point to it before we talk about it."],
+      ["Take one slow breath in, a longer one out. I'm right here on the exhale."],
+    ],
+    practical: [
+      ["Let's narrow it down. Of everything you just named, which one piece would make the next hour easier if it shifted, even a little?"],
+      ["Small move: write down one sentence about what you'd want different by tonight. We'll work from there."],
+      ["Want to break this into two parts — what's in your control today, and what isn't? I'll hold the list."],
+    ],
+  };
+  let bankIdx = 0;
+
+  function appendAgentRow() {
+    const row = document.createElement('div');
+    row.className = 'agent-row';
+    row.innerHTML = `
+      <div class="agent-col" data-voice="reflective">
+        <div class="agent-label"><span class="swatch"></span>Reflective</div>
+        <div class="agent-voice"></div>
+        <button class="pick" type="button">Continue with this</button>
+      </div>
+      <div class="agent-col" data-voice="grounded">
+        <div class="agent-label"><span class="swatch"></span>Grounded</div>
+        <div class="agent-voice"></div>
+        <button class="pick" type="button">Continue with this</button>
+      </div>
+      <div class="agent-col" data-voice="practical">
+        <div class="agent-label"><span class="swatch"></span>Practical</div>
+        <div class="agent-voice"></div>
+        <button class="pick" type="button">Continue with this</button>
+      </div>`;
+    messages.appendChild(row);
+    scrollToBottom();
+
+    const reply = (v) => voiceBank[v][bankIdx % voiceBank[v].length];
+    streamInto(row.querySelector('[data-voice="reflective"] .agent-voice'), reply('reflective'), 1100);
+    streamInto(row.querySelector('[data-voice="grounded"] .agent-voice'),   reply('grounded'),   1500);
+    streamInto(row.querySelector('[data-voice="practical"] .agent-voice'),  reply('practical'),  1900);
+    bankIdx++;
+    attachPicks(row);
+  }
+
+  function attachPicks(scope) {
+    scope.querySelectorAll('.pick').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('.agent-row');
+        const chosen = btn.closest('.agent-col');
+        row.querySelectorAll('.agent-col').forEach(c => {
+          if (c === chosen) {
+            c.classList.remove('is-dimmed');
+            c.querySelector('.pick').classList.add('is-selected');
+            c.querySelector('.pick').textContent = 'Selected';
+          } else {
+            c.classList.add('is-dimmed');
+            c.querySelector('.pick').classList.remove('is-selected');
+            c.querySelector('.pick').textContent = 'Continue with this';
+          }
+        });
+      });
+    });
+  }
+  attachPicks(document); // bind initial rows
+
+  function send() {
+    const text = ta.value.trim();
+    if (!text) return;
+    appendUser(text);
+    ta.value = '';
+    updateState();
+    appendAgentRow();
+  }
+
+  updateState();
+  scrollToBottom();
+</script>
+</body>
+</html>

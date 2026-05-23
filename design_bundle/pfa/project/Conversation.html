@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Companion — Conversation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F2;
+    --surface: #FFFFFF;
+    --surface-muted: #F0EDE8;
+    --border: #E2DDD7;
+
+    --primary: #7A9E87;
+    --primary-dark: #5C8270;
+    --primary-light: #EAF2ED;
+
+    --accent: #B08BA5;
+    --accent-light: #F3EDF6;
+
+    --user-bubble: #EAF2ED;
+    --agent-bubble: #FFFFFF;
+
+    --crisis: #E8A87C;
+    --crisis-bg: #FBEEE2;
+    --crisis-border: #C97E50;
+
+    --text-primary: #2D2926;
+    --text-secondary: #6B6560;
+    --text-muted: #9E9791;
+
+    --radius-card: 14px;
+    --radius-bubble: 20px;
+    --radius-input: 8px;
+    --shadow-soft: 0 2px 12px rgba(0,0,0,0.06);
+
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --t-slow: 280ms;
+    --t-med: 220ms;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: "Nunito", Inter, system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  button { font-family: inherit; cursor: pointer; }
+  textarea { font-family: inherit; }
+
+  /* ─── Layout ────────────────────────────────────────────── */
+
+  .app {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    height: 100vh;
+    width: 100%;
+  }
+
+  /* ─── Sidebar ───────────────────────────────────────────── */
+
+  .sidebar {
+    background: var(--surface-muted);
+    display: flex;
+    flex-direction: column;
+    padding: 22px 14px 16px;
+    gap: 14px;
+    border-right: 1px solid var(--border);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 4px 8px 2px;
+  }
+  .brand-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #A9C4B3 0%, var(--primary) 70%);
+  }
+  .brand-name {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.2px;
+    color: var(--text-primary);
+  }
+
+  .new-conversation {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-input);
+    padding: 11px 14px;
+    font-weight: 600;
+    font-size: 14.5px;
+    letter-spacing: 0.1px;
+    transition: background var(--t-med) var(--ease), transform var(--t-med) var(--ease);
+  }
+  .new-conversation:hover { background: var(--primary-dark); }
+  .new-conversation:active { transform: translateY(1px); }
+
+  .history-label {
+    color: var(--text-muted);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    padding: 4px 8px 0;
+    font-weight: 600;
+  }
+
+  .history {
+    flex: 1;
+    overflow-y: auto;
+    margin: 0 -4px;
+    padding: 2px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    scrollbar-width: thin;
+    scrollbar-color: #d8d2cb transparent;
+  }
+  .history::-webkit-scrollbar { width: 6px; }
+  .history::-webkit-scrollbar-thumb { background: #d8d2cb; border-radius: 3px; }
+
+  .history-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 9px 10px;
+    border-radius: 10px;
+    color: var(--text-primary);
+    transition: background var(--t-med) var(--ease);
+  }
+  .history-item:hover { background: rgba(0,0,0,0.03); }
+  .history-item.active { background: var(--primary-light); }
+
+  .history-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.35;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .history-time {
+    display: block;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* mode switcher (pills) */
+  .mode-switch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: rgba(0,0,0,0.04);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .mode-pill {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 7px 0;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background var(--t-med) var(--ease), color var(--t-med) var(--ease);
+  }
+  .mode-pill.active {
+    background: var(--surface);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background var(--t-med) var(--ease);
+  }
+  .profile:hover { background: rgba(0,0,0,0.03); }
+  .avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12.5px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .profile-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .profile-meta {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.2;
+  }
+
+  /* ─── Conversation area ─────────────────────────────────── */
+
+  .conversation {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .conv-header {
+    padding: 22px 24px 6px;
+    text-align: center;
+  }
+  .conv-title {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    margin: 0;
+  }
+
+  .messages-wrap {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d8d2cb transparent;
+  }
+  .messages-wrap::-webkit-scrollbar { width: 8px; }
+  .messages-wrap::-webkit-scrollbar-thumb { background: #d8d2cb; border-radius: 4px; }
+
+  .messages {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 18px 24px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .day-divider {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 11.5px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin: 6px 0 -4px;
+    font-weight: 600;
+  }
+
+  .turn {
+    display: flex;
+    flex-direction: column;
+  }
+  .turn.user { align-items: flex-end; }
+  .turn.agent { align-items: flex-start; }
+
+  .companion-label {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    margin: 0 0 6px 4px;
+  }
+
+  .bubble {
+    position: relative;
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: var(--radius-bubble);
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    animation: fadeUp var(--t-slow) var(--ease) both;
+  }
+  .bubble + .bubble { margin-top: 6px; }
+
+  .turn.user .bubble {
+    background: var(--user-bubble);
+    border-bottom-right-radius: 4px;
+  }
+  .turn.agent .bubble {
+    background: var(--agent-bubble);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+  }
+
+  /* hover timestamp */
+  .bubble .timestamp {
+    position: absolute;
+    bottom: -18px;
+    font-size: 11px;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity var(--t-med) var(--ease);
+    white-space: nowrap;
+  }
+  .turn.user .bubble .timestamp { right: 4px; }
+  .turn.agent .bubble .timestamp { left: 4px; }
+  .bubble:hover .timestamp { opacity: 1; }
+
+  .bubble p { margin: 0; }
+  .bubble p + p { margin-top: 8px; }
+
+  /* crisis */
+  .crisis-prelude {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 4px 4px 8px;
+    font-style: normal;
+  }
+  .turn.agent .bubble.crisis {
+    background: var(--crisis-bg);
+    border: 1px solid var(--crisis-border);
+  }
+  .crisis-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .crisis-link {
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(201,126,80,0.35);
+    color: #6F3F22;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background var(--t-med) var(--ease);
+  }
+  .crisis-link:hover { background: rgba(255,255,255,0.95); }
+
+  /* typing indicator */
+  .typing {
+    display: inline-flex;
+    gap: 5px;
+    padding: 14px 18px;
+    align-items: center;
+  }
+  .typing .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #cfd9d2;
+    animation: pulse 1.2s var(--ease) infinite;
+  }
+  .typing .dot:nth-child(2) { animation-delay: 0.15s; }
+  .typing .dot:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.35; transform: translateY(0); }
+    40%           { opacity: 1;    transform: translateY(-2px); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Input area ────────────────────────────────────────── */
+
+  .composer-wrap {
+    background: transparent;
+  }
+  .composer {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 8px 24px 22px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .input-shell {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 12px 14px;
+    box-shadow: var(--shadow-soft);
+    transition: border-color var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+  }
+  .input-shell:focus-within {
+    border-color: #cfd9d2;
+    box-shadow: 0 0 0 3px rgba(122,158,135,0.12), var(--shadow-soft);
+  }
+
+  .composer textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 15.5px;
+    line-height: 1.55;
+    max-height: calc(1.55em * 5);
+    overflow-y: auto;
+  }
+  .composer textarea::placeholder { color: var(--text-muted); }
+
+  .send {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow-soft);
+    transition: background var(--t-med) var(--ease), transform var(--t-med) var(--ease), opacity var(--t-med) var(--ease);
+    flex-shrink: 0;
+  }
+  .send:hover:not(:disabled) { background: var(--primary-dark); }
+  .send:active { transform: translateY(1px); }
+  .send:disabled { opacity: 0.4; cursor: default; }
+  .send svg { width: 18px; height: 18px; }
+
+</style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- ───── Sidebar ───── -->
+    <aside class="sidebar" aria-label="Conversation history">
+      <div class="brand">
+        <div class="brand-name">Companion</div>
+      </div>
+
+      <button class="new-conversation" type="button">New conversation</button>
+
+      <div class="history-label">Recent</div>
+
+      <div class="history" role="list">
+        <button class="history-item active" role="listitem">
+          <p class="history-title">Feeling overwhelmed at work</p>
+          <span class="history-time">Just now</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Sleep has been off again</p>
+          <span class="history-time">Yesterday</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Sunday afternoon check-in</p>
+          <span class="history-time">3 days ago</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Talking to my sister again</p>
+          <span class="history-time">Last week</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Letting go of the deadline</p>
+          <span class="history-time">Last week</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Why mornings feel heavy</p>
+          <span class="history-time">2 weeks ago</span>
+        </button>
+        <button class="history-item" role="listitem">
+          <p class="history-title">Small wins this week</p>
+          <span class="history-time">3 weeks ago</span>
+        </button>
+      </div>
+
+      <button class="profile" type="button">
+        <div class="avatar" aria-hidden="true">M</div>
+        <div>
+          <div class="profile-name">Maya R.</div>
+          <div class="profile-meta">Profile &amp; settings</div>
+        </div>
+      </button>
+    </aside>
+
+    <!-- ───── Conversation ───── -->
+    <main class="conversation">
+      <header class="conv-header">
+        <p class="conv-title">Feeling overwhelmed at work · Today</p>
+      </header>
+
+      <div class="messages-wrap" id="messagesWrap">
+        <div class="messages" id="messages">
+
+          <div class="day-divider">Today</div>
+
+          <!-- Agent opener -->
+          <div class="turn agent">
+            <p class="companion-label">Companion</p>
+            <div class="bubble">
+              <p>Hi Maya. It's good to see you here again. How are you arriving today — what's most on your mind?</p>
+              <span class="timestamp">9:42 AM</span>
+            </div>
+          </div>
+
+          <!-- User -->
+          <div class="turn user">
+            <div class="bubble">
+              <p>Honestly, I'm a bit fried. I had three back-to-back meetings this morning and I haven't even started the thing I actually need to finish today.</p>
+              <span class="timestamp">9:44 AM</span>
+            </div>
+          </div>
+
+          <!-- Agent (consecutive) -->
+          <div class="turn agent">
+            <p class="companion-label">Companion</p>
+            <div class="bubble">
+              <p>That sounds like a lot already, and the day is still in front of you. When you say "fried" — does that feel more like exhaustion, or more like the kind of buzzy, can't-sit-still tension?</p>
+              <span class="timestamp">9:44 AM</span>
+            </div>
+          </div>
+
+          <!-- User -->
+          <div class="turn user">
+            <div class="bubble">
+              <p>The buzzy kind. My chest feels tight and I keep refreshing my email instead of just opening the doc.</p>
+              <span class="timestamp">9:46 AM</span>
+            </div>
+          </div>
+
+          <!-- Agent (multi-bubble run) -->
+          <div class="turn agent">
+            <p class="companion-label">Companion</p>
+            <div class="bubble">
+              <p>Thank you for noticing that — the email-refreshing is a really honest signal. Your nervous system is asking for a small offramp before it can settle into focused work.</p>
+              <span class="timestamp">9:47 AM</span>
+            </div>
+            <div class="bubble">
+              <p>Would you be willing to try one minute of slower breathing with me before we look at the doc together? No pressure if it doesn't feel right.</p>
+              <span class="timestamp">9:47 AM</span>
+            </div>
+          </div>
+
+          <!-- User -->
+          <div class="turn user">
+            <div class="bubble">
+              <p>Yeah, ok. Sometimes it just feels like nothing I do is going to be enough and I should just stop trying.</p>
+              <span class="timestamp">9:49 AM</span>
+            </div>
+          </div>
+
+          <!-- Crisis response (warm amber, not alarming) -->
+          <div class="turn agent">
+            <p class="crisis-prelude">I want to make sure you're safe.</p>
+            <div class="bubble crisis">
+              <p>What you said matters, and I want to slow down with it for a moment. When you say "stop trying," I'd like to gently check in — are you having any thoughts of hurting yourself, or of not wanting to be here?</p>
+              <p>Whatever the answer is, you're not in trouble, and you don't have to figure it out alone. If at any point it feels heavier than what we can hold here, talking to a person is a good next step.</p>
+              <div class="crisis-actions">
+                <a href="#" class="crisis-link">Call 988</a>
+                <a href="#" class="crisis-link">Text a counselor</a>
+                <a href="#" class="crisis-link">Find local support</a>
+              </div>
+              <span class="timestamp">9:49 AM</span>
+            </div>
+          </div>
+
+          <!-- User -->
+          <div class="turn user">
+            <div class="bubble">
+              <p>No, nothing like that. Just frustrated with myself. Sorry, I didn't mean to make it sound that big.</p>
+              <span class="timestamp">9:51 AM</span>
+            </div>
+          </div>
+
+          <!-- Agent -->
+          <div class="turn agent">
+            <p class="companion-label">Companion</p>
+            <div class="bubble">
+              <p>You don't have to apologise — I'd rather pause and check than miss it. Frustration with yourself on a morning like this makes a lot of sense. Want to start with that one minute of breathing, and then look at the doc one small piece at a time?</p>
+              <span class="timestamp">9:52 AM</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Composer -->
+      <div class="composer-wrap">
+        <div class="composer">
+          <div class="input-shell">
+            <textarea id="composer" rows="1" placeholder="Write something…" aria-label="Message"></textarea>
+          </div>
+          <button class="send" id="sendBtn" type="button" aria-label="Send" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12l14 0"/>
+              <path d="M13 6l6 6-6 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+  // ── Composer: auto-grow + send + typing indicator ──────────
+  const ta        = document.getElementById('composer');
+  const sendBtn   = document.getElementById('sendBtn');
+  const messages  = document.getElementById('messages');
+  const wrap      = document.getElementById('messagesWrap');
+
+  function autosize() {
+    ta.style.height = 'auto';
+    const lineHeight = parseFloat(getComputedStyle(ta).lineHeight);
+    const max = lineHeight * 5;
+    ta.style.height = Math.min(ta.scrollHeight, max) + 'px';
+  }
+
+  function updateState() {
+    const len = ta.value.trim().length;
+    sendBtn.disabled = len === 0;
+    autosize();
+  }
+
+  ta.addEventListener('input', updateState);
+  ta.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  });
+  sendBtn.addEventListener('click', send);
+
+  function nowLabel() {
+    const d = new Date();
+    let h = d.getHours();
+    const m = String(d.getMinutes()).padStart(2, '0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    return `${h}:${m} ${ampm}`;
+  }
+
+  function scrollToBottom() {
+    wrap.scrollTo({ top: wrap.scrollHeight, behavior: 'smooth' });
+  }
+
+  function appendUser(text) {
+    const t = document.createElement('div');
+    t.className = 'turn user';
+    t.innerHTML = `
+      <div class="bubble">
+        <p></p>
+        <span class="timestamp">${nowLabel()}</span>
+      </div>`;
+    t.querySelector('p').textContent = text;
+    messages.appendChild(t);
+    scrollToBottom();
+  }
+
+  function appendTyping() {
+    const t = document.createElement('div');
+    t.className = 'turn agent';
+    t.id = 'typingTurn';
+    t.innerHTML = `
+      <p class="companion-label">Companion</p>
+      <div class="bubble" aria-label="Companion is typing">
+        <span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
+      </div>`;
+    messages.appendChild(t);
+    scrollToBottom();
+  }
+
+  function replaceTypingWithReply(text) {
+    const t = document.getElementById('typingTurn');
+    if (!t) return;
+    t.id = '';
+    const bubble = t.querySelector('.bubble');
+    bubble.innerHTML = '';
+    const p = document.createElement('p');
+    p.textContent = text;
+    bubble.appendChild(p);
+    const ts = document.createElement('span');
+    ts.className = 'timestamp';
+    ts.textContent = nowLabel();
+    bubble.appendChild(ts);
+    scrollToBottom();
+  }
+
+  const replies = [
+    "Thank you for sharing that. Let's stay with it for a moment — what part of it feels loudest right now?",
+    "I hear you. That sounds tender. Is there a small thing that usually helps, even a little?",
+    "That's a lot to carry. You don't have to make sense of it all at once.",
+    "Mm. Take your time. I'm right here whenever you want to keep going."
+  ];
+  let replyIdx = 0;
+
+  function send() {
+    const text = ta.value.trim();
+    if (!text) return;
+    appendUser(text);
+    ta.value = '';
+    updateState();
+    appendTyping();
+    setTimeout(() => {
+      replaceTypingWithReply(replies[replyIdx % replies.length]);
+      replyIdx++;
+    }, 1400);
+  }
+
+  // ── History selection ───────────────────────────────────────
+  document.querySelectorAll('.history-item').forEach(h => {
+    h.addEventListener('click', () => {
+      document.querySelectorAll('.history-item').forEach(x => x.classList.remove('active'));
+      h.classList.add('active');
+    });
+  });
+
+  // initial scroll + sizing
+  updateState();
+  scrollToBottom();
+</script>
+</body>
+</html>
