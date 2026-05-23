@@ -341,7 +341,24 @@ messages(id, conversation_id, role, content, metadata, created_at)
 
 **User fields:** `user_id`, `email`, `age`, `mood_baseline` (1–10), `goals` (list), `country`, `job`, `relationship_status`
 
-Passwords are hashed with **bcrypt**. Profile fields are updated via `update_profile()` and `update_extracted_fields()` (for LLM-inferred fields in future).
+Passwords are hashed with **bcrypt**. Profile fields are updated via `update_profile()` (manual) and `update_extracted_fields()` (LLM-inferred — see Profile Extractor below).
+
+---
+
+### Profile Extractor (`agents/profile_extractor.py`)
+
+`extract_profile(llm, messages)` runs a silent LLM pass over recent conversation messages and returns a dict of inferred user facts.
+
+**Extracted fields:** `age` (int), `goals` (list of strings), `job` (string), `relationship_status` (string). Fields the model cannot determine with high confidence are omitted (not null).
+
+**Trigger — `VirtualTherapyAgent._maybe_extract_profile()`:** Called after every assistant turn. Runs at different intervals depending on profile completeness:
+
+| Profile state | Interval |
+|---|---|
+| Incomplete | Every 2 assistant turns |
+| Complete | Every 4 assistant turns |
+
+Uses the last 20 messages as input. Results are merged into the user record via `UserStore.update_extracted_fields()`. Only fields with confident values are written — existing fields are not cleared.
 
 ---
 
