@@ -10,7 +10,8 @@ _SYSTEM = (
     "Given a therapy conversation, extract any personal facts the user has revealed. "
     "Return ONLY a JSON object — no prose, no markdown. "
     "Use null for fields you cannot determine with high confidence. "
-    "Fields: age (int), goals (list of strings), job (string), relationship_status (string)."
+    "Fields: age (int), goals (list of strings), job (string), relationship_status (string). "
+    "For job: if the person is unemployed, actively job-seeking, or has no current job, use the string \"unemployed\" rather than null."
 )
 
 _PROMPT_TMPL = """Conversation:

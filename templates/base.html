@@ -12,7 +12,7 @@
     {% if user %}
     <div class="nav-right">
         <a href="/compare">Compare</a>
-        <span class="nav-username">{{ user.username }}</span>
+        <a href="/debug/profile/{{ user.id }}" target="_blank" class="nav-username">{{ user.username }} [{{ user.id[:8] }}]</a>
         <a href="/logout">Logout</a>
     </div>
     {% endif %}

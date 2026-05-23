@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from agents.config import Settings, get_settings
 from agents.utils import strip_dashes
 from safety_classifier.classifier import SafetyClassifier
@@ -16,8 +18,8 @@ from agents.rag import RAGStore, format_context, messages_to_history
 from chat_pipeline import _route_retrieval_mode
 from session.users import User, UserStore
 
-_EXTRACT_EVERY_INCOMPLETE = 10
-_EXTRACT_EVERY_COMPLETE = 20
+_EXTRACT_EVERY_INCOMPLETE = 2
+_EXTRACT_EVERY_COMPLETE = 4
 
 
 def _build_profile_block(user: User) -> str | None:
@@ -292,13 +294,41 @@ class VirtualTherapyAgent:
 
         profile_section = f"\n{profile_block}\n" if profile_block else ""
 
+        last_assistant = next(
+            (m["content"] for m in reversed(recent_messages) if m["role"] == "assistant"),
+            None,
+        )
+
+        asked_questions = [
+            sentence.strip()
+            for m in recent_messages if m["role"] == "assistant"
+            for sentence in re.split(r"(?<=[.?!])\s+", m["content"])
+            if sentence.strip().endswith("?")
+        ]
+
+        continuity_section = ""
+        if last_assistant:
+            questions_block = (
+                "\nQuestions already asked in this conversation (do NOT ask any of these again, "
+                "or anything semantically equivalent):\n"
+                + "\n".join(f"- {q}" for q in asked_questions)
+                if asked_questions else ""
+            )
+            continuity_section = (
+                f"\nPrevious assistant turn: {last_assistant}\n"
+                f"User's reply to that: {user_input}\n"
+                "You MUST directly acknowledge what the user just said before anything else. "
+                "Do not re-suggest anything they already answered or committed to.\n"
+                f"{questions_block}\n"
+            )
+
         prompt = f"""
 Recent conversation:
 {history}
 
 Retrieved context:
 {context}
-{profile_section}
+{profile_section}{continuity_section}
 User message:
 {user_input}
 

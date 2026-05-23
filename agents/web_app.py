@@ -316,6 +316,27 @@ def compare_run(
     )
 
 
+@app.get("/debug/profile/{user_id}", response_class=HTMLResponse)
+def debug_profile(request: Request, user_id: str):
+    user = user_store.get_by_id(user_id)
+
+    if not user:
+        return HTMLResponse(f"<pre>No user found with id: {user_id}</pre>", status_code=404)
+
+    import json as _json
+    data = {
+        "user_id": user.user_id,
+        "email": user.email,
+        "age": user.age,
+        "goals": user.goals,
+        "job": user.job,
+        "relationship_status": user.relationship_status,
+        "profile_complete": user.profile_complete,
+        "updated_at": user.updated_at,
+    }
+    return HTMLResponse(f"<pre>{_json.dumps(data, indent=2)}</pre>")
+
+
 @app.post("/chat/{conversation_id}")
 def chat_send(
     request: Request,

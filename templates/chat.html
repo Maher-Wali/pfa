@@ -164,6 +164,29 @@
         {% else %}
         <p class="debug-empty">Send a message to see debug info here.</p>
         {% endif %}
+
+        {% if conversation.mode == "virtual_therapy" %}
+        <details class="debug-section" {% if user.age or user.job or user.relationship_status or user.goals %}open{% endif %}>
+            <summary>Extracted Profile</summary>
+            <div class="debug-block">
+                {% if user.age %}
+                <div class="debug-field"><span>Age</span><p>{{ user.age }}</p></div>
+                {% endif %}
+                {% if user.job %}
+                <div class="debug-field"><span>Job</span><p>{{ user.job }}</p></div>
+                {% endif %}
+                {% if user.relationship_status %}
+                <div class="debug-field"><span>Relationship</span><p>{{ user.relationship_status }}</p></div>
+                {% endif %}
+                {% if user.goals %}
+                <div class="debug-field"><span>Goals</span><p>{{ user.goals | join(", ") }}</p></div>
+                {% endif %}
+                {% if not user.age and not user.job and not user.relationship_status and not user.goals %}
+                <p class="debug-empty">No profile data extracted yet.</p>
+                {% endif %}
+            </div>
+        </details>
+        {% endif %}
     </aside>
 </div>
 {% endblock %}
