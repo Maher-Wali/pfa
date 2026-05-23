@@ -37,15 +37,15 @@ def build_llm(settings: Settings, temperature: float = 0.3) -> LLMClient:
     return LLMClient(settings, temperature)
 
 
-def invoke_text(llm: LLMClient, system: str, user: str) -> str:
+def invoke_text(llm: LLMClient, system: str, user: str, max_tokens: int | None = None) -> str:
     messages = []
     if system:
         messages.append({"role": "system", "content": system})
     messages.append({"role": "user", "content": user})
 
-    response = llm.client.chat.completions.create(
-        model=llm.model,
-        messages=messages,
-        temperature=llm.temperature,
-    )
+    kwargs = dict(model=llm.model, messages=messages, temperature=llm.temperature)
+    if max_tokens is not None:
+        kwargs["max_tokens"] = max_tokens
+
+    response = llm.client.chat.completions.create(**kwargs)
     return response.choices[0].message.content or ""

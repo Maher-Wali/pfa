@@ -35,7 +35,6 @@ from session.users import UserStore
 FIXTURES = Path(__file__).parent / "fixtures"
 RESULTS = Path(__file__).parent / "results"
 
-TEST_USER_EMAIL = "test-suite@pfa.internal"
 TEST_USER_PASSWORD = "test-suite-pw"
 
 
@@ -43,11 +42,10 @@ TEST_USER_PASSWORD = "test-suite-pw"
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _get_or_create_test_user(user_store: UserStore) -> str:
-    user = user_store.get_by_email(TEST_USER_EMAIL)
-    if user:
-        return user.user_id
-    user = user_store.create_user(email=TEST_USER_EMAIL, password=TEST_USER_PASSWORD)
+def _create_test_user(user_store: UserStore, run_id: str) -> str:
+    email = f"test-{run_id}@pfa.internal"
+    user = user_store.create_user(email=email, password=TEST_USER_PASSWORD)
+    print(f"Test user: {email} ({user.user_id})")
     return user.user_id
 
 
@@ -273,8 +271,7 @@ def main():
     settings = get_settings()
     db = ConversationDB(settings.sqlite_db_path)
     user_store = UserStore()
-    user_id = _get_or_create_test_user(user_store)
-    print(f"Test user: {TEST_USER_EMAIL} ({user_id})")
+    user_id = _create_test_user(user_store, run_id)
 
     run_all = args.suite == "all"
 
