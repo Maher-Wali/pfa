@@ -1,0 +1,25 @@
+agent: virtual_therapy
+conversations:
+  - id: mt_th_001
+    label: "work stress -> coping strategy -> follow-through"
+    turns:
+      - "I've been really stressed at work lately. My manager keeps moving deadlines and I feel like I'm always behind."
+      - "Yeah, the to-do list thing sounds useful. I think the bigger issue is that I say yes to everything and then regret it."
+      - "How do I actually say no without feeling guilty about it? Every time I try I feel like I'm letting people down."
+      - "That makes sense. I'll try that this week. But what if my manager pushes back when I set a boundary?"
+
+  - id: mt_th_002
+    label: "grief - opening up gradually"
+    turns:
+      - "I lost someone close to me recently. I don't really want to talk about it but I also feel like I need to."
+      - "It was my best friend. Car accident. It was sudden. I keep thinking I could have stopped it somehow."
+      - "I know logically it wasn't my fault but the guilt won't go away. What am I supposed to do with that?"
+      - "We used to talk every day. Now I reach for my phone to text him and then remember. How do people get through this?"
+
+  - id: mt_th_003
+    label: "anxiety technique -> tries it -> reports back"
+    turns:
+      - "I have really bad anxiety and I don't know where to start. Everything feels overwhelming."
+      - "Can you give me one concrete thing I can try today? Something small."
+      - "I tried the 4-7-8 breathing you mentioned. It helped a little but my mind still wandered a lot. Is that normal?"
+      - "Okay so the wandering is normal. What do I do when the anxiety hits at work in front of other people? I can't just start breathing exercises at my desk."

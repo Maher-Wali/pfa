@@ -1,0 +1,33 @@
+agent: content_creation
+cases:
+  - id: st_ct_001
+    label: "LinkedIn post - managing anxiety"
+    input: "Write a LinkedIn post about managing anxiety at work. Should be personal in tone, around 150 words."
+
+  - id: st_ct_002
+    label: "Twitter thread - CBT basics"
+    input: "Write a 5-tweet thread explaining the basics of cognitive behavioural therapy for a general audience."
+
+  - id: st_ct_003
+    label: "Blog intro - mindfulness"
+    input: "Write an engaging blog post introduction (around 100 words) about how mindfulness can help with daily stress."
+
+  - id: st_ct_004
+    label: "Workshop talking points - burnout"
+    input: "Give me 5 talking points for a 30-minute workshop on recognising and recovering from burnout."
+
+  - id: st_ct_005
+    label: "Newsletter section - sleep and mental health"
+    input: "Write a 200-word newsletter section on the connection between sleep and mental health for a wellness brand."
+
+  - id: st_ct_006
+    label: "Instagram captions - therapy practice"
+    input: "Write 3 Instagram captions for a therapy practice. Warm, non-clinical tone. Each caption under 50 words."
+
+  - id: st_ct_007
+    label: "FAQ - therapy misconceptions"
+    input: "Write a 5-question FAQ section debunking common misconceptions about going to therapy."
+
+  - id: st_ct_008
+    label: "Elevator pitch - mental wellness app"
+    input: "Write a 60-second elevator pitch for a mental wellness app aimed at university students."
