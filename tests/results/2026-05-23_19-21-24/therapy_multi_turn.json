@@ -1,0 +1,412 @@
+{
+  "suite": "therapy_multi_turn",
+  "agent": "virtual_therapy",
+  "run_at": "2026-05-23T19:30:49",
+  "conversations": [
+    {
+      "id": "mt_th_001",
+      "label": "work stress -> coping strategy -> follow-through",
+      "conversation_id": "27438186-4839-4238-9a4f-d3c4e26f2b93",
+      "turns": [
+        {
+          "turn": 1,
+          "input": "I've been really stressed at work lately. My manager keeps moving deadlines and I feel like I'm always behind.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Stress",
+              "text": "Technique: Stress | Modality: CBT | Source: Mental Health Foundation Talk to your doctor about how you’re feeling. They should be able to advise you on treatment and may refer you for further help. They may suggest talking therapies such as: Cognitive Behavioural Therapy (CBT) can help reduce stress by changing the ways you think about stressful situations brief interpersonal counselling, which ca"
+            },
+            {
+              "source": "Stress Management",
+              "text": "Technique: Stress Management | Modality: CBT | Source: HelpGuide But the truth is, you have a lot more control over stress than you may think. In fact, the simple realization that you’re in control of your life is the foundation of stress management. Managing stress is all about taking charge: of your thoughts, emotions, schedule, environment, and the way you deal with problems. The ultimate goal "
+            },
+            {
+              "source": "Stress Management",
+              "text": "Technique: Stress Management | Modality: CBT | Source: HelpGuide Chronic stress. This is when a stressor looms over you for a long time. Maybe you’re stuck in a tight financial situations for years. Or perhaps you or someone you love is dealing with a long-term health condition. You might feel a sense of hopelessness, as there doesn’t seem to be a break from the stress in sight. Identify the cause"
+            },
+            {
+              "source": "Stress Management",
+              "text": "Technique: Stress Management | Modality: CBT | Source: HelpGuide While you’re exercising, make a conscious effort to pay attention to your body and the physical (and sometimes emotional) sensations you experience as you’re moving. Focus on coordinating your breathing with your movements, for example, or notice how the air or sunlight feels on your skin. Adding this mindfulness element will help yo"
+            },
+            {
+              "source": "Understanding Stress",
+              "text": "Technique: Understanding Stress | Modality: CBT | Source: NHS It might affect how you feel physically and mentally, and also how you behave. It's not always easy to recognise when stress is the reason you're feeling or acting differently. Physical symptoms headaches or dizziness muscle tension or pain stomach problems chest pain or a faster heartbeat sexual problems Mental symptoms difficulty conc"
+            }
+          ],
+          "draft": "I hear how much pressure this is putting on you — it’s not just about the deadlines, but how they’re shifting without warning. That kind of uncertainty can really wear on your energy and focus. You’re not alone in feeling overwhelmed, even if it doesn’t feel like it right now.\n\nWhat’s been sitting with you the most lately?",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how much pressure this is putting on you, it’s not just about the deadlines, but how they’re shifting without warning. That kind of uncertainty can really wear on your energy and focus. You’re not alone in feeling overwhelmed, even if it doesn’t feel like it right now.\n\nWhat’s been sitting with you the most lately?",
+          "safe_mode": false,
+          "elapsed_s": 45.5
+        },
+        {
+          "turn": 2,
+          "input": "Yeah, the to-do list thing sounds useful. I think the bigger issue is that I say yes to everything and then regret it.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "DBT Skills for Your New Year’s Celebrations",
+              "text": "Technique: DBT Skills for Your New Year’s Celebrations | Modality: DBT | Source: DBT Self Help However, these things are crucial in managing emotions, which are sure to be running high anyway at this point in the year. We’ve all experienced losing our temper because we were exhausted or ravenous with hunger. Attending to your PLEASE skills can often help to prevent these types of blow-ups from hap"
+            },
+            {
+              "source": "My Most-Used DBT Skills",
+              "text": "Technique: My Most-Used DBT Skills | Modality: DBT | Source: DBT Self Help Options to Solve Any Problem Admittedly, this is not exactly a skill, but it is a very useful concept that I find myself coming back to time and again. It states that there are 4 options when dealing with a problem in life: 1) solve the problem; 2) feel better about the problem; 3) tolerate the problem; or 4) stay miserable"
+            },
+            {
+              "source": "My Most-Used DBT Skills",
+              "text": "Technique: My Most-Used DBT Skills | Modality: DBT | Source: DBT Self Help I would often eat a spicy candy when at work where I might not be able to use another, more visible skill, whereas at home, I might engage in a strenuous activity like cleaning to calm me down (which also incorporates the Intense Exercise of TIPP). Pushing away and thinking different Thoughts are also exceptionally useful w"
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide You might want to reassess limitations and expectations surrounding things like frequency of sex and contraception use. Emotional boundaries ensure that others are respectful of your emotional well-being and internal comfort level. When setting an emotional boundary, you might say something like, “I don’t want to talk about "
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide I hate hugs.” “I’d prefer a handshake over a hug.” “I suppose I can squeeze in more work over the weekend.” “I can help next week, but I cannot take this on over the weekend.” “You never return my books.” “When you’re done, can I please have my book back?” Feedback in romantic relationships In healthy romantic relationships "
+            }
+          ],
+          "draft": "I hear how much weight that’s carrying — saying yes to everything and then feeling like you’ve lost control. That’s exhausting, and it’s not your fault. You’re not alone in feeling that way. You’re not trying to be selfish — you’re just trying to keep up, and that’s hard.\n\nWhat if we tried something small, like setting a “no” boundary for one thing this week? Maybe just one thing — even if it’s something that feels “not urgent” — and then notice how it feels to say “no” without guilt. You don’t have to do it perfectly. Just enough to feel lighter.",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how much weight that’s carrying, saying yes to everything and then feeling like you’ve lost control. That’s exhausting, and it’s not your fault. You’re not alone in feeling that way. You’re not trying to be selfish, you’re just trying to keep up, and that’s hard.\n\nWhat if we tried something small, like setting a “no” boundary for one thing this week? Maybe just one thing, even if it’s something that feels “not urgent”, and then notice how it feels to say “no” without guilt. You don’t have to do it perfectly. Just enough to feel lighter.",
+          "safe_mode": false,
+          "elapsed_s": 38.9
+        },
+        {
+          "turn": 3,
+          "input": "How do I actually say no without feeling guilty about it? Every time I try I feel like I'm letting people down.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide For example, they might be upset that you’re asking for more “me time.” This could lead you to feel guilty or selfish. Remind yourself why you’re setting the restriction in the first place: You want some time alone to pursue your separate hobbies and avoid feeling emotionally crowded. Don’t feel you have to disregard your ow"
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide You might want to reassess limitations and expectations surrounding things like frequency of sex and contraception use. Emotional boundaries ensure that others are respectful of your emotional well-being and internal comfort level. When setting an emotional boundary, you might say something like, “I don’t want to talk about "
+            },
+            {
+              "source": "Raising Low Self-Esteem",
+              "text": "Technique: Raising Low Self-Esteem | Modality: CBT | Source: NHS One trick is to look at other people who act assertively and copy what they do. It's not about pretending you're someone you're not. It's picking up hints and tips from people you admire and letting the real you come out. Start saying \"no\" People with low self-esteem often feel they have to say yes to other people, even when they do "
+            },
+            {
+              "source": "Cognitive Distortions",
+              "text": "Technique: Cognitive Distortions | Modality: CBT | Source: HelpGuide Jumping to conclusions This involves deciding that something is true or likely to happen without any supporting evidence. Jumping to conclusions can take the form of mind reading, such as: “I can’t think of what to say next, and now this person thinks I’m boring.” “She wants to break up with me but won’t say it yet.” It can also "
+            },
+            {
+              "source": "Coping with a Breakup or Divorce",
+              "text": "Technique: Coping with a Breakup or Divorce | Modality: CBT | Source: HelpGuide Pay attention to what you need in any given moment and speak up to express your needs. Honor what you believe to be right and best for you even though it may be different from what your ex or others want. Say “no” without guilt or angst as a way of honoring what is right for you. Stick to a routine. A divorce or relati"
+            }
+          ],
+          "draft": "I hear how much you’re carrying that guilt — it’s not about being selfish, it’s about being human, and that’s okay. You’re not letting anyone down by saying no, you’re protecting your own space and energy. That’s not a failure — it’s a sign you’re trying to show up for yourself, even if it feels hard.\n\nMaybe try this: say “no” with a gentle, clear, and calm tone — like you’re saying, “I want to be able to give my best to what matters to me, and right now, I need to say no to this so I can be there for the things that really matter.” You don’t have to explain why — just state it, and then give yourself permission to feel lighter afterward.\n\nWhat if we tried one small thing — say “no” to something that feels “not urgent” or “not important” right now, and then notice how it feels to say it without guilt? You don’t have to do it perfectly — just enough to feel lighter, even if it’s just for a moment.",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how much you’re carrying that guilt, it’s not about being selfish, it’s about being human, and that’s okay. You’re not letting anyone down by saying no, you’re protecting your own space and energy. That’s not a failure, it’s a sign you’re trying to show up for yourself, even if it feels hard.\n\nMaybe try this: say “no” with a gentle, clear, and calm tone, like you’re saying, “I want to be able to give my best to what matters to me, and right now, I need to say no to this so I can be there for the things that really matter.” You don’t have to explain why, just state it, and then give yourself permission to feel lighter afterward.\n\nWhat if we tried one small thing, say “no” to something that feels “not urgent” or “not important” right now, and then notice how it feels to say it without guilt? You don’t have to do it perfectly, just enough to feel lighter, even if it’s just for a moment.",
+          "safe_mode": false,
+          "elapsed_s": 48.3
+        },
+        {
+          "turn": 4,
+          "input": "That makes sense. I'll try that this week. But what if my manager pushes back when I set a boundary?",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide This makes it easier for you to receive information rather than prepare for an argument. Accept that the person setting the boundary knows what is best for them. If something truly doesn’t work for you, communicate your needs so that you can both reach a compromise. Remember that you both have your own way of processing and "
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide Tip 2: Talk to the person about your boundaries Knowing how to effectively communicate your needs to others is important. Rushed conversations, poor wording, and vague requests can make it harder for loved ones to understand and respect your ground rules. Consider timing. The best time to set a boundary with your partner is "
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide I hate hugs.” “I’d prefer a handshake over a hug.” “I suppose I can squeeze in more work over the weekend.” “I can help next week, but I cannot take this on over the weekend.” “You never return my books.” “When you’re done, can I please have my book back?” Feedback in romantic relationships In healthy romantic relationships "
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide If you aren’t willing to follow through on a consequence, the other person will feel empowered to overstep your boundaries in the future. For example, if you tell your partner that you’ll take a break from the relationship if they keep lying to you, it’s important to actually follow through on that. Tip 4: Learn how to respo"
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide You might want to reassess limitations and expectations surrounding things like frequency of sex and contraception use. Emotional boundaries ensure that others are respectful of your emotional well-being and internal comfort level. When setting an emotional boundary, you might say something like, “I don’t want to talk about "
+            }
+          ],
+          "draft": "I hear how much you’re carrying that fear — that your manager might react badly, or that you’ll be seen as uncooperative. That’s completely understandable, and it’s not a sign you’re failing. You’re just trying to protect your energy, your peace, and your ability to show up for what matters. That’s brave, not weak.\n\nYou don’t have to win the argument — just show up for yourself, even if it’s quiet. If they push back, try this: pause, breathe, and say, “I want to be able to give my best to what matters to me, and right now, I need to say no to this so I can be there for the things that really matter.” Then, if they respond with frustration, you can gently say, “I understand if you’re upset, but I’m trying to be clear about what I’m able to do. I’m not trying to be selfish — I’m trying to be honest about my limits.” You’re not trying to be perfect — you’re trying to be real.\n\nWhat if we tried one small thing, say “no” to something that feels “not urgent” or “not important” right now, and then notice how it feels to say it without guilt? You don’t have to do it perfectly, just enough to feel lighter, even if it’s just for a moment.",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how much you’re carrying that fear, that your manager might react badly, or that you’ll be seen as uncooperative. That’s completely understandable, and it’s not a sign you’re failing. You’re just trying to protect your energy, your peace, and your ability to show up for what matters. That’s brave, not weak.\n\nYou don’t have to win the argument, just show up for yourself, even if it’s quiet. If they push back, try this: pause, breathe, and say, “I want to be able to give my best to what matters to me, and right now, I need to say no to this so I can be there for the things that really matter.” Then, if they respond with frustration, you can gently say, “I understand if you’re upset, but I’m trying to be clear about what I’m able to do. I’m not trying to be selfish, I’m trying to be honest about my limits.” You’re not trying to be perfect, you’re trying to be real.\n\nWhat if we tried one small thing, say “no” to something that feels “not urgent” or “not important” right now, and then notice how it feels to say it without guilt? You don’t have to do it perfectly, just enough to feel lighter, even if it’s just for a moment.",
+          "safe_mode": false,
+          "elapsed_s": 60.5
+        }
+      ]
+    },
+    {
+      "id": "mt_th_002",
+      "label": "grief - opening up gradually",
+      "conversation_id": "4ce78bfa-95a3-4d1a-a642-2febc5974337",
+      "turns": [
+        {
+          "turn": 1,
+          "input": "I lost someone close to me recently. I don't really want to talk about it but I also feel like I need to.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Checking the Facts on Shame",
+              "text": "Technique: Checking the Facts on Shame | Modality: DBT | Source: DBT Self Help I could barely keep myself together, how could I do any of this? From here things got worse and worse. There were certainly blessings, like finishing that degree and the birth of our son in the beginning of this year. I just couldn’t regulate my emotions, constantly living in every failure, repeating the emotional abuse"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Don’t let others tell you how to feel. Your grief is your own, and no one else can tell you when it’s time to “move on” or “get over it.” Let yourself feel whatever you feel without embarrassment or judgment. It’s okay to be angry, to yell at the heavens, to cry or not to cry. It’s also okay to laugh, to find momen"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide The death of a loved one can trigger uncertainty and fears about your own mortality, of facing life without that person, or the responsibilities you now face alone. Anger. Even if the loss was nobody’s fault, you may feel angry and resentful. If you lost a loved one, you may be angry with yourself, God, the doctors"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Looking after your physical and emotional needs will help you get through this difficult time. Face your feelings. You can try to suppress your grief, but you can’t avoid it forever. To heal, you have to acknowledge the pain. Trying to avoid feelings of sadness and loss only prolongs the grieving process. Unresolve"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide If you’re experiencing complicated grief and the pain from your loss remains unresolved, it’s important to reach out for support and take the steps that will enable you to heal. Finding support for grief and loss The pain of grief can often cause you to want to withdraw from others and retreat into your shell. But "
+            }
+          ],
+          "draft": "I hear how heavy this feels — and that’s okay. You’re carrying something that matters deeply, and it’s not a burden you have to shoulder alone. You don’t have to force yourself to talk if you’re not ready — but if you’re feeling the need to, even a small step can help. Would you like to try writing down what’s been sitting with you, or maybe just sitting with the silence for a few minutes? You’re allowed to be in the space where you are right now.",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how heavy this feels, and that’s okay. You’re carrying something that matters deeply, and it’s not a burden you have to shoulder alone. You don’t have to force yourself to talk if you’re not ready, but if you’re feeling the need to, even a small step can help. Would you like to try writing down what’s been sitting with you, or maybe just sitting with the silence for a few minutes? You’re allowed to be in the space where you are right now.",
+          "safe_mode": false,
+          "elapsed_s": 28.8
+        },
+        {
+          "turn": 2,
+          "input": "It was my best friend. Car accident. It was sudden. I keep thinking I could have stopped it somehow.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Coping with Depression",
+              "text": "Technique: Coping with Depression | Modality: CBT | Source: HelpGuide Believing that the way you feel reflects reality (“I feel like such a loser. Everyone must be laughing at me!”) ‘Shoulds’ and ‘should-nots.’ Holding yourself to a strict list of what you should and shouldn’t do, and beating yourself up if you don’t live up to your rules. (“I should never have interviewed for that job. I’m an idi"
+            },
+            {
+              "source": "Emotional and Psychological Trauma",
+              "text": "Technique: Emotional and Psychological Trauma | Modality: trauma-focused CBT | Source: HelpGuide Here are some of the ways that trauma can disrupt your psychological and physical well-being, as well as your relationships. Psychological effects of trauma Long after a traumatic incident, you might experience cognitive issues, such as intrusive thoughts, nightmares, and memories about the event. You "
+            },
+            {
+              "source": "Intrusive Thoughts",
+              "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide Anxiety Intrusive Thoughts Why You Have Them and How to Stop Last updated on February 20, 2026 Are you struggling with disturbing, sexual, or violent thoughts or images running through your mind? These tips can help you deal with unwanted intrusive thoughts and reduce your anxiety surrounding them. By Sheldon Reid What are intrusive"
+            },
+            {
+              "source": "Intrusive Thoughts",
+              "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide Looping concerns about uncertain situations make it hard for you to relax or concentrate. Eating disorders. If you suffer from an eating disorder , your behaviors might be shaped by intrusive thoughts about your appearance or the need to exercise. Postpartum mood disorders. Intrusive thoughts are common in new mothers who are experi"
+            },
+            {
+              "source": "Intrusive Thoughts",
+              "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide These types of thoughts suddenly drift into your mind and often drift out just as quickly. However, unwanted intrusive thoughts occur when a typical intrusive thought sticks in your mind and causes you distress. You might feel ashamed by a recurring sexual thought, for example. Or disturbed by a mental image of you harming someone y"
+            }
+          ],
+          "draft": "I’m so sorry you’re carrying this — that loss is heavy, and it’s okay to feel it. You’re not alone in thinking, “What if I could have done something?” — that’s a common, human reaction after something like this. You don’t have to make sense of it right now. Just knowing you’re here, and that you’re allowed to be in the space where you are, matters. Would you like to try sitting with that thought — not to change it, but to notice how it feels in your body, and what it’s asking for from you?",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I’m so sorry you’re carrying this, that loss is heavy, and it’s okay to feel it. You’re not alone in thinking, “What if I could have done something?”, that’s a common, human reaction after something like this. You don’t have to make sense of it right now. Just knowing you’re here, and that you’re allowed to be in the space where you are, matters. Would you like to try sitting with that thought, not to change it, but to notice how it feels in your body, and what it’s asking for from you?",
+          "safe_mode": false,
+          "elapsed_s": 33.2
+        },
+        {
+          "turn": 3,
+          "input": "I know logically it wasn't my fault but the guilt won't go away. What am I supposed to do with that?",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Emotional and Psychological Trauma",
+              "text": "Technique: Emotional and Psychological Trauma | Modality: trauma-focused CBT | Source: HelpGuide Anxiety and fear. Guilt, shame, self-blame. Withdrawing from others. Feeling sad or hopeless. Feeling disconnected or numb. Physical symptoms: Insomnia or nightmares. Fatigue. Being startled easily. Difficulty concentrating. Racing heartbeat. Edginess and agitation. Aches and pains. Muscle tension. Imp"
+            },
+            {
+              "source": "Alone in Canada",
+              "text": "Technique: Alone in Canada | Modality: CBT | Source: CAMH Allow yourself to make mistakes – be gentle with yourself when you do so. No one is perfect. Learn from your mistakes. Face your problems – one at a time. It is easier to solve your problems if you divide them up, rather than try to deal with everything all at once. Talk to someone – sharing a problem can make it seem more manageable. Your "
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide If a pet or someone you love has died, for example, you may keep expecting them to show up, even though you know they’re gone. Sadness. Profound sadness is probably the most universally experienced symptom of grief. You may have feelings of emptiness, despair, yearning, or deep loneliness . You may also cry a lot o"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Looking after your physical and emotional needs will help you get through this difficult time. Face your feelings. You can try to suppress your grief, but you can’t avoid it forever. To heal, you have to acknowledge the pain. Trying to avoid feelings of sadness and loss only prolongs the grieving process. Unresolve"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide For real healing, it is necessary to face your grief and actively deal with it. Myth: It’s important to “be strong” in the face of loss. Fact: Feeling sad, frightened, or lonely is a normal reaction to loss. Crying doesn’t mean you are weak. You don’t need to “protect” your family or friends by putting on a brave f"
+            }
+          ],
+          "draft": "I hear how heavy that guilt is — it’s not a sign you’re failing, it’s a signal your heart is still carrying the weight of what happened. You’re not supposed to “fix” it or “get rid of” it — you’re allowed to sit with it, even if it’s uncomfortable. Sometimes, the most gentle thing you can do is let yourself feel it, without trying to change it or push it away. Would you like to try sitting with that thought for a few minutes, noticing how it feels in your body, and what it’s asking for from you — not to change it, but to be with it?",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how heavy that guilt is, it’s not a sign you’re failing, it’s a signal your heart is still carrying the weight of what happened. You’re not supposed to “fix” it or “get rid of” it, you’re allowed to sit with it, even if it’s uncomfortable. Sometimes, the most gentle thing you can do is let yourself feel it, without trying to change it or push it away. Would you like to try sitting with that thought for a few minutes, noticing how it feels in your body, and what it’s asking for from you, not to change it, but to be with it?",
+          "safe_mode": false,
+          "elapsed_s": 33.6
+        },
+        {
+          "turn": 4,
+          "input": "We used to talk every day. Now I reach for my phone to text him and then remember. How do people get through this?",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide You can move on with your life and keep the memory of someone or something you lost as an important part of you. In fact, as we move through life, these memories can become more and more integral to defining the people we are. The grieving process Grieving is a highly individual experience; there’s no right or wron"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Looking after your physical and emotional needs will help you get through this difficult time. Face your feelings. You can try to suppress your grief, but you can’t avoid it forever. To heal, you have to acknowledge the pain. Trying to avoid feelings of sadness and loss only prolongs the grieving process. Unresolve"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide You can plan ahead by making sure that you’re not alone, for example, or by marking your loss in a creative way. For more help managing distressing emotions like grief… HelpGuide’s Emotional Intelligence Toolkit is a free online program that teaches you how to face up to and better manage your emotions—even those u"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Speak to a Licensed Therapist BetterHelp is an online therapy service that matches you to licensed, accredited therapists who can help with depression, anxiety, relationships, and more. Take the assessment and get matched with a therapist in as little as 48 hours. Take Assessment HelpGuide is user supported. We ear"
+            },
+            {
+              "source": "Emotional and Psychological Trauma",
+              "text": "Technique: Emotional and Psychological Trauma | Modality: trauma-focused CBT | Source: HelpGuide That may mean helping with collecting groceries or doing housework, for example, or simply being available to talk or listen. Don’t pressure your loved one into talking, but be available if they want to talk. Some trauma survivors find it difficult to talk about what happened. Don’t force your loved on"
+            }
+          ],
+          "draft": "I hear how much that daily connection meant — and how much it still does, even now. That ache you feel when you reach for the phone? It’s not a sign you’re failing, it’s a sign you’re still holding space for someone who mattered deeply. You’re not alone in this — many people carry the echo of a loved one’s voice in their daily life, even if they don’t speak to them anymore. Would you like to try sitting with that feeling for a few minutes, without trying to change it, just noticing how it settles in your chest, or how it makes you feel — and what it’s asking for from you, right now?",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how much that daily connection meant, and how much it still does, even now. It’s not a sign you’re failing, it’s a sign you’re still holding space for someone who mattered deeply. You’re not alone in this, many people carry the echo of a loved one’s voice in their daily life, even if they don’t speak to them anymore. Would you like to try sitting with that feeling for a few minutes, without trying to change it, just noticing how it settles in your chest, or how it makes you feel, and what it’s asking for from you, right now?",
+          "safe_mode": false,
+          "elapsed_s": 40.7
+        }
+      ]
+    },
+    {
+      "id": "mt_th_003",
+      "label": "anxiety technique -> tries it -> reports back",
+      "conversation_id": "28b0c646-9ef3-47f9-890e-40de5e121239",
+      "turns": [
+        {
+          "turn": 1,
+          "input": "I have really bad anxiety and I don't know where to start. Everything feels overwhelming.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Social Anxiety — Self-Help",
+              "text": "Technique: Social Anxiety — Self-Help | Modality: CBT | Source: GetSelfHelp MINDFULNESS FOR BUSY PEOPLE Choose an activity to do mindfully throughout the day, for one, two or five minutes. For example: Drink a cup of tea. Walk. Wash the dishes. Whatever you are doing, be in that moment, right now. See, hear, smell, touch, feel, breathe. Simply notice whenever other thoughts and sensations come to "
+            },
+            {
+              "source": "Social Anxiety — Self-Help",
+              "text": "Technique: Social Anxiety — Self-Help | Modality: CBT | Source: GetSelfHelp We see everyone around us, but all we can think about is how they might be thinking critically about us! The adrenaline response of anxiety makes us feel terrible too, so we're thinking about how horrible that is, and how we just want to escape the situation. It is very helpful to learn how to change our focus of attention"
+            },
+            {
+              "source": "Generalised Anxiety Disorder (GAD)",
+              "text": "Technique: Generalised Anxiety Disorder (GAD) | Modality: CBT | Source: HelpGuide Your heart pounds, you breathe faster, your muscles tense up, and you feel light-headed. When you’re relaxed, the complete opposite happens. Your heart rate slows down, you breathe slower and more deeply, your muscles relax, and your blood pressure stabilizes. Since it’s impossible to be anxious and relaxed at the sa"
+            },
+            {
+              "source": "Generalised Anxiety Disorder (GAD)",
+              "text": "Technique: Generalised Anxiety Disorder (GAD) | Modality: CBT | Source: HelpGuide You run over the feared situation in your mind and think about all the ways you might deal with it. In essence, you’re trying to solve problems that haven’t happened yet, or worse, simply obsessing on worst-case scenarios. All this worrying may give you the impression that you’re protecting yourself by preparing for "
+            },
+            {
+              "source": "Coping with Anxiety",
+              "text": "Technique: Coping with Anxiety | Modality: CBT | Source: Mental Health Foundation Hold your breath and count to seven. Breathe out through your mouth, making a whoosh sound while counting to eight. Repeat three more times for a total of four breath cycles. Some people find relaxation exercises work too, while others find mindfulness useful. 2. Get moving Exercise is a good way of dealing with anxi"
+            }
+          ],
+          "draft": "I hear how heavy this feels — and that’s okay. You don’t have to figure it out alone, and you don’t have to rush. Let’s start with something small, something that can feel like a safe anchor.\n\nMaybe you could try noticing your breath for just two minutes — right now — while you’re sitting or standing. Feel the air coming in, then going out. No need to judge it, just notice it. If your mind wanders, gently bring it back. That’s enough. That’s a step.\n\nYou’re not failing — you’re just beginning. What’s one tiny thing you could do right now, even if it’s just for a minute, that might feel like a small step toward feeling grounded?",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how heavy this feels, and that’s okay. You don’t have to figure it out alone, and you don’t have to rush. Let’s start with something small, something that can feel like a safe anchor.\n\nMaybe you could try noticing your breath for just two minutes, right now, while you’re sitting or standing. Feel the air coming in, then going out. No need to judge it, just notice it. If your mind wanders, gently bring it back. That’s enough. That’s a step.\n\nYou’re not failing, you’re just beginning. What’s one tiny thing you could do right now, even if it’s just for a minute, that might feel like a small step toward feeling grounded?",
+          "safe_mode": false,
+          "elapsed_s": 29.2
+        },
+        {
+          "turn": 2,
+          "input": "Can you give me one concrete thing I can try today? Something small.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Relaxation",
+              "text": "Technique: Relaxation | Modality: relaxation | Source: Mind UK Look for a class you'd like to try, such as yoga, pilates or gentle stretching. Try some seated exercises. You may be able to fit these into your day more easily if you're busy. Or you might prefer them if other types of exercise are more difficult or not possible. Visit the NHS page on sitting exercises to learn more. See our pages on"
+            },
+            {
+              "source": "Relaxation",
+              "text": "Technique: Relaxation | Modality: relaxation | Source: Mind UK Place your hand on your stomach – it should rise as you breathe in and fall as you breathe out. Count as you breathe. Start by counting '1, 2, 3, 4' as you breathe in and '1, 2, 3, 4' as you breathe out. Try to work out what's comfortable for you. Visit the NHS page on breathing exercises for more information about this exercise. Get c"
+            },
+            {
+              "source": "Coping with Anxiety",
+              "text": "Technique: Coping with Anxiety | Modality: CBT | Source: Mental Health Foundation Hold your breath and count to seven. Breathe out through your mouth, making a whoosh sound while counting to eight. Repeat three more times for a total of four breath cycles. Some people find relaxation exercises work too, while others find mindfulness useful. 2. Get moving Exercise is a good way of dealing with anxi"
+            },
+            {
+              "source": "Managing Fear and Anxiety",
+              "text": "Technique: Managing Fear and Anxiety | Modality: CBT | Source: Mental Health Foundation E.g. It’s okay to make mistakes, people will understand New perspective How do you think and feel about the situation now? E.g. I made a mistake that I can learn from today If you’re interested in CBT for anxiety, visit the NHS ‘Talking Therapies’ webpage or speak to your GP. 15 Manage your anxiety in the momen"
+            },
+            {
+              "source": "Ways to Fight Depression",
+              "text": "Technique: Ways to Fight Depression | Modality: behavioural activation | Source: HelpGuide Pat yourself on the back. Take a moment to acknowledge your role in the successes you’ve experienced in life and give yourself credit. Change your morning thoughts. Before you go to sleep, write down something positive you can read as soon as you wake up in the morning—a hope you have for the day or somethin"
+            }
+          ],
+          "draft": "I hear how you’re looking for something simple, something that doesn’t feel like a big ask — and that’s totally okay. You’re not trying to fix everything at once. Let’s try this:  \nSit or stand comfortably, and gently place one hand on your belly. Breathe in slowly through your nose — count to four — then let it out through your mouth, making a soft whoosh — count to six. Do that for three full cycles. Just focus on the movement, the air, the rhythm. No pressure. No judgment. Just presence.  \nYou’re not doing this to “get better” — you’re doing it to feel a little more grounded, right now. What’s one small thing you could do after that — even if it’s just for a minute — that might help you feel a little less overwhelmed?",
+          "critique": "VERDICT: NEEDS_REVISION\nVERDICT: APPROVED",
+          "final_answer": "Sit or stand comfortably, and gently place one hand on your belly. Breathe in slowly through your nose, count to four, then let it out through your mouth, making a soft whoosh, count to six. Do that for three full cycles. Just focus on the movement, the air, the rhythm. No pressure. No judgment. Just presence.  \nYou’re not doing this to “get better”, you’re doing it to feel a little more grounded, right now. What’s one small thing you could do after that, even if it’s just for a minute, that might help you feel a little less overwhelmed?",
+          "safe_mode": false,
+          "elapsed_s": 59.7
+        },
+        {
+          "turn": 3,
+          "input": "I tried the 4-7-8 breathing you mentioned. It helped a little but my mind still wandered a lot. Is that normal?",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Relaxation Techniques for Stress Relief",
+              "text": "Technique: Relaxation Techniques for Stress Relief | Modality: relaxation | Source: HelpGuide Using mindfulness to stay focused on the present might seem straightforward, but it takes practice to reap all the benefits. When you first start practicing, you’ll likely find that your focus keeps wandering back to your worries or regrets. But don’t get disheartened. Each time you draw your focus back t"
+            },
+            {
+              "source": "Relaxation",
+              "text": "Technique: Relaxation | Modality: relaxation | Source: Mind UK Relaxation It can be hard to find time to relax. But if you can fit it into daily life, it can help if you feel stressed or worried. And it can allow you to refocus. There are lots of different ways to relax. Try anything that feels right for you, when you can. If you can practise these techniques regularly, they often give more benefi"
+            },
+            {
+              "source": "Mindfulness Exercises and Tips",
+              "text": "Technique: Mindfulness Exercises and Tips | Modality: MBSR | Source: Mind UK Some people find it helpful to name and acknowledge the feelings and thoughts that come up. For example, you could think to yourself 'this is a feeling of anger', or 'here is the thought that I'm not good enough'. Be aware and accepting . Notice and be aware of the emotions you are feeling or sensations in your body. You "
+            },
+            {
+              "source": "Building Better Mental Health",
+              "text": "Technique: Building Better Mental Health | Modality: positive psychology | Source: HelpGuide Take up a relaxation practice . While sensory input can relieve stress in the moment, relaxation techniques can help reduce your overall levels of stress—although they’re likely to take more time to learn effectively. Yoga, mindfulness meditation, deep breathing, or progressive muscle relaxation can put th"
+            },
+            {
+              "source": "Mindfulness Introduction",
+              "text": "Technique: Mindfulness Introduction | Modality: MBSR | Source: GetSelfHelp The only aim of mindful activity is to continually bring our attention back to the activity, noticing those sensations, from outside and within us. Nature As Therapy Link NOW: Mindfulness For Busy People - video APPLE: A Mindful Response To Thoughts - video Further Links Mindful Breathing NOW - Mindfulness for busy people A"
+            }
+          ],
+          "draft": "It’s completely normal for your mind to wander — especially when you’re feeling overwhelmed. You’re not failing, you’re just noticing. That’s the real work: noticing, returning, noticing again. And that’s enough.\n\nWhat if we try something different? You could try noticing your breath for just two minutes — not counting, not judging, just feeling the air moving in and out. If your mind wanders, gently bring it back — without pushing, just noticing. You’re not trying to “fix” anything. You’re just being with yourself, right now.\n\nWhat’s one small thing you could do right now — even if it’s just for a minute — that might feel like a safe, quiet space for you to be with yourself?",
+          "critique": "VERDICT: NEEDS_REVISION\nVERDICT: APPROVED",
+          "final_answer": "It’s completely normal for your mind to wander, especially when you’re feeling overwhelmed. You’re not failing, you’re just noticing. That’s the real work: noticing, returning, noticing again. And that’s enough.\n\nWhat if we try something different? You could try noticing your breath for just two minutes, not counting, not judging, just feeling the air moving in and out. If your mind wanders, gently bring it back, without pushing, just noticing. You’re not trying to “fix” anything. You’re just being with yourself, right now.\n\nWhat’s one small thing you could do right now, even if it’s just for a minute, that might feel like a safe, quiet space for you to be with yourself?",
+          "safe_mode": false,
+          "elapsed_s": 61.7
+        },
+        {
+          "turn": 4,
+          "input": "Okay so the wandering is normal. What do I do when the anxiety hits at work in front of other people? I can't just start breathing exercises at my desk.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Social Anxiety — Self-Help",
+              "text": "Technique: Social Anxiety — Self-Help | Modality: CBT | Source: GetSelfHelp MINDFULNESS FOR BUSY PEOPLE Choose an activity to do mindfully throughout the day, for one, two or five minutes. For example: Drink a cup of tea. Walk. Wash the dishes. Whatever you are doing, be in that moment, right now. See, hear, smell, touch, feel, breathe. Simply notice whenever other thoughts and sensations come to "
+            },
+            {
+              "source": "Coping with Anxiety",
+              "text": "Technique: Coping with Anxiety | Modality: CBT | Source: Mental Health Foundation Find out more about the benefits of nature . 7. Connect with people and talk about how you feel Anxiety can feel very lonely. Connecting with other people can help a lot. Spend time with friends or meet other people through activities such as volunteering, sport or social clubs, or peer support groups. If you’re able"
+            },
+            {
+              "source": "Social Anxiety Disorder",
+              "text": "Technique: Social Anxiety Disorder | Modality: CBT | Source: HelpGuide It’s never a good idea to move too fast, take on too much, or force things. This may backfire and reinforce your anxiety. Be patient. Overcoming social anxiety takes time and practice. It’s a gradual step-by-step process. Use the skills you’ve learned to stay calm, such as focusing on your breathing and challenging negative ass"
+            },
+            {
+              "source": "Social Anxiety Disorder",
+              "text": "Technique: Social Anxiety Disorder | Modality: CBT | Source: HelpGuide For others, anxiety is connected to specific social situations, such as speaking to strangers, mingling at parties, or performing in front of an audience. Common social anxiety triggers include: Meeting new people Making small talk Public speaking Performing on stage Being the center of attention Being watched while doing somet"
+            },
+            {
+              "source": "Loneliness and Social Isolation",
+              "text": "Technique: Loneliness and Social Isolation | Modality: interpersonal | Source: HelpGuide I can be proactive and invite them to do something.” “I’m not an eloquent speaker, and people judge me for it.” “The people who care about me won’t look down on me for how I talk.” Managing social anxiety When it comes to social anxiety, you might feel as though your panic is simply uncontrollable. Social situ"
+            }
+          ],
+          "draft": "I hear how hard it is to hold space for yourself when the world feels loud and fast — especially when you’re already carrying so much. You don’t have to do anything “perfect” or “controlled” to feel safe. You just need to be kind to yourself, even when you’re in the middle of it.\n\nWhat if we try something small, right now — like noticing your body, your breath, your posture — while you’re sitting at your desk? Even for 30 seconds. Just notice: where your shoulders are, how your breath feels, whether your hands are tense. That’s enough. You’re not trying to “fix” anything — you’re just noticing, and that’s enough.\n\nWhat’s one tiny thing you could do right now, even if it’s just for a minute, that might feel like a safe, quiet space for you — even if you’re surrounded by noise or pressure?",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how hard it is to hold space for yourself when the world feels loud and fast, especially when you’re already carrying so much. You don’t have to do anything “perfect” or “controlled” to feel safe. You just need to be kind to yourself, even when you’re in the middle of it.\n\nWhat if we try something small, right now, like noticing your body, your breath, your posture, while you’re sitting at your desk? Even for 30 seconds. Just notice: where your shoulders are, how your breath feels, whether your hands are tense. That’s enough. You’re not trying to “fix” anything, you’re just noticing, and that’s enough.\n\nWhat’s one tiny thing you could do right now, even if it’s just for a minute, that might feel like a safe, quiet space for you, even if you’re surrounded by noise or pressure?",
+          "safe_mode": false,
+          "elapsed_s": 43.5
+        }
+      ]
+    }
+  ]
+}

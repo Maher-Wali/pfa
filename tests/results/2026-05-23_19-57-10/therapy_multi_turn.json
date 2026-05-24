@@ -1,0 +1,412 @@
+{
+  "suite": "therapy_multi_turn",
+  "agent": "virtual_therapy",
+  "run_at": "2026-05-23T20:16:47",
+  "conversations": [
+    {
+      "id": "mt_th_001",
+      "label": "work stress -> coping strategy -> follow-through",
+      "conversation_id": "6db5bfda-b1ff-4106-b883-df083cb014cb",
+      "turns": [
+        {
+          "turn": 1,
+          "input": "I've been really stressed at work lately. My manager keeps moving deadlines and I feel like I'm always behind.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Stress Management",
+              "text": "Technique: Stress Management | Modality: CBT | Source: HelpGuide But the truth is, you have a lot more control over stress than you may think. In fact, the simple realization that you’re in control of your life is the foundation of stress management. Managing stress is all about taking charge: of your thoughts, emotions, schedule, environment, and the way you deal with problems. The ultimate goal "
+            },
+            {
+              "source": "Stress Management",
+              "text": "Technique: Stress Management | Modality: CBT | Source: HelpGuide Chronic stress. This is when a stressor looms over you for a long time. Maybe you’re stuck in a tight financial situations for years. Or perhaps you or someone you love is dealing with a long-term health condition. You might feel a sense of hopelessness, as there doesn’t seem to be a break from the stress in sight. Identify the cause"
+            },
+            {
+              "source": "Stress — Managing and Building Resilience",
+              "text": "Technique: Stress — Managing and Building Resilience | Modality: CBT | Source: Mind UK And more able to handle pressure. Identify your best time of day . Do the important tasks that need the most energy and concentration at that time. For example, you might be a morning person or an evening person. Make a list of things you have to do . Arrange them in order of importance, and try to focus on the "
+            },
+            {
+              "source": "Stress — Managing and Building Resilience",
+              "text": "Technique: Stress — Managing and Building Resilience | Modality: CBT | Source: Mind UK Take some time to reflect on events and feelings that could be contributing to your stress. You could do this on your own or with someone you trust. You could consider: Issues that come up regularly and that you worry about, such as paying a bill or attending an appointment One-off events that are on your mind a"
+            },
+            {
+              "source": "Stress Management",
+              "text": "Technique: Stress Management | Modality: CBT | Source: HelpGuide While you’re exercising, make a conscious effort to pay attention to your body and the physical (and sometimes emotional) sensations you experience as you’re moving. Focus on coordinating your breathing with your movements, for example, or notice how the air or sunlight feels on your skin. Adding this mindfulness element will help yo"
+            }
+          ],
+          "draft": "I hear how overwhelming it feels to be constantly behind, especially when deadlines keep shifting. That’s exhausting — and it’s okay to feel that way. You’re not alone in this, and you’re already thinking about how to manage it, which is a big step.\n\nOne thing that’s helped others is breaking big tasks into smaller, doable steps — even if it feels like you’re falling behind, small wins can build momentum. Also, try to notice when you’re feeling most stressed and see if there’s a pattern — maybe it’s late nights, or certain types of tasks. That awareness can help you adjust.\n\nWhat’s one small thing you could try to make things feel a little more manageable right now?",
+          "critique": "VERDICT: NEEDS_REVISION\nMUST_FIX:\n- CLINICAL LABELS — \"One thing that’s helped others\" is a violation. This phrasing frames a suggestion as having been effective for others, which is prohibited.\n- DISTANCING PHRASES — \"You’re not alone in this\" is a violation. It implies a generalized, observational stance rather than offering direct, personalized guidance.\n- TWO-OPTION CLOSING — The closing question “What’s one small thing you could try...?” is a single question, but the draft contains two questions in total: one in the body (“One thing that’s helped others...”) and the closing one. This violates Rule 6(a) — multiple questions ending in “?” are not allowed.\n- VERBATIM CONTEXT — The draft includes “One thing that’s helped others” — a phrase not present in the retrieved context — which is a violation of Rule 7.",
+          "final_answer": "I hear how overwhelming it feels to be constantly behind, especially when deadlines keep shifting. That’s exhausting, and it’s okay to feel that way. You’re not alone in this, and you’re already thinking about how to manage it, which is a big step.\n\nOne thing that’s helped others is breaking big tasks into smaller, doable steps, even if it feels like you’re falling behind, small wins can build momentum. Also, try to notice when you’re feeling most stressed and see if there’s a pattern, maybe it’s late nights, or certain types of tasks. That awareness can help you adjust.\n\nWhat’s one small thing you could try to make things feel a little more manageable right now?",
+          "safe_mode": false,
+          "elapsed_s": 85.4
+        },
+        {
+          "turn": 2,
+          "input": "Yeah, the to-do list thing sounds useful. I think the bigger issue is that I say yes to everything and then regret it.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "DBT Skills for Your New Year’s Celebrations",
+              "text": "Technique: DBT Skills for Your New Year’s Celebrations | Modality: DBT | Source: DBT Self Help However, these things are crucial in managing emotions, which are sure to be running high anyway at this point in the year. We’ve all experienced losing our temper because we were exhausted or ravenous with hunger. Attending to your PLEASE skills can often help to prevent these types of blow-ups from hap"
+            },
+            {
+              "source": "Managing Fear and Anxiety",
+              "text": "Technique: Managing Fear and Anxiety | Modality: CBT | Source: Mental Health Foundation Finding ways to relax can be an enjoyable method of reducing fears. Hold your breath and count to seven. Breathe out through your Relaxation techniques such as deep mouth, making a whoosh sound breathing or mindfulness meditation while counting to eight. can help you cope with the mental and physical feelings o"
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide Enabling is when you shield someone from the consequences of their actions. For example, you might want to offer to pay their legal bills for a DUI or lie to other people to cover up evidence of a gambling or drug addiction . These kinds of actions may seem helpful in the moment, but you’re actually preventing your loved one"
+            },
+            {
+              "source": "Depression Treatment",
+              "text": "Technique: Depression Treatment | Modality: CBT | Source: HelpGuide Setting healthy boundaries. If you are stressed and overwhelmed, and feel like you just can’t say no, you are more at risk for depression. Setting healthy boundaries in relationships and at work can help relieve stress, and therapy can help you identify and validate the boundaries that are right for you. Handling life’s problems. "
+            },
+            {
+              "source": "You Must ACCEPT to IMPROVE: A BPD Recovery Story",
+              "text": "Technique: You Must ACCEPT to IMPROVE: A BPD Recovery Story | Modality: DBT | Source: DBT Self Help The first step is to reach out and talk to someone. Don’t keep it to yourself. If you have any inkling that any of what I’m saying sounds similar or if you feel the same way, please reach out and get help. It will make such a difference. About the Author Sean is 35 and lives in Donegal, Ireland, wit"
+            }
+          ],
+          "draft": "I hear how heavy it feels to say yes to everything — it’s like you’re carrying the weight of everyone else’s expectations, and then you’re left feeling guilty or overwhelmed. That’s really hard, and it’s okay to feel that way. You’re not alone in this.\n\nOne thing that’s helped others is learning to say “no” gently — not to shut people out, but to protect your own space and energy. You don’t have to do it all at once. Start with one small boundary, like saying “I’ll try to help with this, but I need to focus on X first.” That’s enough to make a difference.\n\nWhat’s one small boundary you could try setting right now — even if it feels small — that would help you feel less regret later?",
+          "critique": "VERDICT: NEEDS_REVISION\nMUST_FIX:\n- CLINICAL LABELS: \"One thing that’s helped others\" — this is a violation of Rule 3. The phrase frames a suggestion as having been effective for others, which is not allowed.\n- DISTANCING PHRASES: \"One thing that’s helped others\" — again, this is a violation of Rule 3. It’s a distancing phrase that implies external validation, which is not permitted.\n- REPEATED CLOSING PATTERN: The closing question “What’s one small boundary you could try setting right now — even if it feels small — that would help you feel less regret later?” is structurally identical to the previous assistant turn’s closing question “What’s one small thing you could try to make things feel a little more manageable right now?” — this violates Rule 10. Both open with “What’s one small...” — same structural opener.",
+          "final_answer": "I hear how heavy it feels to say yes to everything, it’s like you’re carrying the weight of everyone else’s expectations, and then you’re left feeling guilty or overwhelmed. That’s really hard, and it’s okay to feel that way. You’re not alone in this.\n\nOne thing that’s helped others is learning to say “no” gently, not to shut people out, but to protect your own space and energy. You don’t have to do it all at once. Start with one small boundary, like saying “I’ll try to help with this, but I need to focus on X first.” That’s enough to make a difference.\n\nWhat’s one small step you could take right now, even if it feels small, that would help you feel less regret later?",
+          "safe_mode": false,
+          "elapsed_s": 83.5
+        },
+        {
+          "turn": 3,
+          "input": "How do I actually say no without feeling guilty about it? Every time I try I feel like I'm letting people down.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide You might want to reassess limitations and expectations surrounding things like frequency of sex and contraception use. Emotional boundaries ensure that others are respectful of your emotional well-being and internal comfort level. When setting an emotional boundary, you might say something like, “I don’t want to talk about "
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide For example, they might be upset that you’re asking for more “me time.” This could lead you to feel guilty or selfish. Remind yourself why you’re setting the restriction in the first place: You want some time alone to pursue your separate hobbies and avoid feeling emotionally crowded. Don’t feel you have to disregard your ow"
+            },
+            {
+              "source": "Raising Low Self-Esteem",
+              "text": "Technique: Raising Low Self-Esteem | Modality: CBT | Source: NHS One trick is to look at other people who act assertively and copy what they do. It's not about pretending you're someone you're not. It's picking up hints and tips from people you admire and letting the real you come out. Start saying \"no\" People with low self-esteem often feel they have to say yes to other people, even when they do "
+            },
+            {
+              "source": "Cognitive Distortions",
+              "text": "Technique: Cognitive Distortions | Modality: CBT | Source: HelpGuide Jumping to conclusions This involves deciding that something is true or likely to happen without any supporting evidence. Jumping to conclusions can take the form of mind reading, such as: “I can’t think of what to say next, and now this person thinks I’m boring.” “She wants to break up with me but won’t say it yet.” It can also "
+            },
+            {
+              "source": "Coping with a Breakup or Divorce",
+              "text": "Technique: Coping with a Breakup or Divorce | Modality: CBT | Source: HelpGuide Pay attention to what you need in any given moment and speak up to express your needs. Honor what you believe to be right and best for you even though it may be different from what your ex or others want. Say “no” without guilt or angst as a way of honoring what is right for you. Stick to a routine. A divorce or relati"
+            }
+          ],
+          "draft": "I hear how deeply you’re carrying that guilt — that fear of letting people down — and it’s so real, and it’s exhausting. You’re not failing anyone by saying no. You’re protecting your own peace, your energy, your time. That’s brave, and it’s okay to feel this way.\n\nOne thing that’s helped others is to reframe “letting people down” as “honoring my own needs.” You don’t have to be perfect at saying no — just honest with yourself about what you can carry. Try this: say something like, “I really want to help, but I’m at a point where I need to focus on X, and I’m not sure I can take on more right now.” It’s not about shutting them out — it’s about being clear, kind, and gentle with yourself.\n\nWhat’s one small thing you could say or do right now, even if it feels small, that would help you feel less like you’re letting anyone down?",
+          "critique": "VERDICT: NEEDS_REVISION\nMUST_FIX:\n- CLINICAL LABELS — “One thing that’s helped others” is a violation. The draft uses this phrase to imply a generalised success story, which is not allowed.\n- REPEATED QUESTION — The draft asks “What’s one small thing you could say or do right now...” — this is a direct repetition of the closing question from the previous assistant turn, which violates the rule.\n- UNANSWERED DIRECT QUESTION — The user asked “How do I actually say no without feeling guilty about it? Every time I try I feel like I’m letting people down.” The draft does not answer this directly before pivoting to a suggestion. It instead frames the question as a new prompt, which is a violation.\n- DISTANCING PHRASES — “One thing that’s helped others” is a violation. The draft frames suggestions as “helped others,” which is not allowed.",
+          "final_answer": "I hear how deeply you’re carrying that guilt, that fear of letting people down, and it’s so real, and it’s exhausting. You’re not failing anyone by saying no. You’re protecting your own peace, your energy, your time. That’s brave, and it’s okay to feel this way.\n\nTry this: say something like, “I really want to help, but I’m at a point where I need to focus on X, and I’m not sure I can take on more right now.” It’s not about shutting them out, it’s about being clear, kind, and gentle with yourself.\n\nWhat’s one small thing you could say or do right now, even if it feels small, that would help you feel less like you’re letting anyone down?",
+          "safe_mode": false,
+          "elapsed_s": 112.3
+        },
+        {
+          "turn": 4,
+          "input": "That makes sense. I'll try that this week. But what if my manager pushes back when I set a boundary?",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide This makes it easier for you to receive information rather than prepare for an argument. Accept that the person setting the boundary knows what is best for them. If something truly doesn’t work for you, communicate your needs so that you can both reach a compromise. Remember that you both have your own way of processing and "
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide I hate hugs.” “I’d prefer a handshake over a hug.” “I suppose I can squeeze in more work over the weekend.” “I can help next week, but I cannot take this on over the weekend.” “You never return my books.” “When you’re done, can I please have my book back?” Feedback in romantic relationships In healthy romantic relationships "
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide Communication is important as you reevaluate and revise your boundaries. You want the other person to be clear on the change and the reason behind it. Examples of shifting boundaries Initial boundary New boundary You initially have loose financial boundaries with family members and help them pay bills when necessary. You los"
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide If you aren’t willing to follow through on a consequence, the other person will feel empowered to overstep your boundaries in the future. For example, if you tell your partner that you’ll take a break from the relationship if they keep lying to you, it’s important to actually follow through on that. Tip 4: Learn how to respo"
+            },
+            {
+              "source": "Setting Healthy Boundaries",
+              "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide You might want to reassess limitations and expectations surrounding things like frequency of sex and contraception use. Emotional boundaries ensure that others are respectful of your emotional well-being and internal comfort level. When setting an emotional boundary, you might say something like, “I don’t want to talk about "
+            }
+          ],
+          "draft": "I hear how you’re worried about how your manager might react — that’s completely understandable, and it’s okay to feel that way. You’re not trying to be rude or dismissive, you’re just trying to protect your own space and energy, and that’s brave.\n\nOne thing that’s helped others is to approach the conversation with calm, clear, and kind intention. You can say something like, “I really want to help, and I’m trying to be thoughtful about what I can handle right now. I’m not saying no to the project — I’m just saying I need to focus on X first, so I can give my best to everything I’m working on.” That’s not about shutting them out — it’s about being honest and gentle with yourself and with them.\n\nWhat’s one small way you could soften the conversation or prepare for a possible pushback, even if it feels small?",
+          "critique": "VERDICT: NEEDS_REVISION\nMUST_FIX:\n- DISTANCING PHRASES — \"One thing that’s helped others\" is a distancing phrase — must be removed or rephrased as a direct suggestion.\n- TWO-OPTION CLOSING — The draft ends with a question that is a closing question, but the prior sentence is also a question — this violates rule 6 (two questions in response). The draft has two sentences ending with \"?\", which is a violation.\n- VERBATIM CONTEXT — The draft includes phrases like “You’re not trying to be rude or dismissive, you’re just trying to protect your own space and energy, and that’s brave.” — while not copied verbatim from context, it’s a paraphrase of the previous assistant turn’s tone and content, which is not allowed under rule 7 (verbatim context). The draft is not “verbatim” but it’s too close to the prior turn’s phrasing — this is a borderline violation, but since it’s not a direct copy, it’s not flagged unless it’s a direct quote. However, since the draft is using the same framing as the prior turn, it’s not a clean rephrasing — this is a violation under rule 7. The draft is not verbatim, but it’s a direct echo of the prior turn’s phrasing — this is not allowed under rule 7.\n\n\n\n- CLINICAL LABELS — “Setting Healthy Boundaries” is a clinical label — must be replaced with plain language.\n- DISTANCING PHRASES — “One thing that’s helped others” is a distancing phrase — must be removed or rephrased as a direct suggestion.\n- TWO-OPTION CLOSING — The draft has two sentences ending with \"?\" — this is a violation.\n\n\n- CLINICAL LABELS — “Setting Healthy Boundaries”",
+          "final_answer": "I hear how you’re worried about how your manager might react, that’s completely understandable, and it’s okay to feel that way. You’re not trying to be rude or dismissive, you’re just trying to protect your own space and energy, and that’s brave.\n\nYou can say something like, “I really want to help, and I’m trying to be thoughtful about what I can handle right now. I’m not saying no to the project, I’m just saying I need to focus on X first, so I can give my best to everything I’m working on.” That’s not about shutting them out, it’s about being honest and gentle with yourself and with them.\n\nWhat’s one small way you could soften the conversation or prepare for a possible pushback, even if it feels small?",
+          "safe_mode": false,
+          "elapsed_s": 121.0
+        }
+      ]
+    },
+    {
+      "id": "mt_th_002",
+      "label": "grief - opening up gradually",
+      "conversation_id": "5fb6864a-5f35-4f81-86fc-e8b41edabf7d",
+      "turns": [
+        {
+          "turn": 1,
+          "input": "I lost someone close to me recently. I don't really want to talk about it but I also feel like I need to.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Cutting and Self-Harm",
+              "text": "Technique: Cutting and Self-Harm | Modality: DBT | Source: HelpGuide Do you simply want another person to know so you can let go of the secret? Communicate in whatever way you feel most comfortable. If you’re too nervous to talk in person, consider starting off the conversation with an email, text, or letter (although it’s important to eventually follow-up with a face-to-face conversation). Don’t "
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Rather than avoiding them, draw friends and loved ones close, spend time together face to face, and accept the assistance that’s offered. Often, people want to help but don’t know how, so tell them what you need—whether it’s a shoulder to cry on, a listening ear, or just someone to hang out with. If you don’t feel "
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Looking after your physical and emotional needs will help you get through this difficult time. Face your feelings. You can try to suppress your grief, but you can’t avoid it forever. To heal, you have to acknowledge the pain. Trying to avoid feelings of sadness and loss only prolongs the grieving process. Unresolve"
+            },
+            {
+              "source": "Emotional and Psychological Trauma",
+              "text": "Technique: Emotional and Psychological Trauma | Modality: trauma-focused CBT | Source: HelpGuide That may mean helping with collecting groceries or doing housework, for example, or simply being available to talk or listen. Don’t pressure your loved one into talking, but be available if they want to talk. Some trauma survivors find it difficult to talk about what happened. Don’t force your loved on"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide If you’re experiencing complicated grief and the pain from your loss remains unresolved, it’s important to reach out for support and take the steps that will enable you to heal. Finding support for grief and loss The pain of grief can often cause you to want to withdraw from others and retreat into your shell. But "
+            }
+          ],
+          "draft": "I hear how heavy this is for you — and that it’s okay to feel like you don’t want to talk, even if you also feel like you need to. You’re not alone in carrying this weight, and there’s no rush to say anything at all. If you’re not ready to share details, that’s perfectly fine — you can start with small things, or even just letting someone know you’re hurting. Would you like to try writing down what’s been sitting with you, even if it’s just a few sentences? Or maybe you’d prefer to say something simple, like “I miss you” — without needing to explain why?",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how heavy this is for you, and that it’s okay to feel like you don’t want to talk, even if you also feel like you need to. You’re not alone in carrying this weight, and there’s no rush to say anything at all. If you’re not ready to share details, that’s perfectly fine, you can start with small things, or even just letting someone know you’re hurting. Or maybe you’d prefer to say something simple, like “I miss you”, without needing to explain why?",
+          "safe_mode": false,
+          "elapsed_s": 48.4
+        },
+        {
+          "turn": 2,
+          "input": "It was my best friend. Car accident. It was sudden. I keep thinking I could have stopped it somehow.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Intrusive Thoughts",
+              "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide Anxiety Intrusive Thoughts Why You Have Them and How to Stop Last updated on February 20, 2026 Are you struggling with disturbing, sexual, or violent thoughts or images running through your mind? These tips can help you deal with unwanted intrusive thoughts and reduce your anxiety surrounding them. By Sheldon Reid What are intrusive"
+            },
+            {
+              "source": "Intrusive Thoughts",
+              "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide These types of thoughts suddenly drift into your mind and often drift out just as quickly. However, unwanted intrusive thoughts occur when a typical intrusive thought sticks in your mind and causes you distress. You might feel ashamed by a recurring sexual thought, for example. Or disturbed by a mental image of you harming someone y"
+            },
+            {
+              "source": "Coping with Suicidal Thoughts",
+              "text": "Technique: Coping with Suicidal Thoughts | Modality: CBT | Source: HelpGuide Suicide & Self-Harm How to Cope with Thoughts of Suicide Last updated on March 23, 2026 If you’re thinking about suicide, your pain may seem overwhelming and permanent. But there are ways to cope with suicidal thoughts and feelings and overcome the pain. By Lawrence Robinson , Jeanne Segal, Ph.D. and Jaelline Jaffe, Ph.D."
+            },
+            {
+              "source": "Emotional and Psychological Trauma",
+              "text": "Technique: Emotional and Psychological Trauma | Modality: trauma-focused CBT | Source: HelpGuide Here are some of the ways that trauma can disrupt your psychological and physical well-being, as well as your relationships. Psychological effects of trauma Long after a traumatic incident, you might experience cognitive issues, such as intrusive thoughts, nightmares, and memories about the event. You "
+            },
+            {
+              "source": "How to Stop Worrying",
+              "text": "Technique: How to Stop Worrying | Modality: CBT | Source: HelpGuide I’m such a moron.” Labeling. Criticizing yourself based on mistakes and perceived shortcomings. “I’m a failure; I’m boring; I deserve to be alone.” Personalization. Assuming responsibility for things that are outside your control. “It’s my fault my son got in an accident. I should have warned him to drive carefully in the rain.” H"
+            }
+          ],
+          "draft": "I’m so sorry you’re carrying this — that loss is heavy, and it’s okay to feel like you could’ve done more. You’re not failing or broken for thinking that, even if it doesn’t feel true. Sometimes the mind repeats what we wish we could undo, and that’s not a sign of weakness — it’s a sign you’re still holding space for the pain.\n\nIf you want, you can let yourself feel that thought without judging it — just notice it, and then gently say to yourself, “This is a thought. It’s not me. I’m not responsible for what happened.” You don’t have to fix it, just be with it — and then, maybe, you can let it go a little.\n\nWhat’s the one thing you’ve been carrying with you that feels most like a weight right now?",
+          "critique": "VERDICT: NEEDS_REVISION\nMUST_FIX:\n- CLINICAL LABELS — The draft uses “intrusive thoughts” and “CBT” in the context of the retrieved documents. These are clinical labels and must not be named. The draft should reframe them in plain language (e.g., “thoughts that keep coming back” or “a way of thinking that helps you cope”).\n- VERBATIM CONTEXT — The draft includes phrases like “that loss is heavy, and it’s okay to feel like you could’ve done more,” which closely mirrors the tone and phrasing of the retrieved context. Even if not verbatim copied, the draft should avoid using the same structure or wording from the context without rephrasing.\n- TWO-OPTION CLOSING — The draft ends with “What’s the one thing you’ve been carrying with you that feels most like a weight right now?” — this is a single question, so it does not violate the two-option closing rule. However, if the draft had included another question or choice embedded in the body, that would be a violation. In this case, no second question exists, so this is not flagged.\n- UNANSWERED DIRECT QUESTION — The user’s request ends with a statement, not a direct question. The draft does not need to answer a direct question — it is appropriate to pivot to a reflective prompt. This is acceptable.\n- PROFILE RECITATION — The draft does not quote the user’s profile facts (e.g., “Car accident,” “sudden,” “I keep thinking I could have stopped it somehow”). This is fine.\n- DISTANCING PHRASES — The draft does not frame suggestions as “things that have helped others.” It uses direct, personal suggestions. This is acceptable.\n- REPEATED QUESTION — The draft does not ask a question the user already answered.\n- REDUNDANT SUGGESTION — The draft does not suggest something the user already said they will do or have done.\n- LENGTH — The draft is 4 sentences — well under 5 sentences — so this is acceptable.\n- REPEATED CLOSING PATTERN — The draft’s closing question is unique and not structurally identical to the previous assistant turn’s closing question.\n\n\n\n- CLINICAL LABELS —",
+          "final_answer": "I’m so sorry you’re carrying this, that loss is heavy, and it’s okay to feel like you could’ve done more. You’re not failing or broken for thinking that, even if it doesn’t feel true. Sometimes the mind repeats what we wish we could undo, and that’s not a sign of weakness, it’s a sign you’re still holding space for the pain.\n\nIf you want, you can let yourself feel that thought without judging it, just notice it, and then gently say to yourself, “This is a thought. It’s not me. I’m not responsible for what happened.” You don’t have to fix it, just be with it, and then, maybe, you can let it go a little.\n\nWhat’s the one thing you’ve been carrying with you that feels most like a weight right now?",
+          "safe_mode": false,
+          "elapsed_s": 118.2
+        },
+        {
+          "turn": 3,
+          "input": "I know logically it wasn't my fault but the guilt won't go away. What am I supposed to do with that?",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Intrusive Thoughts",
+              "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide A mental health professional who practices cognitive behavioral therapy (CBT) can teach you to reframe and manage intrusive thoughts. The following tips can also help. Tip 1: Understand the nature of your thoughts Many people have misconceptions about thoughts, including what they mean and how they work. By gaining a better understa"
+            },
+            {
+              "source": "Intrusive Thoughts",
+              "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide Say, “I am having an intrusive thought.” Just thoughts. Remind yourself that thoughts are just thoughts. They can be automatic, random, and not worth engaging with. Accept and allow. Don’t try to reason away the thoughts or distract yourself. Don’t try to evaluate whether they are true or not. Just observe them and take a nonjudgeme"
+            },
+            {
+              "source": "Alone in Canada",
+              "text": "Technique: Alone in Canada | Modality: CBT | Source: CAMH Allow yourself to make mistakes – be gentle with yourself when you do so. No one is perfect. Learn from your mistakes. Face your problems – one at a time. It is easier to solve your problems if you divide them up, rather than try to deal with everything all at once. Talk to someone – sharing a problem can make it seem more manageable. Your "
+            },
+            {
+              "source": "Emotional and Psychological Trauma",
+              "text": "Technique: Emotional and Psychological Trauma | Modality: trauma-focused CBT | Source: HelpGuide Anxiety and fear. Guilt, shame, self-blame. Withdrawing from others. Feeling sad or hopeless. Feeling disconnected or numb. Physical symptoms: Insomnia or nightmares. Fatigue. Being startled easily. Difficulty concentrating. Racing heartbeat. Edginess and agitation. Aches and pains. Muscle tension. Imp"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide If a pet or someone you love has died, for example, you may keep expecting them to show up, even though you know they’re gone. Sadness. Profound sadness is probably the most universally experienced symptom of grief. You may have feelings of emptiness, despair, yearning, or deep loneliness . You may also cry a lot o"
+            }
+          ],
+          "draft": "I hear how deeply that guilt is sitting with you — not because you’re wrong, but because your heart is still holding space for what you wish you could have done differently. That’s not a flaw, it’s a sign you’re still carrying the weight of love, and that’s okay. You don’t have to “fix” it or “get rid” of it — you just have to meet it with kindness, like you would meet a friend who’s hurting.\n\nTry this: when the thought comes, say to yourself, “This is a thought. It’s not me. I’m not responsible for what happened.” Then, gently shift your attention to something small — a sound, a scent, a texture — and let yourself feel that. Don’t fight the thought, just let it be there, and then let yourself go back to what’s real: you’re safe, you’re here, and you’re still loved.\n\nWhat’s the one thing you’ve been carrying with you that feels most like a weight right now?",
+          "critique": "VERDICT: NEEDS_REVISION\nVERDICT: APPROVED",
+          "final_answer": "I hear how deeply that guilt is sitting with you, not because you’re wrong, but because your heart is still holding space for what you wish you could have done differently. That’s not a flaw, it’s a sign you’re still carrying the weight of love, and that’s okay. You don’t have to “fix” it or “get rid” of it, you just have to meet it with kindness, like you would meet a friend who’s hurting.\n\nTry this: when the thought comes, say to yourself, “This is a thought. It’s not me. I’m not responsible for what happened.” Then, gently shift your attention to something small, a sound, a scent, a texture, and let yourself feel that. Don’t fight the thought, just let it be there, and then let yourself go back to what’s real: you’re safe, you’re here, and you’re still loved.\n\nWhat’s the one thing you’ve been carrying with you that feels most like a weight right now?",
+          "safe_mode": false,
+          "elapsed_s": 120.9
+        },
+        {
+          "turn": 4,
+          "input": "We used to talk every day. Now I reach for my phone to text him and then remember. How do people get through this?",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Alone in Canada",
+              "text": "Technique: Alone in Canada | Modality: CBT | Source: CAMH Allow yourself to make mistakes – be gentle with yourself when you do so. No one is perfect. Learn from your mistakes. Face your problems – one at a time. It is easier to solve your problems if you divide them up, rather than try to deal with everything all at once. Talk to someone – sharing a problem can make it seem more manageable. Your "
+            },
+            {
+              "source": "Coping with Depression",
+              "text": "Technique: Coping with Depression | Modality: CBT | Source: HelpGuide You can also encourage each other, give and receive advice on how to cope, and share your experiences. If going to an in-person support group feels too difficult, some of the top online therapy platforms offer virtual support groups. 10 ways to connect with others Talk to one person about your feelings. Help someone else by volu"
+            },
+            {
+              "source": "Alcohol Do You Know",
+              "text": "Technique: Alcohol Do You Know | Modality: CBT | Source: CAMH It is an addiction, where the person can’t stop drinking, even though it causes problems in their life. This addiction involves tolerance and withdrawal, which means the person has to drink more to get the same effect and experiences withdrawal symptoms if they stop drinking. Symptoms include tremors, insomnia, vivid dreams, anxiety, na"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide You can move on with your life and keep the memory of someone or something you lost as an important part of you. In fact, as we move through life, these memories can become more and more integral to defining the people we are. The grieving process Grieving is a highly individual experience; there’s no right or wron"
+            },
+            {
+              "source": "Coping with Grief and Loss",
+              "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Looking after your physical and emotional needs will help you get through this difficult time. Face your feelings. You can try to suppress your grief, but you can’t avoid it forever. To heal, you have to acknowledge the pain. Trying to avoid feelings of sadness and loss only prolongs the grieving process. Unresolve"
+            }
+          ],
+          "draft": "I hear how much your heart still holds space for that daily connection — and how much it hurts now that it’s gone. That ache isn’t weak, it’s a sign you’re still carrying the love you shared, and that’s okay. You don’t have to “get through” it by forcing yourself to move on — you can just be with it, and let yourself feel it, without judgment.\n\nTry this: when you reach for your phone, pause for a moment. Breathe in, then out. Say to yourself, “I’m here. I’m safe. I’m still loved.” Then, gently put the phone down — not because you’re trying to stop yourself, but because you’re honoring the space you’re in right now. You don’t have to answer anything. You just have to be with yourself.\n\nWhat’s one small thing you can do today — even if it’s just a few minutes — to feel close to him without needing to reply?",
+          "critique": "VERDICT: NEEDS_REVISION\nVERDICT: APPROVED",
+          "final_answer": "I hear how much your heart still holds space for that daily connection, and how much it hurts now that it’s gone. That ache isn’t weak, it’s a sign you’re still carrying the love you shared, and that’s okay. You don’t have to “get through” it by forcing yourself to move on, you can just be with it, and let yourself feel it, without judgment.\n\nTry this: when you reach for your phone, pause for a moment. Breathe in, then out. Say to yourself, “I’m here. I’m safe. I’m still loved.” Then, gently put the phone down, not because you’re trying to stop yourself, but because you’re honoring the space you’re in right now. You don’t have to answer anything. You just have to be with yourself.\n\nWhat’s one small thing you can do today, even if it’s just a few minutes, to feel close to him without needing to reply?",
+          "safe_mode": false,
+          "elapsed_s": 127.0
+        }
+      ]
+    },
+    {
+      "id": "mt_th_003",
+      "label": "anxiety technique -> tries it -> reports back",
+      "conversation_id": "4c2f8d36-91ca-4c9d-857d-e24931f619fd",
+      "turns": [
+        {
+          "turn": 1,
+          "input": "I have really bad anxiety and I don't know where to start. Everything feels overwhelming.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Managing Fear and Anxiety",
+              "text": "Technique: Managing Fear and Anxiety | Modality: CBT | Source: Mental Health Foundation This fear may begin at a situation. young age and continue into adulthood, If you have a phobia, the thought of having a big influence on your life. coming into contact with the cause of You may have social anxiety if you: your fear might make you very anxious worry a lot before, during, – or even result in a p"
+            },
+            {
+              "source": "Coping with Anxiety",
+              "text": "Technique: Coping with Anxiety | Modality: CBT | Source: Mental Health Foundation This can make it easier to challenge the thoughts and stop them from overwhelming you. 5. Get support for money worries A common cause of anxiety is money. If you’re worried about not being able to pay bills, are struggling to repay debt, or aren’t sure if you can cover your family’s living costs, seek help. Make sur"
+            },
+            {
+              "source": "Coping with Anxiety",
+              "text": "Technique: Coping with Anxiety | Modality: CBT | Source: Mental Health Foundation Anxiety is something we can all experience from time-to time. There are lots of reasons why we get this feeling. It can be connected to a job, school, a relationship, social situations, how we feel about ourselves, or a change in our life. If we don’t know how to cope with our feelings of anxiety, they can get out of"
+            },
+            {
+              "source": "Managing Fear and Anxiety",
+              "text": "Technique: Managing Fear and Anxiety | Modality: CBT | Source: Mental Health Foundation Strain in the back? Perhaps no sensations at all. Be sure to take a moment to let these sensations arise, they may not be so obvious at first. Once you’ve given yourself a moment, start to move your awareness out of your body and become aware of the space around you again. 17 Face your fear if you can Constantl"
+            },
+            {
+              "source": "Generalised Anxiety Disorder (GAD)",
+              "text": "Technique: Generalised Anxiety Disorder (GAD) | Modality: CBT | Source: HelpGuide You can’t turn off your anxious thoughts. They keep running through your head, on endless repeat. But no matter how overwhelming things seem now, you can break free from chronic worrying, learn to calm your anxious mind, and regain your sense of hope. Sound familiar? “I can’t get my mind to stop… it’s driving me craz"
+            }
+          ],
+          "draft": "I hear how heavy this feels right now — and that’s okay. You’re not alone in this, and there’s no rush to figure it out. Sometimes the first step is just sitting with the feeling without trying to fix it.\n\nYou mentioned feeling overwhelmed — what’s been sitting with you the most lately?",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "I hear how heavy this feels right now, and that’s okay. You’re not alone in this, and there’s no rush to figure it out. Sometimes the first step is just sitting with the feeling without trying to fix it.\n\nYou mentioned feeling overwhelmed, what’s been sitting with you the most lately?",
+          "safe_mode": false,
+          "elapsed_s": 39.5
+        },
+        {
+          "turn": 2,
+          "input": "Can you give me one concrete thing I can try today? Something small.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Quick Stress Relief",
+              "text": "Technique: Quick Stress Relief | Modality: relaxation | Source: HelpGuide Eventually you’ll feel like you’re forgetting something if you don’t tune into your body during challenging times. Here’s how to make it habit: Start small. Instead of testing your quick stress relief tools on a source of major stress, start with a predictable low-level source of stress, like cooking dinner at the end of a l"
+            },
+            {
+              "source": "Quick Stress Relief",
+              "text": "Technique: Quick Stress Relief | Modality: relaxation | Source: HelpGuide Your workspace. Place family photos on your desk or mementos that remind you of your life outside the office. Quick stress relief on the go In traffic. Play music or listen to an audiobook. Take a different route to see something new. Do neck-rolls at stoplights. Sing in the car to stay awake and happy. Public transportation"
+            },
+            {
+              "source": "Quick Stress Relief",
+              "text": "Technique: Quick Stress Relief | Modality: relaxation | Source: HelpGuide Stuck in a long line at the grocery store? Instead of talking on your phone, take a moment to people watch. Pay attention to what you hear and see. Instead of checking email while waiting for a meeting, take a few deep breaths, look out the window, or sip some tea. While waiting for an appointment, resist the urge to text an"
+            },
+            {
+              "source": "Quick Stress Relief",
+              "text": "Technique: Quick Stress Relief | Modality: relaxation | Source: HelpGuide Run in place or jump up and down. Dance around. Stretch or roll your head in circles. Go for a short walk. Squeeze a rubbery stress ball. Sound Sing or play a favorite tune. Listen to calming or uplifting music . Tune in to the soundtrack of nature—crashing waves, the wind rustling the trees, birds singing. Buy a small fount"
+            },
+            {
+              "source": "Quick Stress Relief",
+              "text": "Technique: Quick Stress Relief | Modality: relaxation | Source: HelpGuide Experiment with different essential oils. Smell the roses or another type of flower. Enjoy clean, fresh air in the great outdoors. Spritz on your favorite perfume or cologne. Touch Wrap yourself in a warm blanket. Pet a dog or cat. Hold a comforting object (a stuffed animal, a favorite memento). Give yourself a hand or neck "
+            }
+          ],
+          "draft": "I’m so glad you’re asking for something small — that’s a brave and kind place to start. You don’t have to do everything at once. Let’s try this: when you’re sitting down to do something routine — like checking your phone, eating a snack, or even just sitting in silence — take three slow, deep breaths. In through your nose, out through your mouth. Feel your body soften a little with each one. Then, gently notice what’s around you: a color, a sound, a texture. Even if it’s just a chair, a cup, or the way the light hits the wall — that’s enough. You’re not trying to fix anything. You’re just noticing. What’s one small thing you can notice or feel right now, that you can bring your attention to?",
+          "critique": "VERDICT: APPROVED",
+          "final_answer": "Take three slow, deep breaths, inhale through your nose, exhale through your mouth, and gently notice one small thing around you: a color, a sound, a texture. You’re not trying to fix anything. You’re just noticing.",
+          "safe_mode": false,
+          "elapsed_s": 53.7
+        },
+        {
+          "turn": 3,
+          "input": "I tried the 4-7-8 breathing you mentioned. It helped a little but my mind still wandered a lot. Is that normal?",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Relaxation Techniques for Stress Relief",
+              "text": "Technique: Relaxation Techniques for Stress Relief | Modality: relaxation | Source: HelpGuide If thoughts intrude your relaxation session, don’t fight them, just gently turn your attention back to your point of focus, without judgment. Listen to HelpGuide’s mindful breathing meditation. #7: Rhythmic movement and mindful exercise The idea of exercising may not sound particularly soothing, but rhyth"
+            },
+            {
+              "source": "Relaxation Techniques for Stress Relief",
+              "text": "Technique: Relaxation Techniques for Stress Relief | Modality: relaxation | Source: HelpGuide Using mindfulness to stay focused on the present might seem straightforward, but it takes practice to reap all the benefits. When you first start practicing, you’ll likely find that your focus keeps wandering back to your worries or regrets. But don’t get disheartened. Each time you draw your focus back t"
+            },
+            {
+              "source": "Mindfulness Exercises and Tips",
+              "text": "Technique: Mindfulness Exercises and Tips | Modality: MBSR | Source: Mind UK Some people find it helpful to name and acknowledge the feelings and thoughts that come up. For example, you could think to yourself 'this is a feeling of anger', or 'here is the thought that I'm not good enough'. Be aware and accepting . Notice and be aware of the emotions you are feeling or sensations in your body. You "
+            },
+            {
+              "source": "Mindfulness Introduction",
+              "text": "Technique: Mindfulness Introduction | Modality: MBSR | Source: GetSelfHelp The only aim of mindful activity is to continually bring our attention back to the activity, noticing those sensations, from outside and within us. Nature As Therapy Link NOW: Mindfulness For Busy People - video APPLE: A Mindful Response To Thoughts - video Further Links Mindful Breathing NOW - Mindfulness for busy people A"
+            },
+            {
+              "source": "Coping with Anxiety",
+              "text": "Technique: Coping with Anxiety | Modality: CBT | Source: Mental Health Foundation Hold your breath and count to seven. Breathe out through your mouth, making a whoosh sound while counting to eight. Repeat three more times for a total of four breath cycles. Some people find relaxation exercises work too, while others find mindfulness useful. 2. Get moving Exercise is a good way of dealing with anxi"
+            }
+          ],
+          "draft": "It’s completely normal for your mind to wander — even with something as simple as breathing. You’re not failing or doing anything wrong. What matters is that you’re trying, and that’s already a step forward.\n\nYou could try shifting your focus to a small, rhythmic movement — like walking slowly or gently swinging your arms — while keeping your attention on the sensation of your body moving. If thoughts come back, just notice them without judgment, and gently bring yourself back to the movement. You’re not trying to stop them — you’re just noticing them, and that’s enough.\n\nWhat’s one small movement or sensation you could notice right now, that feels safe and grounding to you?",
+          "critique": "VERDICT: NEEDS_REVISION\nVERDICT: APPROVED",
+          "final_answer": "It’s completely normal for your mind to wander, even with something as simple as breathing. You’re not failing or doing anything wrong. What matters is that you’re trying, and that’s already a step forward.\n\nYou could try shifting your focus to a small, rhythmic movement, like walking slowly or gently swinging your arms, while keeping your attention on the sensation of your body moving. If thoughts come back, just notice them without judgment, and gently bring yourself back to the movement. You’re not trying to stop them, you’re just noticing them, and that’s enough.\n\nWhat’s one small movement or sensation you could notice right now, that feels safe and grounding to you?",
+          "safe_mode": false,
+          "elapsed_s": 99.8
+        },
+        {
+          "turn": 4,
+          "input": "Okay so the wandering is normal. What do I do when the anxiety hits at work in front of other people? I can't just start breathing exercises at my desk.",
+          "retrieval_mode": "therapy",
+          "rag_docs": [
+            {
+              "source": "Social Anxiety — Self-Help",
+              "text": "Technique: Social Anxiety — Self-Help | Modality: CBT | Source: GetSelfHelp MINDFULNESS FOR BUSY PEOPLE Choose an activity to do mindfully throughout the day, for one, two or five minutes. For example: Drink a cup of tea. Walk. Wash the dishes. Whatever you are doing, be in that moment, right now. See, hear, smell, touch, feel, breathe. Simply notice whenever other thoughts and sensations come to "
+            },
+            {
+              "source": "Social Anxiety Disorder",
+              "text": "Technique: Social Anxiety Disorder | Modality: CBT | Source: HelpGuide Step 9: Share personal information about yourself with one or more co-workers. Step 10: Attend a staff party with your co-workers. Tip 5: Make an effort to be more social Actively seeking out supportive social environments is another effective way of challenging your fears and overcoming social anxiety. The following suggestion"
+            },
+            {
+              "source": "Loneliness and Social Isolation",
+              "text": "Technique: Loneliness and Social Isolation | Modality: interpersonal | Source: HelpGuide I can be proactive and invite them to do something.” “I’m not an eloquent speaker, and people judge me for it.” “The people who care about me won’t look down on me for how I talk.” Managing social anxiety When it comes to social anxiety, you might feel as though your panic is simply uncontrollable. Social situ"
+            },
+            {
+              "source": "Coping with Anxiety",
+              "text": "Technique: Coping with Anxiety | Modality: CBT | Source: Mental Health Foundation Hold your breath and count to seven. Breathe out through your mouth, making a whoosh sound while counting to eight. Repeat three more times for a total of four breath cycles. Some people find relaxation exercises work too, while others find mindfulness useful. 2. Get moving Exercise is a good way of dealing with anxi"
+            },
+            {
+              "source": "Social Anxiety Disorder",
+              "text": "Technique: Social Anxiety Disorder | Modality: CBT | Source: HelpGuide In fact, the more you avoid a feared social situation, the more frightening it becomes. Avoidance can also prevent you from doing things you’d like to do or reaching certain goals. For example, a fear of speaking up may prevent you from sharing your ideas at work, standing out in the classroom, or making new friends. While it m"
+            }
+          ],
+          "draft": "I hear how heavy that moment feels — being in a place where your anxiety shows up, and you can’t just “do the breathing” because it’s not enough. That’s okay. You’re not failing. You’re just trying to show up, and that matters.\n\nWhat if you start by noticing one small thing around you — maybe the sound of your own voice, or the way your chair feels under you, or the color of your screen — and then gently bring your attention back to that, without trying to fix anything. You’re not trying to be calm — you’re just trying to be here, right now.\n\nWhat’s one small thing you can notice or do right now, that feels safe and manageable — even if it’s just a few seconds — to help you feel grounded while you’re at work?",
+          "critique": "VERDICT: NEEDS_REVISION\nMUST_FIX:\n\n\n\n- “grounding technique” — not used.\n\n- “cognitive restructuring” — not used.\n\n- “EMDR” — not used.\n\n- “Distract with ACCEPTS” — not used.\n\n- “PLEASE skill” — not used.\n\n- “TIPP skill” — not used.\n\n\n\n\n- REPEATED QUESTION — The draft asks: “What’s one small thing you can notice or do right now, that feels safe and manageable — even if it’s just a few seconds — to help you feel grounded while you’re at work?” — this is a single question. No repeated question.\n\n- REDUNDANT SUGGESTION — The draft suggests noticing “the sound of your own voice, or the way your chair feels under you, or the color of your screen” — this is not redundant with anything the user said. The user said: “I can’t just start breathing exercises at my desk.” — the draft does not suggest breathing",
+          "final_answer": "I hear how heavy that moment feels, being in a place where your anxiety shows up, and you can’t just “do the breathing” because it’s not enough. That’s okay. You’re not failing. You’re just trying to show up, and that matters.\n\nWhat if you start by noticing one small thing around you, maybe the sound of your own voice, or the way your chair feels under you, or the color of your screen, and then gently bring your attention back to that, without trying to fix anything. You’re not trying to be calm, you’re just trying to be here, right now.\n\nWhat’s one small thing you can notice or do right now, that feels safe and manageable, even if it’s just a few seconds, to help you feel grounded while you’re at work?",
+          "safe_mode": false,
+          "elapsed_s": 120.1
+        }
+      ]
+    }
+  ]
+}
