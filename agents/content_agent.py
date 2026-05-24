@@ -1,11 +1,37 @@
 from __future__ import annotations
 
 from agents.config import Settings, get_settings
-from agents.utils import strip_dashes
+from agents.utils import (
+    strip_dashes,
+    strip_emojis,
+    strip_critique_bleed,
+    _resolve_dual_verdict,
+    _filter_hallucinated_must_fix,
+    _cap_must_fix,
+)
 from agents.database import ConversationDB
 from agents.llm import build_llm, invoke_text
-from agents.prompts import CONTENT_CREATOR_SYSTEM, CRITIC_SYSTEM, REVISER_SYSTEM
+from agents.prompts import CONTENT_CREATOR_SYSTEM, CONTENT_CRITIC_SYSTEM, CONTENT_REVISER_SYSTEM
 from agents.rag import RAGStore, format_context, messages_to_history
+
+_CRITIQUE_MAX_TOKENS = 500
+_REVISE_MAX_TOKENS = 2000
+
+# Purely creative/marketing requests where clinical RAG adds noise rather than value
+_SKIP_RAG_PATTERNS = (
+    "elevator pitch",
+    "instagram caption",
+    "instagram post",
+    "social media caption",
+    "app description",
+    "product description",
+    "service description",
+)
+
+
+def _should_retrieve(user_input: str) -> bool:
+    lower = user_input.lower()
+    return not any(p in lower for p in _SKIP_RAG_PATTERNS)
 
 
 class ContentCreationAgent:
@@ -58,19 +84,22 @@ class ContentCreationAgent:
 
         recent_messages = self.db.get_recent_messages(
             conversation_id=conversation_id,
-            limit=12,
+            limit=6,
         )
         history = messages_to_history(recent_messages)
         llm_func = lambda prompt: invoke_text(self.llm, "", prompt)
 
-        docs = self.rag.retrieve(
-            query=user_input,
-            top_k=self.settings.top_k_docs,
-            informational=self.INFORMATIONAL,
-            retrieval_mode="clinical",
-            history=history,
-            llm_func=llm_func,
-        )
+        if _should_retrieve(user_input):
+            docs = self.rag.retrieve(
+                query=user_input,
+                top_k=self.settings.top_k_docs,
+                informational=self.INFORMATIONAL,
+                retrieval_mode="clinical",
+                history=history,
+                llm_func=llm_func,
+            )
+        else:
+            docs = []
         context = format_context(docs)
 
         draft = self._draft(
@@ -83,12 +112,17 @@ class ContentCreationAgent:
             context=context,
             draft=draft,
         )
-        final_answer = strip_dashes(self._revise(
-            user_input=user_input,
-            context=context,
-            draft=draft,
-            critique=critique,
-        ))
+
+        if "VERDICT: APPROVED" in critique and "VERDICT: NEEDS_REVISION" not in critique:
+            final_answer = strip_emojis(strip_dashes(draft))
+        else:
+            revised = self._revise(
+                user_input=user_input,
+                context=context,
+                draft=draft,
+                critique=critique,
+            )
+            final_answer = strip_emojis(strip_dashes(strip_critique_bleed(revised)))
 
         rag_docs = [
             {
@@ -104,12 +138,13 @@ class ContentCreationAgent:
             for i, doc in enumerate(docs, 1)
         ]
 
+        retrieval_mode = "clinical" if docs else "none"
         self.db.add_message(
             conversation_id=conversation_id,
             role="assistant",
             content=final_answer,
             metadata={
-                "retrieval_mode": "clinical",
+                "retrieval_mode": retrieval_mode,
                 "draft": draft,
                 "critique": critique,
                 "rag_docs": rag_docs,
@@ -132,13 +167,16 @@ class ContentCreationAgent:
             informational=self.INFORMATIONAL,
             history=[],
             llm_func=llm_func,
-        )
+        ) if _should_retrieve(user_input) else []
         context = format_context(docs)
         draft = self._draft(user_input=user_input, context=context, recent_messages=[])
         critique = self._critique(user_input=user_input, context=context, draft=draft)
-        answer = strip_dashes(
-            self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
-        )
+        if "VERDICT: APPROVED" in critique and "VERDICT: NEEDS_REVISION" not in critique:
+            answer = strip_emojis(strip_dashes(draft))
+        else:
+            answer = strip_emojis(strip_dashes(strip_critique_bleed(
+                self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+            )))
 
         passages = [
             {
@@ -167,9 +205,12 @@ class ContentCreationAgent:
         context = format_context(docs)
         draft = self._draft(user_input=user_input, context=context, recent_messages=[])
         critique = self._critique(user_input=user_input, context=context, draft=draft)
-        answer = strip_dashes(
-            self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
-        )
+        if "VERDICT: APPROVED" in critique and "VERDICT: NEEDS_REVISION" not in critique:
+            answer = strip_emojis(strip_dashes(draft))
+        else:
+            answer = strip_emojis(strip_dashes(strip_critique_bleed(
+                self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+            )))
 
         passages = [
             {
@@ -201,13 +242,20 @@ class ContentCreationAgent:
             f"{m['role']}: {m['content']}" for m in recent_messages
         )
 
+        lower = user_input.lower()
+        format_hint = ""
+        if "single tweet" in lower or "one tweet" in lower:
+            format_hint = "\nFormat requirement: output exactly one tweet with no numbering. Must not exceed 280 characters.\n"
+        elif "tweet" in lower or "twitter thread" in lower:
+            format_hint = "\nFormat requirement: each tweet must be its own paragraph, numbered (e.g. 1/5, 2/5), and must not exceed 280 characters.\n"
+
         prompt = f"""
 Recent conversation:
 {history}
 
 Retrieved context:
 {context}
-
+{format_hint}
 User request:
 {user_input}
 
@@ -234,7 +282,10 @@ Draft answer:
 {draft}
 """.strip()
 
-        return invoke_text(self.llm, CRITIC_SYSTEM, prompt)
+        raw = invoke_text(self.llm, CONTENT_CRITIC_SYSTEM, prompt, max_tokens=_CRITIQUE_MAX_TOKENS)
+        raw = _resolve_dual_verdict(raw)
+        raw = _filter_hallucinated_must_fix(raw, draft)
+        return _cap_must_fix(raw)
 
     def _revise(
         self,
@@ -257,4 +308,4 @@ Critique:
 {critique}
 """.strip()
 
-        return invoke_text(self.llm, REVISER_SYSTEM, prompt)
+        return invoke_text(self.llm, CONTENT_REVISER_SYSTEM, prompt, max_tokens=_REVISE_MAX_TOKENS)

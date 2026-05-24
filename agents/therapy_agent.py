@@ -52,84 +52,12 @@ from session.users import User, UserStore
 _EXTRACT_EVERY_INCOMPLETE = 2
 _EXTRACT_EVERY_COMPLETE = 4
 
-
-def _resolve_dual_verdict(critique: str) -> str:
-    """If the critic wrote two VERDICT lines (self-correction), keep only the last one."""
-    needs = "VERDICT: NEEDS_REVISION"
-    approved = "VERDICT: APPROVED"
-    has_needs = needs in critique
-    has_approved = approved in critique
-    if not (has_needs and has_approved):
-        return critique
-    # Find which verdict appears last and strip the earlier one
-    last_needs = critique.rfind(needs)
-    last_approved = critique.rfind(approved)
-    if last_approved > last_needs:
-        # Final verdict is APPROVED — drop the NEEDS_REVISION line and everything after it up to APPROVED
-        return critique[last_approved:]
-    else:
-        # Final verdict is NEEDS_REVISION — drop the APPROVED line
-        return critique[:last_approved].rstrip() + "\n" + critique[last_needs:]
-
-
-def _is_looping_bullet(text: str) -> bool:
-    # Detect critic reasoning loops: any 6-word span repeating 3+ times signals a loop.
-    words = text.split()
-    if len(words) < 30:
-        return False
-    for i in range(len(words) - 5):
-        ngram = " ".join(words[i:i + 6])
-        if text.count(ngram) >= 3:
-            return True
-    return False
-
-
-def _quote_matches_draft(quote: str, draft: str) -> bool:
-    # Check if a quoted phrase (possibly with ellipsis ...) appears in the draft.
-    if "..." not in quote:
-        return quote in draft
-    # Split on ellipsis and require all non-empty fragments (>=4 chars) to appear in draft
-    fragments = [f.strip() for f in quote.split("...") if len(f.strip()) >= 4]
-    return bool(fragments) and all(f in draft for f in fragments)
-
-
-def _filter_hallucinated_must_fix(critique: str, draft: str) -> str:
-    """Drop MUST_FIX items whose quoted phrase cannot be found verbatim in the draft,
-    and drop items that are reasoning loops."""
-    if "MUST_FIX:" not in critique:
-        return critique
-    header, _, must_fix_block = critique.partition("MUST_FIX:")
-    lines = must_fix_block.splitlines()
-    kept = []
-    for line in lines:
-        stripped = line.strip()
-        if not stripped.startswith("-"):
-            # Drop non-bullet lines (reasoning prose, "So:", "Actually:", etc.)
-            if stripped:
-                continue
-            kept.append(line)  # preserve blank lines as spacing
-            continue
-        # Drop looping bullets regardless of quoted phrase content
-        if _is_looping_bullet(stripped):
-            continue
-        # Drop bullets where the critic concluded no violation (clean-rule assessments)
-        lower = stripped.lower()
-        if any(phrase in lower for phrase in ("no violation", "not a violation", "so no violation")):
-            continue
-        # Extract quoted phrases (text between " or ")
-        quotes = re.findall(r'["""]([^"""]{4,})["""]', stripped)
-        if not quotes:
-            # No quoted phrase — keep the item (can't verify)
-            kept.append(line)
-            continue
-        # Keep the item only if at least one quoted phrase matches the draft
-        if any(_quote_matches_draft(q, draft) for q in quotes):
-            kept.append(line)
-    surviving = [l for l in kept if l.strip().startswith("-")]
-    if not surviving:
-        # All MUST_FIX items were hallucinated — convert to APPROVED
-        return header.rstrip() + "\nVERDICT: APPROVED"
-    return header + "MUST_FIX:" + "\n".join(kept)
+from agents.utils import (
+    _filter_hallucinated_must_fix,
+    _is_looping_bullet,
+    _quote_matches_draft,
+    _resolve_dual_verdict,
+)
 
 
 def _build_profile_block(user: User) -> str | None:

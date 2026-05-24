@@ -158,14 +158,17 @@ class HybridRetriever:
             normalize_embeddings=True,
         )[0]
 
-        # Query Pinecone for cosine similarity scores
+        # Pinecone enforces a top_k limit of 10 000
+        top_k = min(len(self.docs), 10_000)
         results = self.index.query(
             vector=query_emb.tolist(),
-            top_k=len(self.docs),
+            top_k=top_k,
             include_metadata=False,
         )
 
-        # Build a score array aligned with self.docs order
+        if not hasattr(results, "matches"):
+            return np.zeros(len(self.docs), dtype=float)
+
         score_map = {m.id: m.score for m in results.matches}
         scores = np.array(
             [score_map.get(did, 0.0) for did in self.doc_ids],
@@ -183,6 +186,7 @@ class HybridRetriever:
         k: int = 10,
         bm25_weight: float | None = None,
         dense_weight: float | None = None,
+        min_score: float | None = None,
     ) -> List[Document]:
         bm25_w = bm25_weight if bm25_weight is not None else self.bm25_weight
         dense_w = dense_weight if dense_weight is not None else self.dense_weight
@@ -202,8 +206,11 @@ class HybridRetriever:
 
         results = []
         for idx in top_idx:
+            score = float(final[idx])
+            if min_score is not None and score < min_score:
+                break
             doc = self.docs[idx].copy()
-            doc.metadata["hybrid_score"] = float(final[idx])
+            doc.metadata["hybrid_score"] = score
             doc.metadata["bm25_score"] = float(bm25_norm[idx])
             doc.metadata["dense_score"] = float(dense_norm[idx])
             results.append(doc)
