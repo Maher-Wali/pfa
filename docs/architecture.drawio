@@ -187,6 +187,56 @@
           <mxGeometry x="960" y="278" width="230" height="25" as="geometry" />
         </mxCell>
 
+        <!-- is_image_request? diamond (content branch) -->
+        <mxCell id="node-img-intent" value="is_image_request?"
+          style="rhombus;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="955" y="295" width="190" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Edge: Mode Router -> is_image_request -->
+        <mxCell id="edge-router-content" value="content_creation"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
+          edge="1" source="node-mode-router" target="node-img-intent" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Prompt Optimizer -->
+        <mxCell id="node-prompt-optimizer" value="Prompt Optimizer&#xa;(LLM + conversation context)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="1165" y="298" width="175" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- FLUX model -->
+        <mxCell id="node-flux" value="FLUX.1-dev&#xa;(HuggingFace InferenceClient)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="1165" y="393" width="175" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Generated Image response -->
+        <mxCell id="node-response-image" value="Generated Image&#xa;(base64 PNG → metadata)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="1165" y="488" width="175" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Edges: yes path -->
+        <mxCell id="edge-intent-optimizer" value="yes"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="node-img-intent" target="node-prompt-optimizer" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-optimizer-flux" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-prompt-optimizer" target="node-flux" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-flux-response" style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="node-flux" target="node-response-image" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
         <!-- RAG Retrieval (Content) — aligned with therapy RAG at y=440 -->
         <mxCell id="node-rag-content" value="RAG Retrieval&#xa;(BM25 ×0.70 + Dense ×0.30)"
           style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;"
@@ -194,10 +244,10 @@
           <mxGeometry x="960" y="440" width="190" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Edge: Mode Router -> Content RAG -->
-        <mxCell id="edge-router-content" value="content_creation"
-          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
-          edge="1" source="node-mode-router" target="node-rag-content" parent="1">
+        <!-- Edge: is_image_request -> RAG (no path) -->
+        <mxCell id="edge-intent-rag" value="no"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
+          edge="1" source="node-img-intent" target="node-rag-content" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
@@ -306,6 +356,18 @@
         </mxCell>
         <mxCell id="edge-note-clinical" style="dashed=1;endArrow=none;strokeColor=#558b2f;rounded=0;"
           edge="1" source="node-clinical-db" target="note-clinical" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note: Image Generation -->
+        <mxCell id="note-image-gen"
+          value="Content creation branch only. Triggered by is_image_request() — keyword check for generation verbs + image nouns, or noun-first pattern (&quot;an image where...&quot;). No LLM call for detection.&#xa;&#xa;Prompt Optimizer: LLM enriches the raw user request with composition, style, lighting, mood, and aspect ratio using the last 12 conversation messages as context.&#xa;&#xa;Model: black-forest-labs/FLUX.1-dev via HuggingFace InferenceClient. Requires IMAGE_GENERATION_KEY env var (HF token with inference permissions).&#xa;&#xa;Output stored as assistant message with image_data_url in metadata (base64 PNG data URL). RAG and draft/critique/revise pipeline are skipped entirely."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f3e8ff;strokeColor=#9673a6;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1310" y="278" width="290" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-image-gen" style="dashed=1;endArrow=none;strokeColor=#9673a6;rounded=0;"
+          edge="1" source="node-img-intent" target="note-image-gen" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 

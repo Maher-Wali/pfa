@@ -129,7 +129,12 @@ def generate_image(prompt: str) -> GeneratedImage:
         )
     except HfHubHTTPError as exc:
         status_code = getattr(getattr(exc, "response", None), "status_code", None)
-        if status_code in {401, 403}:
+        if status_code == 402:
+            message = (
+                "Your Hugging Face inference credits are depleted. "
+                "Purchase pre-paid credits or subscribe to HF PRO to continue generating images."
+            )
+        elif status_code in {401, 403}:
             message = (
                 "Hugging Face rejected the image request. Check that IMAGE_GENERATION_KEY "
                 f"is valid and has access to {IMAGE_GENERATION_MODEL}."

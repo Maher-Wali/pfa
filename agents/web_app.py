@@ -674,7 +674,13 @@ def v2_chat_send(
     if not message:
         return RedirectResponse(f"/v2/chat/{conversation_id}", status_code=303)
 
-    if conversation["mode"] == "content_creation":
+    if conversation["mode"] == "content_creation" and is_image_request(message):
+        _respond_with_generated_image(
+            conversation_id=conversation_id,
+            conversation=conversation,
+            user_input=message,
+        )
+    elif conversation["mode"] == "content_creation":
         content_agent.respond(
             user_id=user["id"],
             user_input=message,

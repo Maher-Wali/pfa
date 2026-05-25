@@ -236,6 +236,7 @@ All settings are loaded from environment variables (or a `.env` file):
 | `top_k_docs` | `5` | Retrieved passages per query |
 | `classify_every_n_turns` | `4` | Safety check frequency |
 | `sqlite_db_path` | `data/conversations.sqlite3` | Conversation storage |
+| `IMAGE_GENERATION_KEY` | — | HuggingFace API token for FLUX.1-dev image generation |
 
 ---
 
@@ -294,6 +295,42 @@ User message
 
 Same draft → critique → revise pipeline as the therapy agent, without safety classification or user profile personalisation. Uses `informational=True` in RAGStore to favour BM25 (exact keyword matching suits content research queries).
 
+Before routing to RAG, each incoming message is checked by `is_image_request()`. If it returns `True`, the message bypasses RAG and the refinement pipeline entirely and goes to the image generation service instead.
+
+---
+
+### Image Generation Service (`services/image_generation.py`)
+
+Generates images from natural language requests within a content creation conversation.
+
+#### Intent detection — `is_image_request(text)`
+
+Keyword-based check. Returns `True` if the message contains a generation verb (`generate`, `create`, `make`, `draw`, `design`, etc.) and an image noun (`image`, `photo`, `visual`, `banner`, `poster`, etc.), or if the message starts with an image noun (noun-first pattern: *"an image where..."*). No LLM call.
+
+#### Per-request flow
+
+```
+User message  ──►  is_image_request?  ──no──►  normal content agent pipeline
+                        │
+                       yes
+                        │
+                        ▼
+              optimize_image_prompt (LLM)
+              Enriches the raw request with composition, style,
+              lighting, mood, and aspect ratio using recent
+              conversation context.
+                        │
+                        ▼
+              generate_image (HuggingFace InferenceClient)
+              Model: black-forest-labs/FLUX.1-dev
+              Returns PIL image → base64 PNG data URL
+                        │
+                        ▼
+              Stored as assistant message with image_data_url in metadata
+```
+
+**Environment variable:** `IMAGE_GENERATION_KEY` — HuggingFace API token with inference permissions and access to `black-forest-labs/FLUX.1-dev`.
+
 ---
 
 ### Safety Classifier (`safety_classifier/classifier.py`)
@@ -339,9 +376,9 @@ messages(id, conversation_id, role, content, metadata, created_at)
 
 `UserStore` — SQLite-backed user account and profile store.
 
-**User fields:** `user_id`, `email`, `age`, `mood_baseline` (1–10), `goals` (list), `country`, `job`, `relationship_status`
+**User fields:** `user_id`, `email`, `age`, `goals` (list), `job`, `relationship_status`
 
-Passwords are hashed with **bcrypt**. Profile fields are updated via `update_profile()` (manual) and `update_extracted_fields()` (LLM-inferred — see Profile Extractor below).
+Passwords are hashed with **bcrypt**. Profile fields are updated via `update_extracted_fields()` (LLM-inferred — see Profile Extractor below).
 
 ---
 
@@ -381,6 +418,20 @@ FastAPI application with Jinja2 templates and session-based auth.
 | POST | `/chat/{conversation_id}` | Submit message, redirect back |
 | GET/POST | `/profile` | View / update user profile |
 | GET/POST | `/compare` | Side-by-side bare-LLM vs RAG comparison |
+| GET | `/debug/profile/{user_id}` | Raw JSON dump of a user's profile |
+
+**V2 routes** (new design, same backend logic):
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/v2` | Redirect to login or conversations |
+| GET/POST | `/v2/login` | Authentication |
+| GET/POST | `/v2/register` | Account creation |
+| GET | `/v2/conversations` | List conversations |
+| POST | `/v2/conversations/{mode}/new` | Create conversation |
+| GET | `/v2/chat/{conversation_id}` | Render v2 chat page |
+| POST | `/v2/chat/{conversation_id}` | Submit message (includes image intent detection) |
+| GET/POST | `/v2/compare` | Side-by-side comparison |
 
 ### Session middleware
 
