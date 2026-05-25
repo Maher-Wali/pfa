@@ -11,6 +11,45 @@ from agents.llm import invoke_text
 
 IMAGE_GENERATION_MODEL = "black-forest-labs/FLUX.1-dev"
 
+_GENERATION_VERBS = {
+    "generate", "create", "make", "draw", "produce", "design",
+    "illustrate", "render", "build", "craft", "need", "get",
+}
+_IMAGE_NOUNS = {
+    "image", "images", "photo", "photos", "picture", "pictures",
+    "visual", "visuals", "illustration", "illustrations",
+    "graphic", "graphics", "banner", "thumbnail", "poster",
+}
+
+
+def is_image_request(text: str) -> bool:
+    tokens = text.lower().split()
+    if not tokens:
+        return False
+    words = set(tokens)
+    if words & _GENERATION_VERBS and words & _IMAGE_NOUNS:
+        return True
+    # noun-first pattern: "an image where...", "a photo where..."
+    # strip leading articles then check the word isn't used as a verb ("picture this")
+    idx = 0
+    if tokens[idx] in {"a", "an", "the"} and len(tokens) > 1:
+        idx = 1
+    first = tokens[idx]
+    next_word = tokens[idx + 1].strip(",:;!?") if idx + 1 < len(tokens) else ""
+    return first in _IMAGE_NOUNS and next_word != "this"
+
+
+_PLATFORM_DIMENSIONS: list[tuple[set[str], int, int]] = [
+    ({"instagram", "story", "stories", "reel", "reels", "tiktok"}, 1088, 1920),
+    ({"instagram"}, 1088, 1088),
+    ({"facebook", "fb"}, 1216, 640),
+    ({"twitter", "tweet", "x"}, 1216, 704),
+    ({"blog", "header", "banner", "article"}, 1600, 896),
+    ({"thumbnail", "youtube"}, 1280, 720),
+]
+_DEFAULT_DIMENSIONS = (1024, 1024)
+
+
 PROMPT_OPTIMIZER_SYSTEM = (
     "Rewrite the user's image request into a complete, high-quality image "
     "generation prompt. Preserve the user's intent exactly. Use conversation "

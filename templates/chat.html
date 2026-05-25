@@ -41,18 +41,6 @@
             {% endif %}
         </div>
 
-        <div class="chat-tools">
-            <form class="image-mode-form" method="post" action="/chat/{{ conversation.id }}/image-mode">
-                <button type="submit" class="image-mode-button">Create image</button>
-            </form>
-
-            {% if image_generation_mode %}
-            <p class="image-mode-indicator">
-                Image generation mode is active. Describe the image you want.
-            </p>
-            {% endif %}
-        </div>
-
         <form class="chat-form" method="post" action="/chat/{{ conversation.id }}">
             <textarea
                 name="message"

@@ -16,14 +16,13 @@ from services.image_generation import (
     ImageGenerationError,
     ImagePromptOptimizationError,
     generate_image,
+    is_image_request,
     optimize_image_prompt,
 )
 from services.support_plan_service import SupportPlanService
 from session.users import User, UserStore
 
 
-IMAGE_GENERATION_MODE_KEY = "image_generation_mode"
-IMAGE_GENERATION_CONVERSATION_KEY = "image_generation_conversation_id"
 
 settings = get_settings()
 db = ConversationDB(settings.sqlite_db_path)
@@ -80,22 +79,6 @@ def require_user(request: Request):
 
     return user
 
-
-def _image_generation_mode_active(request: Request, conversation_id: str) -> bool:
-    return (
-        bool(request.session.get(IMAGE_GENERATION_MODE_KEY))
-        and request.session.get(IMAGE_GENERATION_CONVERSATION_KEY) == conversation_id
-    )
-
-
-def _activate_image_generation_mode(request: Request, conversation_id: str) -> None:
-    request.session[IMAGE_GENERATION_MODE_KEY] = True
-    request.session[IMAGE_GENERATION_CONVERSATION_KEY] = conversation_id
-
-
-def _reset_image_generation_mode(request: Request) -> None:
-    request.session[IMAGE_GENERATION_MODE_KEY] = False
-    request.session.pop(IMAGE_GENERATION_CONVERSATION_KEY, None)
 
 
 def _agent_for_mode(mode: str):
@@ -286,28 +269,9 @@ def chat_page(request: Request, conversation_id: str):
             "user": user,
             "conversation": conversation,
             "messages": messages,
-            "image_generation_mode": _image_generation_mode_active(
-                request,
-                conversation_id,
-            ),
         },
     )
 
-
-@app.post("/chat/{conversation_id}/image-mode")
-def activate_image_mode(request: Request, conversation_id: str):
-    user = require_user(request)
-
-    if isinstance(user, RedirectResponse):
-        return user
-
-    conversation = db.get_conversation(conversation_id)
-
-    if not conversation or conversation["user_id"] != user["id"]:
-        return RedirectResponse("/choose-mode", status_code=303)
-
-    _activate_image_generation_mode(request, conversation_id)
-    return RedirectResponse(f"/chat/{conversation_id}", status_code=303)
 
 
 @app.get("/profile", response_class=HTMLResponse)
@@ -511,16 +475,12 @@ def chat_send(
     if not message:
         return RedirectResponse(f"/chat/{conversation_id}", status_code=303)
 
-    if _image_generation_mode_active(request, conversation_id):
-        try:
-            _respond_with_generated_image(
-                conversation_id=conversation_id,
-                conversation=conversation,
-                user_input=message,
-            )
-        finally:
-            _reset_image_generation_mode(request)
-
+    if conversation["mode"] == "content_creation" and is_image_request(message):
+        _respond_with_generated_image(
+            conversation_id=conversation_id,
+            conversation=conversation,
+            user_input=message,
+        )
         return RedirectResponse(f"/chat/{conversation_id}", status_code=303)
 
     if conversation["mode"] == "content_creation":

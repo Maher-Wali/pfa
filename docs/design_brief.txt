@@ -1,0 +1,103 @@
+PROJECT
+-------
+A web-based mental health companion system with two modes: a virtual therapy
+agent for personal support and a content creation agent for mental health
+information. The interface must feel like a safe, private space — not a
+clinical tool, not a chat widget. The conversation is the product; the UI
+should disappear into the background.
+
+
+DESIGN PRINCIPLES
+-----------------
+1. Calm over stimulation
+   Nothing should demand attention. No badges, no pings, no high-contrast
+   alerts. Every element should lower cognitive load, not raise it.
+
+2. Warmth over precision
+   Rounded corners, soft shadows, generous whitespace. The interface should
+   feel like a quiet room, not a dashboard.
+
+3. Conversation is the focus
+   The chat column is the centre of gravity. Navigation, history, and controls
+   sit at the periphery and recede when not needed.
+
+4. Gentle feedback
+   Transitions are slow and soft (200–300ms ease-out). No sharp pops or
+   jarring state changes. Typing indicators, subtle message fades.
+
+5. Crisis signals are visible but not alarming
+   Safe-mode responses are visually distinct using warm amber — never red,
+   never a modal interrupt.
+
+6. Accessibility as a baseline
+   Sufficient contrast on all text (WCAG AA minimum), no colour-only
+   communication, readable at 16px base with 1.65 line height.
+
+
+COLOR PALETTE
+-------------
+Background         #F7F5F2   Warm off-white. The canvas for everything.
+Surface            #FFFFFF   Cards, message bubbles, input area.
+Surface muted      #F0EDE8   Sidebar, secondary panels, hover states.
+Border             #E2DDD7   Dividers and input outlines. Never stark.
+
+Primary            #7A9E87   Sage green. Main actions, send button, links.
+Primary dark       #5C8270   Hover / active state for primary.
+Primary light      #EAF2ED   Tinted backgrounds, selected states.
+
+Accent             #B08BA5   Dusty lavender. Secondary actions, tags.
+Accent light       #F3EDF6   Tinted background for accent elements.
+
+User bubble        #EAF2ED   Primary light. User messages.
+Agent bubble       #FFFFFF   White with border. Agent messages.
+
+Crisis             #E8A87C   Warm amber. Safe-mode response background only.
+Crisis border      #C97E50   Border for crisis message card.
+
+Text primary       #2D2926   Near-black. Main readable text.
+Text secondary     #6B6560   Labels, timestamps, placeholder text.
+Text muted         #9E9791   Metadata, character counts.
+
+Font family        Nunito, Inter, system-ui (humanist sans-serif)
+Border radius      14px cards / 20px bubbles / 8px inputs
+Shadow             0 2px 12px rgba(0,0,0,0.06)
+
+
+MAIN CONVERSATION PAGE LAYOUT
+------------------------------
+The page is split into two regions: a narrow sidebar on the left and the
+conversation area filling the rest.
+
+SIDEBAR (240px, background: Surface muted)
+  - App name or small logo at the top, understated.
+  - "New conversation" button directly below — sage green, full sidebar width.
+  - Scrollable list of past conversations for the current mode, each shown as
+    a short title and relative timestamp. Active conversation is highlighted
+    with Primary light background. No icons, no clutter.
+  - Profile link at the very bottom. Mode switcher (therapy / content) just
+    above it, shown as two soft pill tabs.
+
+CONVERSATION AREA (remaining width, background: Background)
+  - A single centred column, max-width 650px, with auto horizontal margins.
+  - At the top: the conversation title in small, muted text. Nothing else.
+  - MESSAGE LIST fills the column, scrollable. Each turn is separated by
+    generous vertical spacing (20–24px).
+      User messages: right-aligned bubble, User bubble colour, 14px border
+        radius on all corners except bottom-right (4px). No avatar.
+      Agent messages: left-aligned bubble, Agent bubble colour with Border
+        stroke. Same asymmetric radius, bottom-left set to 4px. No avatar.
+        A small "Companion" label in Text muted sits just above the first
+        bubble in a consecutive agent run.
+      Crisis responses: Agent bubble with Crisis background and Crisis border.
+        A single line of muted text above it ("I want to make sure you're
+        safe.") in Text secondary. No icon, no alarm.
+  - INPUT AREA is fixed to the bottom of the conversation column. It is a
+    single rounded textarea (auto-grow, max 5 lines) with a soft border, and
+    a sage green send button to the right. The area has a thin top border and
+    Surface background so it sits cleanly above the message list. Placeholder
+    text: "Write something…"
+  - No timestamps visible by default. They appear on hover of a bubble in
+    Text muted, small.
+  - No read receipts, no seen indicators, no typing animation beyond a subtle
+    three-dot pulse in the agent bubble colour while a response is being
+    generated.
