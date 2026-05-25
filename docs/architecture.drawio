@@ -275,7 +275,7 @@
 
         <!-- Note: Safety Classifier -->
         <mxCell id="note-safety"
-          value="Therapy branch only. Runs every classify_every_n_turns (default 4) assistant turns — not on every message.&#xa;&#xa;Model: maherwali/mental-safety-classifier (HuggingFace).&#xa;Input: last 16 messages as formatted transcript.&#xa;Labels: NOT_CRITICAL | CONCERNING | CRITICAL.&#xa;&#xa;CRITICAL → safe mode response only; RAG + refinement pipeline skipped for that turn.&#xa;Any exception → treat as CRITICAL (fail-safe, never fail open)."
+          value="Therapy branch only. Runs every classify_every_n_turns (default 4) assistant turns — not on every message.&#xa;&#xa;Model: maherwali/mental-safety-classifier (HuggingFace).&#xa;Class: SafetyClassifier (safety_classifier/classifier.py).&#xa;Input: last 16 messages as formatted transcript.&#xa;Output: boolean — P(crisis class) ≥ 0.6 threshold.&#xa;&#xa;True → safe mode response only; RAG + refinement pipeline skipped for that turn.&#xa;Any exception → treat as crisis (fail-safe, never fail open)."
           style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;"
           vertex="1" parent="1">
           <mxGeometry x="1310" y="280" width="290" height="175" as="geometry" />
@@ -287,7 +287,7 @@
 
         <!-- Note: Self-Refinement Pipeline -->
         <mxCell id="note-refinement"
-          value="Both agents share the same 3-step self-refinement pipeline.&#xa;&#xa;Draft: initial response from LLM given retrieved context (+ user profile for therapy).&#xa;Critique: CRITIC_SYSTEM reviews draft for correctness, safety, relevance, and tone.&#xa;Revise: REVISER_SYSTEM rewrites draft incorporating the critique.&#xa;&#xa;Only the final revised output is shown to the user. Draft and critique are stored in message metadata (metadata_json) for audit and debugging."
+          value="Both agents share the same 3-step self-refinement pipeline.&#xa;&#xa;Draft: initial response from LLM given retrieved context (+ user profile for therapy).&#xa;Critique: CRITIC_SYSTEM reviews draft for correctness, safety, relevance, and tone.&#xa;Revise: REVISER_SYSTEM rewrites draft incorporating the critique.&#xa;&#xa;Only the final revised output is shown to the user. Draft and critique are stored in message metadata (JSON) for audit and debugging."
           style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;"
           vertex="1" parent="1">
           <mxGeometry x="1310" y="475" width="290" height="165" as="geometry" />
@@ -318,6 +318,41 @@
         </mxCell>
         <mxCell id="edge-note-therapy" style="dashed=1;endArrow=none;strokeColor=#aaaaaa;rounded=0;"
           edge="1" source="node-therapy-db" target="note-therapy" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== PROFILE EXTRACTOR (therapy branch, post-turn) ===== -->
+
+        <!-- Profile Extractor node -->
+        <mxCell id="node-profile-extractor" value="Profile Extractor&#xa;(post-turn)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;dashed=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="145" y="910" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Edge: Final Response -> Profile Extractor -->
+        <mxCell id="edge-response-extractor" value="every 2–4 turns"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#d6b656;fontSize=10;fontStyle=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
+          edge="1" source="node-response-therapy" target="node-profile-extractor" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Edge: Profile Extractor -> User Profile (updates for future turns) -->
+        <mxCell id="edge-extractor-userprofile" value="updates"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;strokeColor=#d6b656;fontSize=10;fontStyle=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;"
+          edge="1" source="node-profile-extractor" target="node-user-profile" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note: Profile Extractor -->
+        <mxCell id="note-profile-extractor"
+          value="Therapy branch only. Fires after the final response is stored — not in the user-visible critical path.&#xa;&#xa;Interval: every 2 assistant turns when profile is incomplete; every 4 when complete.&#xa;&#xa;Input: last 20 messages as formatted transcript.&#xa;Module: agents/profile_extractor.py — silent LLM pass.&#xa;Extracted fields: age, goals, job, relationship_status.&#xa;&#xa;Results merged into UserStore via update_extracted_fields(). Only high-confidence fields are written; existing fields are not cleared. Updated profile is injected into the Draft prompt on the next turn."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fff3e0;strokeColor=#d6b656;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1310" y="915" width="290" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-profile-extractor" style="dashed=1;endArrow=none;strokeColor=#d6b656;rounded=0;"
+          edge="1" source="node-profile-extractor" target="note-profile-extractor" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 

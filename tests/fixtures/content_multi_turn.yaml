@@ -1,0 +1,25 @@
+agent: content_creation
+conversations:
+  - id: mt_ct_001
+    label: "blog post -> feedback -> revision"
+    turns:
+      - "Write a 300-word blog post about the importance of setting boundaries for mental health."
+      - "I like it but it feels too formal. Can you rewrite it with a more conversational, first-person tone? Like you're talking to a friend."
+      - "Much better. Can you add a short section at the end with 3 practical boundary-setting tips the reader can try this week?"
+      - "Perfect. Now write a short meta description for this post, under 160 characters, for SEO."
+
+  - id: mt_ct_002
+    label: "LinkedIn post -> repurpose for Instagram -> Twitter"
+    turns:
+      - "Write a LinkedIn post about how journaling helps with anxiety. Professional but warm tone, around 120 words."
+      - "Now repurpose that same content as an Instagram caption. More casual, shorter, with a call to action and 5 relevant hashtags."
+      - "Now turn the core idea into a single tweet under 280 characters. Punchy and shareable."
+      - "Can you now write a TikTok script (spoken, 30 seconds) based on the same topic?"
+
+  - id: mt_ct_003
+    label: "workshop script -> expand -> adjust tone"
+    turns:
+      - "Write a short opening script (2 minutes when spoken) for a mental health awareness workshop aimed at corporate employees."
+      - "Good start. Can you expand the part about stigma? I want to spend more time on why people avoid seeking help."
+      - "Now adjust the whole tone — it's going to be delivered to senior executives, so it needs to be more data-driven and less emotionally led."
+      - "Add a closing statement that includes a clear call to action: encouraging attendees to book a free 15-minute consultation."

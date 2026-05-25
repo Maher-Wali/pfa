@@ -1,5 +1,4 @@
 import json
-import re
 import time
 import uuid
 from dataclasses import dataclass
@@ -10,11 +9,6 @@ import bcrypt as _bcrypt
 
 from session.store import _DB_PATH, SessionStore
 
-try:
-    import phonenumbers
-except ModuleNotFoundError:  # pragma: no cover - requirements install covers prod
-    phonenumbers = None
-
 
 def _hash_password(password: str) -> str:
     return _bcrypt.hashpw(password.encode(), _bcrypt.gensalt()).decode()
@@ -24,37 +18,12 @@ def _verify_password(password: str, hashed: str) -> bool:
     return _bcrypt.checkpw(password.encode(), hashed.encode())
 
 
-def normalize_phone_number(phone_number: str) -> str:
-    """Validate and normalise an E.164 phone number."""
-    phone = (phone_number or "").strip()
-    if not phone:
-        raise ValueError("Phone number is required.")
-
-    if phonenumbers is None:
-        if not re.fullmatch(r"\+[1-9]\d{7,14}", phone):
-            raise ValueError("Enter a valid E.164 phone number, for example +216xxxxxxxx.")
-        return phone
-
-    try:
-        parsed = phonenumbers.parse(phone, None)
-    except Exception as exc:
-        raise ValueError("Enter a valid E.164 phone number, for example +216xxxxxxxx.") from exc
-
-    if not phonenumbers.is_valid_number(parsed):
-        raise ValueError("Enter a valid E.164 phone number, for example +216xxxxxxxx.")
-    return phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.E164)
-
-
 @dataclass
 class User:
     user_id: str
     email: str
-    age: int
-    mood_baseline: int
     goals: List[str]
-    phone_number: str | None = None
-    whatsapp_opt_in: bool = False
-    country: str | None = None
+    age: int | None = None
     job: str | None = None
     relationship_status: str | None = None
     created_at: float = 0.0
@@ -62,7 +31,6 @@ class User:
 
     @property
     def profile_complete(self) -> bool:
-        """True once both passively-extracted fields are filled."""
         return self.job is not None and self.relationship_status is not None
 
 
@@ -86,18 +54,10 @@ class UserStore:
         self,
         email: str,
         password: str,
-        age: int = 0,
-        mood_baseline: int = 5,
         goals: List[str] | None = None,
-        country: str | None = None,
-        phone_number: str | None = None,
-        whatsapp_opt_in: bool = False,
     ) -> User:
         if self.get_by_email(email) is not None:
             raise ValueError(f"Email already registered: {email!r}")
-        normalized_phone = normalize_phone_number(phone_number or "")
-        if not whatsapp_opt_in:
-            raise ValueError("WhatsApp consent is required for account creation.")
 
         user_id = str(uuid.uuid4())
         password_hash = _hash_password(password)
@@ -106,27 +66,16 @@ class UserStore:
         with self._open() as conn:
             conn.execute(
                 """INSERT INTO users
-                   (user_id, email, password_hash, age, country,
-                    mood_baseline, goals, phone_number, whatsapp_opt_in,
-                    created_at, updated_at)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (
-                    user_id, email, password_hash, age, country,
-                    mood_baseline, json.dumps(goals or []), normalized_phone,
-                    1 if whatsapp_opt_in else 0, now, now,
-                ),
+                   (user_id, email, password_hash, goals, created_at, updated_at)
+                   VALUES (?, ?, ?, ?, ?, ?)""",
+                (user_id, email, password_hash, json.dumps(goals or []), now, now),
             )
             conn.commit()
 
         return User(
             user_id=user_id,
             email=email,
-            age=age,
-            mood_baseline=mood_baseline,
             goals=goals or [],
-            phone_number=normalized_phone,
-            whatsapp_opt_in=whatsapp_opt_in,
-            country=country,
             created_at=now,
             updated_at=now,
         )
@@ -158,33 +107,8 @@ class UserStore:
     def update_extracted_fields(
         self,
         user_id: str,
-        job: str | None = None,
-        relationship_status: str | None = None,
-    ) -> None:
-        """Update whichever extracted fields are provided (non-None only)."""
-        fields, values = [], []
-        if job is not None:
-            fields.append("job = ?")
-            values.append(job)
-        if relationship_status is not None:
-            fields.append("relationship_status = ?")
-            values.append(relationship_status)
-        if not fields:
-            return
-        fields.append("updated_at = ?")
-        values.append(time.time())
-        values.append(user_id)
-        with self._open() as conn:
-            conn.execute(
-                f"UPDATE users SET {', '.join(fields)} WHERE user_id = ?",
-                values,
-            )
-            conn.commit()
-
-    def update_profile(
-        self,
-        user_id: str,
         age: int | None = None,
+        goals: List[str] | None = None,
         job: str | None = None,
         relationship_status: str | None = None,
     ) -> None:
@@ -192,6 +116,9 @@ class UserStore:
         if age is not None:
             fields.append("age = ?")
             values.append(age)
+        if goals is not None:
+            fields.append("goals = ?")
+            values.append(json.dumps(goals))
         if job is not None:
             fields.append("job = ?")
             values.append(job)
@@ -207,34 +134,6 @@ class UserStore:
             conn.execute(
                 f"UPDATE users SET {', '.join(fields)} WHERE user_id = ?",
                 values,
-            )
-            conn.commit()
-
-    def update_whatsapp_settings(
-        self,
-        user_id: str,
-        phone_number: str | None,
-        whatsapp_opt_in: bool,
-    ) -> None:
-        normalized_phone = normalize_phone_number(phone_number or "") if whatsapp_opt_in else (phone_number or "").strip() or None
-        with self._open() as conn:
-            conn.execute(
-                "UPDATE users SET phone_number = ?, whatsapp_opt_in = ?, "
-                "updated_at = ? WHERE user_id = ?",
-                (
-                    normalized_phone,
-                    1 if whatsapp_opt_in else 0,
-                    time.time(),
-                    user_id,
-                ),
-            )
-            conn.commit()
-
-    def update_country(self, user_id: str, country: str) -> None:
-        with self._open() as conn:
-            conn.execute(
-                "UPDATE users SET country = ?, updated_at = ? WHERE user_id = ?",
-                (country, time.time(), user_id),
             )
             conn.commit()
 
@@ -254,11 +153,7 @@ class UserStore:
             user_id=row["user_id"],
             email=row["email"],
             age=row["age"],
-            mood_baseline=row["mood_baseline"],
             goals=json.loads(row["goals"]),
-            phone_number=row["phone_number"],
-            whatsapp_opt_in=bool(row["whatsapp_opt_in"]),
-            country=row["country"],
             job=row["job"],
             relationship_status=row["relationship_status"],
             created_at=row["created_at"],

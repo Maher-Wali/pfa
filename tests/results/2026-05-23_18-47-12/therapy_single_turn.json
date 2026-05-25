@@ -1,0 +1,535 @@
+{
+  "suite": "therapy_single_turn",
+  "agent": "virtual_therapy",
+  "run_at": "2026-05-23T18:58:12",
+  "cases": [
+    {
+      "id": "st_th_001",
+      "label": "work anxiety - venting",
+      "input": "I've been having really bad anxiety at work. My boss keeps piling on more tasks and I feel like I'm drowning. I can't focus on anything.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "How to Use DBT to Combat Work Stress",
+          "text": "Technique: How to Use DBT to Combat Work Stress | Modality: DBT | Source: DBT Self Help However, sometimes life throws you curveballs and can cause a sudden spike in your stress. Using DBT intervention at this time is crucial, as a quick intervention can help you overcome anxiety and get back on track. Easy DBT-inspired interventions include: Belly Breathing : While sitting or lying down, place on"
+        },
+        {
+          "source": "How to Use DBT to Combat Work Stress",
+          "text": "Technique: How to Use DBT to Combat Work Stress | Modality: DBT | Source: DBT Self Help Over time, this will increase your resilience and help you self-advocate while at work. DBT and Resilience DBT isn’t designed to help you rationalize overworking or overcome toxic work cultures. However, it can help you improve your response to stress by changing the way you think about the world. Rather than s"
+        },
+        {
+          "source": "How to Use DBT to Combat Work Stress",
+          "text": "Technique: How to Use DBT to Combat Work Stress | Modality: DBT | Source: DBT Self Help Technique: How to Use DBT to Combat Work Stress Modality: DBT Target conditions: BPD, emotion dysregulation, depression, anxiety, PTSD"
+        },
+        {
+          "source": "Using DBT Skills to Cope with Anxiety and Panic Attacks",
+          "text": "Technique: Using DBT Skills to Cope with Anxiety and Panic Attacks | Modality: DBT | Source: DBT Self Help Using DBT Skills to Cope with Anxiety and Panic Attacks Anxiety and panic attacks have been on the rise in the past few years. The Anxiety and Depression Association of America (ADAA) reports that anxiety affects 6.8 million Americans today. The same report also found that around 6 million Am"
+        },
+        {
+          "source": "How to Use DBT to Combat Work Stress",
+          "text": "Technique: How to Use DBT to Combat Work Stress | Modality: DBT | Source: DBT Self Help This is partially due to the pandemic fallout, but can also be attributed to poor stress management and overworking. Seeking a burnout diagnosis can be a step in the right direction. A burnout diagnosis can help you by legitimizing the challenges you face and showing decision-makers that their systemic policies"
+        }
+      ],
+      "draft": "I hear how overwhelming this feels — that pressure, that sense of being pulled in too many directions, and the fog of not being able to focus. That’s not just “stress,” it’s a real signal your body and mind are saying, “This isn’t sustainable.” You’re not alone in feeling this way.\n\nYou might try starting with a simple breath exercise — just sitting quietly, place one hand on your belly, inhale slowly through your nose, exhale gently through your mouth. Focus on the rise and fall. Even 3–5 minutes can help ground you in the moment. Or, if you’re feeling mentally scattered, try imagining a calm, open space — a quiet beach or wide field — and let that image anchor you while you’re in the office.\n\nWhat’s the one thing you’d most like to do right now — even if it’s just a small step — to feel a little more in control?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how overwhelming this feels, that pressure, that sense of being pulled in too many directions, and the fog of not being able to focus. That’s not just “stress,” it’s a real signal your body and mind are saying, “This isn’t sustainable.” You’re not alone in feeling this way.\n\nYou might try starting with a simple breath exercise, just sitting quietly, place one hand on your belly, inhale slowly through your nose, exhale gently through your mouth. Focus on the rise and fall. Even 3, 5 minutes can help ground you in the moment. Or, if you’re feeling mentally scattered, try imagining a calm, open space, a quiet beach or wide field, and let that image anchor you while you’re in the office.\n\nWhat’s the one thing you’d most like to do right now, even if it’s just a small step, to feel a little more in control?",
+      "safe_mode": false,
+      "elapsed_s": 55.3
+    },
+    {
+      "id": "st_th_002",
+      "label": "grief - loss of parent",
+      "input": "My dad passed away three months ago and I still can't get through a day without crying. I don't know how to move forward.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "Checking the Facts on Shame",
+          "text": "Technique: Checking the Facts on Shame | Modality: DBT | Source: DBT Self Help I could barely keep myself together, how could I do any of this? From here things got worse and worse. There were certainly blessings, like finishing that degree and the birth of our son in the beginning of this year. I just couldn’t regulate my emotions, constantly living in every failure, repeating the emotional abuse"
+        },
+        {
+          "source": "Coping with Grief and Loss",
+          "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Don’t let others tell you how to feel. Your grief is your own, and no one else can tell you when it’s time to “move on” or “get over it.” Let yourself feel whatever you feel without embarrassment or judgment. It’s okay to be angry, to yell at the heavens, to cry or not to cry. It’s also okay to laugh, to find momen"
+        },
+        {
+          "source": "Emotional and Psychological Trauma",
+          "text": "Technique: Emotional and Psychological Trauma | Modality: trauma-focused CBT | Source: HelpGuide Whether or not a traumatic event involves death, you as a survivor must cope with the loss, at least temporarily, of your sense of safety. The natural reaction to this loss is grief. Like people who have lost a loved one, you need to go through a grieving process . The following tips can help you cope "
+        },
+        {
+          "source": "Coping with Grief and Loss",
+          "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Looking after your physical and emotional needs will help you get through this difficult time. Face your feelings. You can try to suppress your grief, but you can’t avoid it forever. To heal, you have to acknowledge the pain. Trying to avoid feelings of sadness and loss only prolongs the grieving process. Unresolve"
+        },
+        {
+          "source": "Coping with Grief and Loss",
+          "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide For real healing, it is necessary to face your grief and actively deal with it. Myth: It’s important to “be strong” in the face of loss. Fact: Feeling sad, frightened, or lonely is a normal reaction to loss. Crying doesn’t mean you are weak. You don’t need to “protect” your family or friends by putting on a brave f"
+        }
+      ],
+      "draft": "I’m so sorry you’re carrying this weight. It’s okay to be sad, to cry, to feel lost — none of it makes you weak or broken. You’re not alone in this, and you don’t have to “fix” yourself or “move on” any faster than you’re ready.\n\nIt’s okay to sit with the grief, even if it feels like it’s never going away. You’re allowed to feel everything — the pain, the anger, the quiet ache — without needing to “get through” it or “be strong.” That’s not a test. That’s your body and heart telling you it’s still healing.\n\nWould you like to try something small today — like walking for 10 minutes, or writing down one thing you’re feeling right now — even if it’s just “I miss him” or “I’m tired” — and then put it down? You don’t have to do it perfectly. Just let yourself be there with it.",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I’m so sorry you’re carrying this weight. It’s okay to be sad, to cry, to feel lost, none of it makes you weak or broken. You’re not alone in this, and you don’t have to “fix” yourself or “move on” any faster than you’re ready.\n\nIt’s okay to sit with the grief, even if it feels like it’s never going away. You’re allowed to feel everything, the pain, the anger, the quiet ache, without needing to “get through” it or “be strong.” That’s not a test. That’s your body and heart telling you it’s still healing.\n\nWould you like to try something small today, like walking for 10 minutes, or writing down one thing you’re feeling right now, even if it’s just “I miss him” or “I’m tired”, and then put it down? You don’t have to do it perfectly. Just let yourself be there with it.",
+      "safe_mode": false,
+      "elapsed_s": 41.7
+    },
+    {
+      "id": "st_th_003",
+      "label": "relationship conflict",
+      "input": "My partner and I keep arguing about the same things over and over. I feel like we're stuck in a loop and I don't know how to break it.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "Setting Healthy Boundaries",
+          "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide I hate hugs.” “I’d prefer a handshake over a hug.” “I suppose I can squeeze in more work over the weekend.” “I can help next week, but I cannot take this on over the weekend.” “You never return my books.” “When you’re done, can I please have my book back?” Feedback in romantic relationships In healthy romantic relationships "
+        },
+        {
+          "source": "Me, Myself & My Wife: A Spiritual DBT Approach to Marriage with BPD",
+          "text": "Technique: Me, Myself & My Wife: A Spiritual DBT Approach to Marriage with BPD | Modality: DBT | Source: DBT Self Help The gut punch when I heard that phrase came on the heels of realizing that I was totally backsliding from everything I’ve learned this year. I was reacting to everything I perceived as a criticism looping them all together and throwing them back at my wife and kids. I heard Rose s"
+        },
+        {
+          "source": "Setting Healthy Boundaries",
+          "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide Tip 2: Talk to the person about your boundaries Knowing how to effectively communicate your needs to others is important. Rushed conversations, poor wording, and vague requests can make it harder for loved ones to understand and respect your ground rules. Consider timing. The best time to set a boundary with your partner is "
+        },
+        {
+          "source": "Setting Healthy Boundaries",
+          "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide For example, they might be upset that you’re asking for more “me time.” This could lead you to feel guilty or selfish. Remind yourself why you’re setting the restriction in the first place: You want some time alone to pursue your separate hobbies and avoid feeling emotionally crowded. Don’t feel you have to disregard your ow"
+        },
+        {
+          "source": "Setting Healthy Boundaries",
+          "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide A vague request, such as “I’d like more personal space,” may get the message across, but it’s better to be as clear as possible to avoid confusing the other person. Try, “I feel disrespected and uncomfortable when you come into my room unannounced. Please knock before entering.” A calm but firm tone lets the other person kno"
+        }
+      ],
+      "draft": "I hear how exhausting and frustrating this must feel — like you’re trying to move forward but getting stuck in the same place again and again. That’s not your fault, and it’s not a sign you’re doing anything wrong. You’re not alone in this.\n\nOne thing that’s helped others is talking about what’s really bothering you — not just the surface issue, but the feeling behind it. Try saying something like, “I feel overwhelmed when we keep going back to this, and I’d really like to find a way to move past it.” That way, you’re not blaming them, but you’re also giving them space to hear what you need.\n\nSometimes, it helps to pause before the next argument — even if you’re both feeling tense. Just take a breath, say, “Let’s take a break,” and come back when you’re both calmer. That small step can make a big difference.\n\nWhat’s the one thing you wish you could say to your partner that might help break the cycle?",
+      "critique": "VERDICT: NEEDS_REVISION\nMUST_FIX:\n- CLINICAL LABELS: “One thing that’s helped others” — this is a violation because it frames a suggestion as having been effective for others, which is prohibited.\n- DISTANCING PHRASES: “One thing that’s helped others” — this is a violation because it implies a generalized, third-party success, which is not allowed.\n\n\n\n\n\n\n\n- CLINICAL LABELS: “One thing that’s helped others” — this is a violation because it implies a generalized success for others, which is not allowed.\n- DISTANCING PH",
+      "final_answer": "I hear how exhausting and frustrating this must feel, like you’re trying to move forward but getting stuck in the same place again and again. That’s not your fault, and it’s not a sign you’re doing anything wrong. You’re not alone in this.\n\nTry saying something like, “I feel overwhelmed when we keep going back to this, and I’d really like to find a way to move past it.” That way, you’re not blaming them, but you’re also giving them space to hear what you need.\n\nSometimes, it helps to pause before the next argument, even if you’re both feeling tense. Just take a breath, say, “Let’s take a break,” and come back when you’re both calmer. That small step can make a big difference.\n\nWhat’s the one thing you wish you could say to your partner that might help break the cycle?",
+      "safe_mode": false,
+      "elapsed_s": 66.1
+    },
+    {
+      "id": "st_th_004",
+      "label": "sleep problems",
+      "input": "I haven't been sleeping well for weeks. My mind races the moment I lie down and I wake up exhausted every morning.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "Mind, Body, and Sleep: Integrating DBT Skills for Recharged Living",
+          "text": "Technique: Mind, Body, and Sleep: Integrating DBT Skills for Recharged Living | Modality: DBT | Source: DBT Self Help Signs of Poor Sleep Poor sleep quality can wreak havoc on your mental health and wellbeing. However, it can be difficult to identify the signs of poor sleep if you are unaware of subtle indicators like: Dry mouth or a sore throat; Sore teeth and jaw; Acne breakouts and new blemishe"
+        },
+        {
+          "source": "Sleep Hygiene",
+          "text": "Technique: Sleep Hygiene | Modality: behavioral | Source: GetSelfHelp After a while you should feel tired enough to go to bed again. Keep a sleep diary for a week. Then you can look back and notice what helps you sleep better and what doesn`t, so you can make positive changes and do more of what helps, and less of what doesn`t. If nothing seemed to help, try something different. Speak to your doct"
+        },
+        {
+          "source": "Sleep Hygiene",
+          "text": "Technique: Sleep Hygiene | Modality: behavioral | Source: Mental Health Foundation Try a sleep diary Working out the reasons behind poor sleep can be difficult. Keeping a sleep diary can help people identify patterns and triggers. For example, track the following for at least a week: bedtime, wake time, and total hours slept. how long it takes to fall asleep. number and length of night wakings. ev"
+        },
+        {
+          "source": "Sleep and Mental Health",
+          "text": "Technique: Sleep and Mental Health | Modality: behavioral | Source: Mental Health Foundation Anxiety can cause your thoughts to race, which can make it hard to sleep Depression can lead to oversleeping: sleeping late or a lot during the day. It can also cause insomnia if you have troubling thoughts Post-traumatic stress disorder (PTSD) can cause nightmares or night terrors. These may wake you up a"
+        },
+        {
+          "source": "Sleep and Mental Health",
+          "text": "Technique: Sleep and Mental Health | Modality: behavioral | Source: Mental Health Foundation Coming off medication can also cause sleep problems How can I improve my sleep? There are many things you can try to help yourself sleep well. Establish a regular, relaxing bedtime routine that lets you unwind and sends a signal to your brain that it's time to sleep Create a restful environment: bedrooms t"
+        }
+      ],
+      "draft": "I hear how heavy and exhausting this has felt — that your mind racing and waking up drained is really hard to carry. You’re not alone in this, and it’s okay to let yourself rest without rushing to fix it.\n\nOne gentle thing you could try is writing down what’s swirling in your thoughts right before bed — not to solve it, but to notice it. Then, gently shift your attention to something soothing, like a short breathing exercise or imagining a quiet, safe place. You don’t have to do it perfectly — just enough to let your brain settle.\n\nAlso, if you’re not already, try keeping a simple sleep diary for a few nights — just bedtime, wake time, and how you felt before bed or when you woke. It might help you spot patterns or small changes that could make a difference.\n\nWhat’s been most difficult to sit with lately?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how heavy and exhausting this has felt, that your mind racing and waking up drained is really hard to carry. You’re not alone in this, and it’s okay to let yourself rest without rushing to fix it.\n\nOne gentle thing you could try is writing down what’s swirling in your thoughts right before bed, not to solve it, but to notice it. Then, gently shift your attention to something soothing, like a short breathing exercise or imagining a quiet, safe place. You don’t have to do it perfectly, just enough to let your brain settle.\n\nAlso, if you’re not already, try keeping a simple sleep diary for a few nights, just bedtime, wake time, and how you felt before bed or when you woke. It might help you spot patterns or small changes that could make a difference.\n\nWhat’s been most difficult to sit with lately?",
+      "safe_mode": false,
+      "elapsed_s": 40.0
+    },
+    {
+      "id": "st_th_005",
+      "label": "student overwhelm",
+      "input": "I'm in my second year of university and everything feels like too much. Exams, assignments, social pressure — I'm not coping.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "How to Use DBT to Combat Work Stress",
+          "text": "Technique: How to Use DBT to Combat Work Stress | Modality: DBT | Source: DBT Self Help This is partially due to the pandemic fallout, but can also be attributed to poor stress management and overworking. Seeking a burnout diagnosis can be a step in the right direction. A burnout diagnosis can help you by legitimizing the challenges you face and showing decision-makers that their systemic policies"
+        },
+        {
+          "source": "Relaxation Techniques for Stress Relief",
+          "text": "Technique: Relaxation Techniques for Stress Relief | Modality: relaxation | Source: HelpGuide Technique: Relaxation Techniques for Stress Relief Modality: relaxation Target conditions: anxiety, stress, insomnia"
+        },
+        {
+          "source": "Relaxation",
+          "text": "Technique: Relaxation | Modality: relaxation | Source: Mind UK Notice the difference between the two feelings. Match this to your breathing. Tense your muscles as you take a deep breath in, and relax as you breathe out. Move up your body to your thighs, your stomach and all the way to your shoulders and hands, clenching and relaxing each muscle in turn. Take time to notice any parts of your body t"
+        },
+        {
+          "source": "My Five Easy Stress Relief Strategies",
+          "text": "Technique: My Five Easy Stress Relief Strategies | Modality: DBT | Source: DBT Self Help After... Read More DBT Skills for Your New Year’s Celebrations With New Year’s fast approaching, it can be a stressful time of year. The forced cheer, long stretches of time spent with family or... Read More The Alphabet Soup of DBT: A Walk Through the ABCs It may seem like going back to elementary school. But"
+        },
+        {
+          "source": "How to Use DBT to Combat Work Stress",
+          "text": "Technique: How to Use DBT to Combat Work Stress | Modality: DBT | Source: DBT Self Help The forced cheer, long stretches of time spent with family or... Read More The Alphabet Soup of DBT: A Walk Through the ABCs It may seem like going back to elementary school. But don't worry we're not going to sing the actual Alphabet song. As with many of... Read More The Ghosts of Christmas Past: Shame & Love"
+        }
+      ],
+      "draft": "I hear how overwhelming this all feels — exams, assignments, and social expectations can really pile up, and it’s okay to feel stretched thin. You don’t have to carry this alone.  \nTry starting with a short body scan: notice where your tension is, breathe in slowly, let it go as you exhale. Even 5 minutes can help you feel grounded.  \nIf you’re feeling stuck, you might also try writing down one thing you’re grateful for — even small — to shift your focus.  \nWhat’s been sitting with you the most lately?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how overwhelming this all feels, exams, assignments, and social expectations can really pile up, and it’s okay to feel stretched thin. You don’t have to carry this alone.  \nTry starting with a short body scan: notice where your tension is, breathe in slowly, let it go as you exhale. Even 5 minutes can help you feel grounded.  \nIf you’re feeling stuck, you might also try writing down one thing you’re grateful for, even small, to shift your focus.  \nWhat’s been sitting with you the most lately?",
+      "safe_mode": false,
+      "elapsed_s": 34.7
+    },
+    {
+      "id": "st_th_006",
+      "label": "social anxiety",
+      "input": "I get really anxious in social situations. Even going to the grocery store makes me nervous. I've started avoiding going out.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "Social Anxiety — Self-Help",
+          "text": "Technique: Social Anxiety — Self-Help | Modality: CBT | Source: GetSelfHelp It's helpful to identify what you do in those situations, such as: plan your exit (book a taxi), sit in a corner (to hide), sit on the end (to allow quick exit), check where the exits or toilets are, fiddle with something, drink more, not talk, avoid eye contact and so on. Slowly, we can change what we do. Use the Avoidanc"
+        },
+        {
+          "source": "Social Anxiety Disorder",
+          "text": "Technique: Social Anxiety Disorder | Modality: CBT | Source: HelpGuide For others, anxiety is connected to specific social situations, such as speaking to strangers, mingling at parties, or performing in front of an audience. Common social anxiety triggers include: Meeting new people Making small talk Public speaking Performing on stage Being the center of attention Being watched while doing somet"
+        },
+        {
+          "source": "Social Anxiety Disorder",
+          "text": "Technique: Social Anxiety Disorder | Modality: CBT | Source: HelpGuide Challenging negative, unhelpful thoughts that trigger and fuel social anxiety, replacing them with more balanced views. Facing the social situations you fear in a gradual, systematic way, rather than avoiding them. While you can learn and practice these exercises on your own, if you’ve had trouble with self-help, you may benefi"
+        },
+        {
+          "source": "Social Anxiety Disorder",
+          "text": "Technique: Social Anxiety Disorder | Modality: CBT | Source: HelpGuide But social anxiety disorder, or social phobia, is more than just shyness or occasional nerves. Social anxiety disorder involves intense fear of certain social situations—especially situations that are unfamiliar or in which you feel you’ll be watched or evaluated by others. These situations may be so frightening that you get an"
+        },
+        {
+          "source": "Social Anxiety Disorder",
+          "text": "Technique: Social Anxiety Disorder | Modality: CBT | Source: HelpGuide Emotional signs and symptoms of social anxiety disorder: Excessive self-consciousness and anxiety in everyday social situations Intense worry for days, weeks, or even months before an upcoming social situation Extreme fear of being watched or judged by others, especially people you don’t know Fear that you’ll act in ways that w"
+        }
+      ],
+      "draft": "I hear how much this is weighing on you — that fear, that avoidance, it’s not about being shy or “not enough” — it’s about how your body and mind are reacting to the pressure of being watched or judged. You’re not alone in feeling this way, and it’s okay to be scared.  \n\nWhat’s been sitting with you the most lately?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how much this is weighing on you, that fear, that avoidance, it’s not about being shy or “not enough”, it’s about how your body and mind are reacting to the pressure of being watched or judged. You’re not alone in feeling this way, and it’s okay to be scared.\n\nWhat’s been sitting with you the most lately?",
+      "safe_mode": false,
+      "elapsed_s": 27.2
+    },
+    {
+      "id": "st_th_007",
+      "label": "low motivation / possible depression",
+      "input": "I've lost interest in everything I used to enjoy. I don't want to see friends, I skip the gym, I just go to work and come home and stare at my phone.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "Empowered Aging with DBT: Strategies for Enhancing Resilience in Older Adults",
+          "text": "Technique: Empowered Aging with DBT: Strategies for Enhancing Resilience in Older Adults | Modality: DBT | Source: DBT Self Help But don't worry we're not going to sing the actual Alphabet song. As with many of... Read More The Ghosts of Christmas Past: Shame & Love During the Holiday Season Throughout every Holiday season that I can remember, I’ve referred to to myself as Clark W. Griswold (from "
+        },
+        {
+          "source": "Rejection Sensitivity: A Guide",
+          "text": "Technique: Rejection Sensitivity: A Guide | Modality: DBT | Source: DBT Self Help For example, if a friend doesn’t call you back, instead of thinking they’re ignoring you, consider that they might be busy or have other priorities at the moment. Delaying gratification: Practice resisting the urge to seek immediate reassurance. You can even use a timer if it is helpful for you. Over time, you can de"
+        },
+        {
+          "source": "Mind, Body, and Sleep: Integrating DBT Skills for Recharged Living",
+          "text": "Technique: Mind, Body, and Sleep: Integrating DBT Skills for Recharged Living | Modality: DBT | Source: DBT Self Help But don't worry we're not going to sing the actual Alphabet song. As with many of... Read More The Ghosts of Christmas Past: Shame & Love During the Holiday Season Throughout every Holiday season that I can remember, I’ve referred to to myself as Clark W. Griswold (from the movie C"
+        },
+        {
+          "source": "Raising Low Self-Esteem",
+          "text": "Technique: Raising Low Self-Esteem | Modality: CBT | Source: NHS One trick is to look at other people who act assertively and copy what they do. It's not about pretending you're someone you're not. It's picking up hints and tips from people you admire and letting the real you come out. Start saying \"no\" People with low self-esteem often feel they have to say yes to other people, even when they do "
+        },
+        {
+          "source": "Cognitive Distortions",
+          "text": "Technique: Cognitive Distortions | Modality: CBT | Source: HelpGuide This makes it easier to stick to the routine and view it as a hobby rather than a chore. Get active to quickly clear your head. Exercise has many long-term benefits, but some research suggests that even a single workout session—even just 10 to 30 minutes of moderate or high-intensity exercise—might be enough to elevate your mood "
+        }
+      ],
+      "draft": "I hear how heavy this feels — that loss of interest, the withdrawal from things you used to love, the quiet exhaustion of just showing up and not wanting to engage. That’s not a sign of weakness, it’s a signal your mind and body are asking for rest, space, and gentle care. You don’t have to force yourself to feel anything you’re not ready for right now.\n\nMaybe you can start small — like walking for five minutes, or putting on a song you used to love and letting yourself just listen to it without needing to “do” anything else. Or, if you’re feeling safe, try saying “I’m here, and I’m not okay right now — and that’s okay.” That’s a kind, honest thing to say to yourself.\n\nWhat’s one small thing you could try doing today — even if it’s just a tiny step — that might feel like a little bit of a return to yourself?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how heavy this feels, that loss of interest, the withdrawal from things you used to love, the quiet exhaustion of just showing up and not wanting to engage. That’s not a sign of weakness, it’s a signal your mind and body are asking for rest, space, and gentle care. You don’t have to force yourself to feel anything you’re not ready for right now.\n\nMaybe you can start small, like walking for five minutes, or putting on a song you used to love and letting yourself just listen to it without needing to “do” anything else. Or, if you’re feeling safe, try saying “I’m here, and I’m not okay right now, and that’s okay.” That’s a kind, honest thing to say to yourself.\n\nWhat’s one small thing you could try doing today, even if it’s just a tiny step, that might feel like a little bit of a return to yourself?",
+      "safe_mode": false,
+      "elapsed_s": 54.7
+    },
+    {
+      "id": "st_th_008",
+      "label": "explicit technique request",
+      "input": "Can you walk me through a breathing exercise I can do when I feel a panic attack coming on?",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "Panic Attacks and Panic Disorder",
+          "text": "Technique: Panic Attacks and Panic Disorder | Modality: CBT | Source: HelpGuide Deep breathing , on the other hand, can relieve the symptoms of panic. By learning to control your breathing, you can calm yourself down when you begin to feel anxious. And if you know how to control your breathing, you’re also less likely to create the very sensations that you’re afraid of. Some breathing exercises to"
+        },
+        {
+          "source": "Panic Attacks and Panic Disorder",
+          "text": "Technique: Panic Attacks and Panic Disorder | Modality: CBT | Source: HelpGuide Become familiar with the sensations. Panic is often driven by discomfort with physical sensations. For example, you might worry that your chest tightness is actually a heart attack. That kind of catastrophizing—jumping to the worst possible conclusion—can propel you into a panic attack. Learning more about normal physi"
+        },
+        {
+          "source": "Panic Attacks and Panic Disorder",
+          "text": "Technique: Panic Attacks and Panic Disorder | Modality: CBT | Source: HelpGuide They rarely last more than an hour, with most ending within 20 to 30 minutes. Panic attacks can happen anywhere and at any time. You may have one while you’re in a store shopping, walking down the street, driving in your car, or even sitting on the couch at home. Panic attack symptoms include: Shortness of breath or hy"
+        },
+        {
+          "source": "Panic Attacks and Panic Disorder",
+          "text": "Technique: Panic Attacks and Panic Disorder | Modality: CBT | Source: HelpGuide How to help someone having a panic attack Seeing a friend or loved one suffering a panic attack can be frightening. Their breathing may become abnormally fast and shallow, they could become dizzy or light-headed, tremble, sweat, feel nauseous, or think they’re having a heart attack. No matter how irrational you think t"
+        },
+        {
+          "source": "Panic — Understanding and Managing",
+          "text": "Technique: Panic — Understanding and Managing | Modality: CBT | Source: GetSelfHelp Terrifying. In fact, these physical feelings of adrenaline are normal - it is simply the body's alarm system being activated in order to help us escape from a dangerous situation. So it feels dangerous, even if it really isn't. We add meaning to the thoughts and feelings - we believe the thoughts, and we think the "
+        }
+      ],
+      "draft": "I’m here with you — and that’s enough. You’re not alone in this. When panic starts to build, your body’s trying to tell you something, not that you’re failing — just that you’re human, and it’s okay to feel this way.\n\nTry this: Inhale slowly through your nose for 4 seconds, letting your belly rise. Hold for 1 second. Then exhale gently through your mouth for 6 seconds — like you’re blowing out a candle. Repeat that rhythm, 5 times. You can do it while sitting, standing, or even lying down. Just notice your breath — not the panic, not the thoughts, just the breath.\n\nIf you feel your chest tightening or your heart racing, that’s your body’s alarm — not a warning that you’re dying. You’re just learning to breathe through it.\n\nWhat’s the first thing that comes to mind when you feel that panic rising?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I’m here with you, and that’s enough. You’re not alone in this. When panic starts to build, your body’s trying to tell you something, not that you’re failing, just that you’re human, and it’s okay to feel this way.\n\nTry this: Inhale slowly through your nose for 4 seconds, letting your belly rise. Hold for 1 second. Then exhale gently through your mouth for 6 seconds, like you’re blowing out a candle. Repeat that rhythm, 5 times. You can do it while sitting, standing, or even lying down. Just notice your breath, not the panic, not the thoughts, just the breath.\n\nIf you feel your chest tightening or your heart racing, that’s your body’s alarm, not a warning that you’re dying. You’re just learning to breathe through it.",
+      "safe_mode": false,
+      "elapsed_s": 46.0
+    },
+    {
+      "id": "st_th_009",
+      "label": "ambiguous - unsure if they need help",
+      "input": "A friend suggested I try talking to someone. I don't really know what I'd even say.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "How to Build Confidence",
+          "text": "Technique: How to Build Confidence | Modality: CBT | Source: HelpGuide Apply the skill in real-world situations. You could speak up more often at a work meeting or give a presentation in front of a small class or group of colleagues. Assess the results. Take note of what you seem to be doing right and what can be improved. You may decide you want to talk slower or more clearly. Make changes as nec"
+        },
+        {
+          "source": "Talking Therapies",
+          "text": "Technique: Talking Therapies | Modality: CBT | Source: Mental Health Foundation What you talk about could include your childhood, your relationships, past and present life events, or stressful situations. Your therapist will listen to you without judging you and help you explore your thoughts and feelings. They won’t tell you what to do but will help you understand yourself better and think about "
+        },
+        {
+          "source": "Cutting and Self-Harm",
+          "text": "Technique: Cutting and Self-Harm | Modality: DBT | Source: HelpGuide Do you simply want another person to know so you can let go of the secret? Communicate in whatever way you feel most comfortable. If you’re too nervous to talk in person, consider starting off the conversation with an email, text, or letter (although it’s important to eventually follow-up with a face-to-face conversation). Don’t "
+        },
+        {
+          "source": "Managing Fear and Anxiety",
+          "text": "Technique: Managing Fear and Anxiety | Modality: CBT | Source: Mental Health Foundation Feeling anxious is normal, your body and mind’s attempt to protect you from harm, and you don’t have to struggle alone. If you have a friend or family member you feel confident will respond in a supportive way, perhaps consider opening up to them about what’s going on. The act of talking about something can hel"
+        },
+        {
+          "source": "Active Listening",
+          "text": "Technique: Active Listening | Modality: interpersonal | Source: HelpGuide Tip 1: Minimize external distractions No matter how interested you are in what the other person has to say, external factors can disrupt the conversation. Here are some tips on dealing with those common hurdles. Remove the obvious environmental distractions. For example, turn off the television and put the cellphones away. E"
+        }
+      ],
+      "draft": "It’s okay to feel unsure — that’s not a sign of weakness, it’s just your brain trying to protect you. You don’t have to figure it out alone, and there’s no rush to say anything perfect. What matters most is that you’re choosing to reach out, and that’s brave.\n\nIf you’re not sure what to say, you can start with something simple — like “I’ve been feeling a bit stuck lately, and I wanted to talk about it.” Or, if you’re nervous, you could write a note or message first, even if it’s just a few sentences. You can always adjust or add more later.\n\nWould you like to try writing down one thing you’ve been thinking about — even if it’s small or messy — and then share it with your friend? That might help you feel less overwhelmed.",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "It’s okay to feel unsure, that’s not a sign of weakness, it’s just your brain trying to protect you. You don’t have to figure it out alone, and there’s no rush to say anything perfect. What matters most is that you’re choosing to reach out, and that’s brave.\n\nIf you’re not sure what to say, you can start with something simple, like “I’ve been feeling a bit stuck lately, and I wanted to talk about it.” Or, if you’re nervous, you could write a note or message first, even if it’s just a few sentences. You can always adjust or add more later.\n\nWould you like to try writing down one thing you’ve been thinking about, even if it’s small or messy, and then share it with your friend? That might help you feel less overwhelmed.",
+      "safe_mode": false,
+      "elapsed_s": 54.3
+    },
+    {
+      "id": "st_th_010",
+      "label": "ambiguous - fine on paper but feels flat",
+      "input": "Things are fine, honestly. I just feel a bit flat lately. Like everything's fine on paper but I don't feel much.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "Checking the Facts on Shame",
+          "text": "Technique: Checking the Facts on Shame | Modality: DBT | Source: DBT Self Help I could barely keep myself together, how could I do any of this? From here things got worse and worse. There were certainly blessings, like finishing that degree and the birth of our son in the beginning of this year. I just couldn’t regulate my emotions, constantly living in every failure, repeating the emotional abuse"
+        },
+        {
+          "source": "Mindfulness Exercises and Tips",
+          "text": "Technique: Mindfulness Exercises and Tips | Modality: MBSR | Source: Mind UK Focus on using them in the ways that are most helpful for you. Many people find it takes a while to feel comfortable doing mindfulness exercises. Was this page useful? Yes No Tell us more Tell us more X Tell us more Why did you visit this page? * For my own mental health For someone else’s mental health Academic/education"
+        },
+        {
+          "source": "Physical Activity and Mental Health",
+          "text": "Technique: Physical Activity and Mental Health | Modality: behavioral | Source: Mental Health Foundation My medication and/or mental health condition makes me feel tired and lethargic - work with your body and your mood. For example, if you know your medication makes you feel tired in the mornings, plan to get active later in the day. If you feel unmotivated all day, try just going for a walk. Eve"
+        },
+        {
+          "source": "Coping with Depression",
+          "text": "Technique: Coping with Depression | Modality: CBT | Source: HelpGuide This includes caffeine , alcohol , and processed food with high levels of chemical preservatives or hormones (found in some packaged food and cured meats). Don’t skip meals. Going too long between meals can make you feel irritable and tired, so aim to eat something at least every three to four hours. Minimize sugar and refined c"
+        },
+        {
+          "source": "Food and Mental Health",
+          "text": "Technique: Food and Mental Health | Modality: behavioural activation | Source: Mind UK It can be difficult to eat well when we have poor mental health. These are some tips which might help if you are struggling. Remember: it's ok to choose more convenient foods if this is what feels possible right now. Write down how food is making you feel If you feel able to, write down what you eat and make not"
+        }
+      ],
+      "draft": "I hear how quiet and heavy that feeling can feel — even when everything else looks okay. That’s not a sign of weakness, it’s just your body and mind telling you something’s different. You’re not alone in that.\n\nWhat’s been sitting with you the most lately?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how quiet and heavy that feeling can feel, even when everything else looks okay. That’s not a sign of weakness, it’s just your body and mind telling you something’s different. You’re not alone in that.\n\nWhat’s been sitting with you the most lately?",
+      "safe_mode": false,
+      "elapsed_s": 30.3
+    },
+    {
+      "id": "st_th_011",
+      "label": "ambiguous - caretaker fatigue, not framing it as their own problem",
+      "input": "My partner has been going through a hard time and I've been trying to support them. I think it's affecting me more than I expected.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "How to Have Healthy Relationships with BPD",
+          "text": "Technique: How to Have Healthy Relationships with BPD | Modality: DBT | Source: DBT Self Help By combining acceptance with fact-checking, individuals can find compromises and move forward without trying to force change. Practising coping skills is important, but having a supportive partner is also helpful. What can help you feel supported by your partner Having a partner who supports you when you "
+        },
+        {
+          "source": "How to Have Healthy Relationships with BPD",
+          "text": "Technique: How to Have Healthy Relationships with BPD | Modality: DBT | Source: DBT Self Help Staying on top of medication, if prescribed, is also part of the PLEASE skill, ensuring that one’s emotional state remains as stable as possible. By solidifying a self-care routine, you create an emotional anchor, which helps keep a person grounded even during challenging times.When self-care is neglected"
+        },
+        {
+          "source": "Checking the Facts on Shame",
+          "text": "Technique: Checking the Facts on Shame | Modality: DBT | Source: DBT Self Help When I came home it was rough settling back in and it meant some demons would return. The biggest lesson came from the emotional regulation DBT skill, Checking the Facts! I am definitely not perfect at it, but between the 6 questions and really understanding what is actually happening, I’m able to understand and choose "
+        },
+        {
+          "source": "How to Have Healthy Relationships with BPD",
+          "text": "Technique: How to Have Healthy Relationships with BPD | Modality: DBT | Source: DBT Self Help They’ve got your back, and that feels reassuring. Being direct is another big thing. It helps when your partner says what they mean, without playing games or being passive-aggressive. This clear communication means you don’t have to guess what’s on their mind. Consistency is important, too—it gives you a "
+        },
+        {
+          "source": "How to Have Healthy Relationships with BPD",
+          "text": "Technique: How to Have Healthy Relationships with BPD | Modality: DBT | Source: DBT Self Help People are often viewed in extremes: they are either idealised as perfect or suddenly devalued when something goes wrong. This all-or-nothing thinking can lead to instability in relationships. One moment, a partner might be seen as flawless, and the next, a minor disagreement can turn them into the enemy."
+        }
+      ],
+      "draft": "I hear how much you’re trying to be there for them — that’s really brave and meaningful. It’s completely normal for your own feelings to shift when someone you care about is struggling. You’re not alone in feeling this way.\n\nWhat’s been sitting with you the most lately?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how much you’re trying to be there for them, that’s really brave and meaningful. It’s completely normal for your own feelings to shift when someone you care about is struggling. You’re not alone in feeling this way.\n\nWhat’s been sitting with you the most lately?",
+      "safe_mode": false,
+      "elapsed_s": 30.9
+    },
+    {
+      "id": "st_th_012",
+      "label": "ambiguous - minimising, compares to others",
+      "input": "I don't want to complain because other people have it much worse, but I've been feeling really overwhelmed lately.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "My Most-Used DBT Skills",
+          "text": "Technique: My Most-Used DBT Skills | Modality: DBT | Source: DBT Self Help Distract with ACCEPTS It’s imperative that the skills you use help you in the way you need them to, when you need them. Nowhere is this more important than with Distress Tolerance skills , where your level of emotional overwhelm might be so high that using the wrong or an ineffective skill might actually make things worse. "
+        },
+        {
+          "source": "Effectively Use Skills by Brent Menninger",
+          "text": "Technique: Effectively Use Skills by Brent Menninger | Modality: DBT | Source: DBT Self Help You want to improve. You need to do better, try harder, and be more motivated to change. You may not have caused all your problems but you have to solve them anyway. If you are suicidal, you must change your life, not end it. You must learn new behaviors in all relevant contexts. You cannot fail in therapy"
+        },
+        {
+          "source": "Setting Healthy Boundaries",
+          "text": "Technique: Setting Healthy Boundaries | Modality: DBT | Source: HelpGuide You might want to reassess limitations and expectations surrounding things like frequency of sex and contraception use. Emotional boundaries ensure that others are respectful of your emotional well-being and internal comfort level. When setting an emotional boundary, you might say something like, “I don’t want to talk about "
+        },
+        {
+          "source": "Stress — Managing and Building Resilience",
+          "text": "Technique: Stress — Managing and Building Resilience | Modality: CBT | Source: Mind UK Try to take breaks in your day for things you enjoy. And reward yourself for your achievements, even if they seem small. Try to find time to relax . This might feel hard if you can't do anything to stop a situation that's making you stressed. But if you can allow yourself a short break, this can help with how yo"
+        },
+        {
+          "source": "Improving Emotional Intelligence",
+          "text": "Technique: Improving Emotional Intelligence | Modality: interpersonal | Source: HelpGuide Probably not. When you become overly stressed, your ability to both think clearly and accurately assess emotions—your own and other people’s—becomes compromised. Emotions are important pieces of information that tell you about yourself and others, but in the face of stress that takes us out of our comfort zon"
+        }
+      ],
+      "draft": "I hear how heavy this feels — and that’s okay. You’re not alone in carrying this weight, even if it doesn’t feel like it. What’s been sitting with you the most lately?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how heavy this feels, and that’s okay. You’re not alone in carrying this weight, even if it doesn’t feel like it. What’s been sitting with you the most lately?",
+      "safe_mode": false,
+      "elapsed_s": 24.4
+    },
+    {
+      "id": "st_th_013",
+      "label": "ambiguous - intrusive thoughts, unsure if it counts",
+      "input": "It's probably nothing but I've been having a lot of weird intrusive thoughts lately. I don't know if that's normal.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "Intrusive Thoughts",
+          "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide Anxiety Intrusive Thoughts Why You Have Them and How to Stop Last updated on February 20, 2026 Are you struggling with disturbing, sexual, or violent thoughts or images running through your mind? These tips can help you deal with unwanted intrusive thoughts and reduce your anxiety surrounding them. By Sheldon Reid What are intrusive"
+        },
+        {
+          "source": "Intrusive Thoughts",
+          "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide Looping concerns about uncertain situations make it hard for you to relax or concentrate. Eating disorders. If you suffer from an eating disorder , your behaviors might be shaped by intrusive thoughts about your appearance or the need to exercise. Postpartum mood disorders. Intrusive thoughts are common in new mothers who are experi"
+        },
+        {
+          "source": "Intrusive Thoughts",
+          "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide Get creative. If you have intrusive thoughts about riding your bike into oncoming traffic, for example, write it down in as much detail as you can tolerate. If you keep imagining yourself losing control and yelling obscenities in public, make a song about it. You can also draw pictures, write poems, or simply repeat the thought to y"
+        },
+        {
+          "source": "Intrusive Thoughts",
+          "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide These types of thoughts suddenly drift into your mind and often drift out just as quickly. However, unwanted intrusive thoughts occur when a typical intrusive thought sticks in your mind and causes you distress. You might feel ashamed by a recurring sexual thought, for example. Or disturbed by a mental image of you harming someone y"
+        },
+        {
+          "source": "Intrusive Thoughts",
+          "text": "Technique: Intrusive Thoughts | Modality: CBT | Source: HelpGuide You may spend lots of time and mental energy trying to tame or avoid them. However, the more effort you exert trying to run from your thoughts, the more your brain will treat them as if they’re actually dangerous. This can trigger or exacerbate anxiety whenever the thoughts surface. No matter how disturbing they may seem, the conten"
+        }
+      ],
+      "draft": "It’s okay to feel unsure — and it’s also okay to notice when something’s different. You’re not alone in this, even if it feels that way right now. These thoughts can feel loud or unsettling, but they’re not usually about you being “broken” or “crazy.” They’re just thoughts — sometimes strange, sometimes uncomfortable, but not always dangerous.\n\nIf you’d like, we could try something simple: write down one of the thoughts that’s been sticking around, and then read it out loud — without judging it. Or, if you’re feeling up for it, try describing it in a silly or creative way — like turning it into a song or a drawing. It might help to see how the thought looks when it’s not taking over.\n\nWhat’s been sitting with you the most lately?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "It’s okay to feel unsure, and it’s also okay to notice when something’s different. You’re not alone in this, even if it feels that way right now. These thoughts can feel loud or unsettling, but they’re not usually about you being “broken” or “crazy.” They’re just thoughts, sometimes strange, sometimes uncomfortable, but not always dangerous.\n\nIf you’d like, we could try something simple: write down one of the thoughts that’s been sticking around, and then read it out loud, without judging it. Or, if you’re feeling up for it, try describing it in a silly or creative way, like turning it into a song or a drawing. It might help to see how the thought looks when it’s not taking over.\n\nWhat’s been sitting with you the most lately?",
+      "safe_mode": false,
+      "elapsed_s": 42.7
+    },
+    {
+      "id": "st_th_014",
+      "label": "ambiguous - philosophical, no clear personal hook",
+      "input": "Do you think it's possible to be genuinely happy without really knowing what you want from life?",
+      "retrieval_mode": "clinical",
+      "rag_docs": [
+        {
+          "source": "Mental Health Foundation",
+          "text": "Condition: Take Action for Good Mental Health | Section: other | Source: Mental Health Foundation When you consistently repeat healthy actions, they can become habits, which means you may begin doing them almost without thinking. Simply put, consistency leads to benefits (such as lasting wellbeing) without much mental effort. This is valuable because you can rely on routines to boost your mental h"
+        },
+        {
+          "source": "Royal College of Psychiatrists",
+          "text": "Condition: Bipolar Disorder | Section: other | Source: Royal College of Psychiatrists You feel intensely well, energetic and optimistic – so much so that it affects your thinking and judgement. You can start to believe strange things about yourself, make bad decisions, and behave in embarrassing, harmful and - occasionally - dangerous ways. Like depression, it can make it difficult or impossible t"
+        },
+        {
+          "source": "Mind UK",
+          "text": "Condition: OCD | Section: when_to_seek_help | Source: Mind UK You might even help their compulsions without knowing it. For example, if you check things for them, give them repeated reassurance or help them avoid things they find distressing. This is sometimes called accommodation. It's natural to want to help someone, especially if they're distressed. You may feel guilty about not helping them. O"
+        },
+        {
+          "source": "Cleveland Clinic",
+          "text": "Condition: Borderline Personality Disorder | Section: other | Source: Cleveland Clinic Borderline personality disorder can affect your emotional well-being. You may be more at risk of developing other mental health conditions like depression, anxiety, eating disorders or substance use disorder . BPD can significantly impact your personal life, especially if it goes undiagnosed or untreated. You mi"
+        },
+        {
+          "source": "Rethink Mental Illness",
+          "text": "Condition: Bipolar Disorder | Section: other | Source: Rethink Mental Illness This is an instruction to health professionals. It is what you would like to happen with your care if you ever lack mental capacity to make your own decisions. What if I am not happy with my treatment? If you are not happy with your treatment, you can: talk to your doctor about your treatment options, ask for a second op"
+        }
+      ],
+      "draft": "I hear how deeply you’re asking this — it’s not a question about whether happiness is possible, but about how it might feel when you’re not sure where it’s headed. That’s okay. You don’t have to have all the answers to be happy.\n\nSometimes happiness shows up quietly — in the small things, in the rhythm of your days, in the quiet moments of peace you find even when you’re not “on track.” You don’t need to know everything to feel something. What’s been sitting with you the most lately?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how deeply you’re asking this, it’s not a question about whether happiness is possible, but about how it might feel when you’re not sure where it’s headed. That’s okay. You don’t have to have all the answers to be happy.\n\nSometimes happiness shows up quietly, in the small things, in the rhythm of your days, in the quiet moments of peace you find even when you’re not “on track.” You don’t need to know everything to feel something. What’s been sitting with you the most lately?",
+      "safe_mode": false,
+      "elapsed_s": 26.4
+    },
+    {
+      "id": "st_th_015",
+      "label": "ambiguous - vague, can't articulate it",
+      "input": "I just feel off. I don't know how else to put it.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "You Must ACCEPT to IMPROVE: A BPD Recovery Story",
+          "text": "Technique: You Must ACCEPT to IMPROVE: A BPD Recovery Story | Modality: DBT | Source: DBT Self Help I woke up feeling bad; I went to sleep feeling bad. The things I did during the day made me feel even worse. I never felt like I had control. I remember one day my mother asking me, “Sean, do you think maybe you’re suffering from depression?” I just dismissed it. I don’t get depressed; that’s not wh"
+        },
+        {
+          "source": "Panic — Understanding and Managing",
+          "text": "Technique: Panic — Understanding and Managing | Modality: CBT | Source: GetSelfHelp My body and mind is reacting to the thoughts and anxiety feelings. Pull back - this is just the anxiety talking. Don't believe everything you think! Let's stick with the facts - these thoughts are just opinions ( Fact Or Opinion ). These feelings are normal - it's just the body's alarm system doing its job, when it"
+        },
+        {
+          "source": "Coping with Grief and Loss",
+          "text": "Technique: Coping with Grief and Loss | Modality: grief therapy | Source: HelpGuide Don’t let others tell you how to feel. Your grief is your own, and no one else can tell you when it’s time to “move on” or “get over it.” Let yourself feel whatever you feel without embarrassment or judgment. It’s okay to be angry, to yell at the heavens, to cry or not to cry. It’s also okay to laugh, to find momen"
+        },
+        {
+          "source": "Physical Activity and Mental Health",
+          "text": "Technique: Physical Activity and Mental Health | Modality: behavioral | Source: Mental Health Foundation My medication and/or mental health condition makes me feel tired and lethargic - work with your body and your mood. For example, if you know your medication makes you feel tired in the mornings, plan to get active later in the day. If you feel unmotivated all day, try just going for a walk. Eve"
+        },
+        {
+          "source": "Loneliness",
+          "text": "Technique: Loneliness | Modality: interpersonal | Source: Mind UK My anxiety and depression isolates me from people and stops me from being able to do the things I'd like to do. So socially it cuts me off. What causes loneliness? Loneliness has many different causes. These vary from person to person. We don't always understand what it is about an experience that makes us feel lonely. Certain life "
+        }
+      ],
+      "draft": "I hear how heavy that feeling is — and that’s okay to feel that way. You don’t have to figure out what it is right now. What’s been sitting with you the most lately?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how heavy that feeling is, and that’s okay to feel that way. You don’t have to figure out what it is right now. What’s been sitting with you the most lately?",
+      "safe_mode": false,
+      "elapsed_s": 21.0
+    },
+    {
+      "id": "st_th_016",
+      "label": "ambiguous - questioning if their feelings are valid",
+      "input": "I'm not sure if what I'm feeling is even worth talking about. Maybe I'm just being dramatic.",
+      "retrieval_mode": "therapy",
+      "rag_docs": [
+        {
+          "source": "How to Build Confidence",
+          "text": "Technique: How to Build Confidence | Modality: CBT | Source: HelpGuide When have confidence, you have no doubt that you’ll succeed. However, confidence can also be a way of acting. It’s when you trust yourself to act, move forward, and grow, even if you feel uncertain about the potential outcome. When you act with confidence, you might not feel certain that you’ll pass that course—you might even f"
+        },
+        {
+          "source": "ACT Pack — Exercises and Worksheets",
+          "text": "Technique: ACT Pack — Exercises and Worksheets | Modality: ACT | Source: ACT Mindfully Values specify the forms of effectiveness needed and thus the nature of the problem. Clinical work thus demands values clarification. To take a new direction, we must let go of an old one. If a problem is chronic, the client's solutions are probably part of them. When you see strange loops, inappropriate verbal "
+        },
+        {
+          "source": "Coping with a Breakup or Divorce",
+          "text": "Technique: Coping with a Breakup or Divorce | Modality: CBT | Source: HelpGuide Just remember that grieving is essential to the healing process. The pain of grief is precisely what helps you let go of the old relationship and move on. And no matter how strong your grief, it won’t last forever. Grieving a relationship Don’t fight your feelings. It’s normal to have lots of ups and downs, and feel ma"
+        },
+        {
+          "source": "Anger Management",
+          "text": "Technique: Anger Management | Modality: CBT | Source: HelpGuide Slowly count to ten . Focus on the counting to let your rational mind catch up with your feelings. If you still feel out of control by the time you reach ten, start counting again. Give yourself a reality check When you start getting upset about something, take a moment to think about the situation. Ask yourself: How important is it i"
+        },
+        {
+          "source": "Understanding Stress",
+          "text": "Technique: Understanding Stress | Modality: CBT | Source: NHS It might affect how you feel physically and mentally, and also how you behave. It's not always easy to recognise when stress is the reason you're feeling or acting differently. Physical symptoms headaches or dizziness muscle tension or pain stomach problems chest pain or a faster heartbeat sexual problems Mental symptoms difficulty conc"
+        }
+      ],
+      "draft": "I hear how heavy this feels right now — and that’s okay. You don’t have to convince yourself or anyone else that what you’re feeling is “worth” anything. It’s just as valid as any other emotion, even if it doesn’t fit into a neat box. What’s been sitting with you the most lately?",
+      "critique": "VERDICT: APPROVED",
+      "final_answer": "I hear how heavy this feels right now, and that’s okay. You don’t have to convince yourself or anyone else that what you’re feeling is “worth” anything. It’s just as valid as any other emotion, even if it doesn’t fit into a neat box. What’s been sitting with you the most lately?",
+      "safe_mode": false,
+      "elapsed_s": 34.3
+    }
+  ]
+}

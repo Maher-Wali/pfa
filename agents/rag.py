@@ -11,12 +11,14 @@ class RAGStore:
     def __init__(
         self,
         index_name: str,
+        therapy_index_name: str,
         embedding_model_name: str,
         reranker_model_name: str,
         debug: bool = False,
     ):
         self._rag = MentalHealthRAG(
             clinical_index=index_name,
+            therapy_index=therapy_index_name,
             reranker_model=reranker_model_name,
             debug=debug,
         )
@@ -26,6 +28,7 @@ class RAGStore:
         query: str,
         top_k: int = 5,
         informational: bool = True,
+        retrieval_mode: str = "clinical",
         history: List[Tuple[str, str]] | None = None,
         llm_func: Callable[[str], str] | None = None,
     ) -> List[Document]:
@@ -36,8 +39,27 @@ class RAGStore:
                 llm_func=llm_func,
                 top_k_docs=top_k,
                 informational=informational,
+                retrieval_mode=retrieval_mode,
             )
         return self._rag.clinical.hybrid_search(query, k=top_k)
+
+    def retrieve_selfrag(
+        self,
+        query: str,
+        top_k: int = 5,
+        informational: bool = True,
+        llm_func: Callable[[str], str] | None = None,
+    ) -> tuple[List[Document], dict]:
+        if llm_func is None:
+            raise ValueError("llm_func is required for selfrag retrieval")
+        self._rag.chat_history = []
+        docs, state = self._rag._clinical_selfrag_docs(
+            user_query=query,
+            llm_func=llm_func,
+            top_k_docs=top_k,
+            informational=informational,
+        )
+        return docs, state
 
 
 def messages_to_history(messages: list[dict]) -> list[tuple[str, str]]:
@@ -63,7 +85,8 @@ def format_context(docs: List[Document], max_chars_per_doc: int = 1800) -> str:
             text = text[:max_chars_per_doc].rsplit(" ", 1)[0] + "..."
 
         source = (
-            doc.metadata.get("source")
+            doc.metadata.get("technique_name")
+            or doc.metadata.get("source")
             or doc.metadata.get("title")
             or doc.metadata.get("condition")
             or "retrieved_doc"

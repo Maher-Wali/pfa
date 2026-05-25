@@ -1,0 +1,66 @@
+agent: virtual_therapy
+cases:
+  - id: st_th_001
+    label: "work anxiety - venting"
+    input: "I've been having really bad anxiety at work. My boss keeps piling on more tasks and I feel like I'm drowning. I can't focus on anything."
+
+  - id: st_th_002
+    label: "grief - loss of parent"
+    input: "My dad passed away three months ago and I still can't get through a day without crying. I don't know how to move forward."
+
+  - id: st_th_003
+    label: "relationship conflict"
+    input: "My partner and I keep arguing about the same things over and over. I feel like we're stuck in a loop and I don't know how to break it."
+
+  - id: st_th_004
+    label: "sleep problems"
+    input: "I haven't been sleeping well for weeks. My mind races the moment I lie down and I wake up exhausted every morning."
+
+  - id: st_th_005
+    label: "student overwhelm"
+    input: "I'm in my second year of university and everything feels like too much. Exams, assignments, social pressure — I'm not coping."
+
+  - id: st_th_006
+    label: "social anxiety"
+    input: "I get really anxious in social situations. Even going to the grocery store makes me nervous. I've started avoiding going out."
+
+  - id: st_th_007
+    label: "low motivation / possible depression"
+    input: "I've lost interest in everything I used to enjoy. I don't want to see friends, I skip the gym, I just go to work and come home and stare at my phone."
+
+  - id: st_th_008
+    label: "explicit technique request"
+    input: "Can you walk me through a breathing exercise I can do when I feel a panic attack coming on?"
+
+  # Ambiguous cases
+  - id: st_th_009
+    label: "ambiguous - unsure if they need help"
+    input: "A friend suggested I try talking to someone. I don't really know what I'd even say."
+
+  - id: st_th_010
+    label: "ambiguous - fine on paper but feels flat"
+    input: "Things are fine, honestly. I just feel a bit flat lately. Like everything's fine on paper but I don't feel much."
+
+  - id: st_th_011
+    label: "ambiguous - caretaker fatigue, not framing it as their own problem"
+    input: "My partner has been going through a hard time and I've been trying to support them. I think it's affecting me more than I expected."
+
+  - id: st_th_012
+    label: "ambiguous - minimising, compares to others"
+    input: "I don't want to complain because other people have it much worse, but I've been feeling really overwhelmed lately."
+
+  - id: st_th_013
+    label: "ambiguous - intrusive thoughts, unsure if it counts"
+    input: "It's probably nothing but I've been having a lot of weird intrusive thoughts lately. I don't know if that's normal."
+
+  - id: st_th_014
+    label: "ambiguous - philosophical, no clear personal hook"
+    input: "Do you think it's possible to be genuinely happy without really knowing what you want from life?"
+
+  - id: st_th_015
+    label: "ambiguous - vague, can't articulate it"
+    input: "I just feel off. I don't know how else to put it."
+
+  - id: st_th_016
+    label: "ambiguous - questioning if their feelings are valid"
+    input: "I'm not sure if what I'm feeling is even worth talking about. Maybe I'm just being dramatic."

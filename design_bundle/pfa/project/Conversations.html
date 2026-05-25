@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Companion — Your conversations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F2;
+    --surface: #FFFFFF;
+    --surface-muted: #F0EDE8;
+    --border: #E2DDD7;
+
+    --primary: #7A9E87;
+    --primary-dark: #5C8270;
+    --primary-light: #EAF2ED;
+
+    --accent: #B08BA5;
+    --accent-light: #F3EDF6;
+
+    --text-primary: #2D2926;
+    --text-secondary: #6B6560;
+    --text-muted: #9E9791;
+
+    --radius-card: 14px;
+    --shadow-soft: 0 2px 12px rgba(0,0,0,0.06);
+
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --t-med: 220ms;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: "Nunito", Inter, system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  button, a { font-family: inherit; cursor: pointer; }
+
+  /* ─── Page frame ────────────────────────────────────────── */
+
+  .page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 56px 28px 96px;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 36px;
+  }
+  .brand {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.2px;
+    color: var(--text-secondary);
+  }
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    padding: 4px 6px;
+    border-radius: 8px;
+    transition: background var(--t-med) var(--ease);
+  }
+  .profile:hover { background: rgba(0,0,0,0.03); }
+  .avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12.5px;
+    display: grid;
+    place-items: center;
+  }
+  .profile-name {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+  }
+
+  /* ─── Heading + mode switch ─────────────────────────────── */
+
+  h1 {
+    margin: 0 0 4px;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  .greeting {
+    color: var(--text-secondary);
+    margin: 0 0 28px;
+    font-size: 15px;
+  }
+
+  /* mode switcher — pill segmented */
+  .mode-switch {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--surface-muted);
+    border-radius: 999px;
+    padding: 4px;
+    gap: 2px;
+    margin-bottom: 22px;
+  }
+  .mode-pill {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 9px 22px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 600;
+    transition: background var(--t-med) var(--ease), color var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+  }
+  .mode-pill.active {
+    background: var(--surface);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  /* ─── New conversation ──────────────────────────────────── */
+
+  .new-conversation {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.1px;
+    transition: background var(--t-med) var(--ease), transform var(--t-med) var(--ease);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+  .new-conversation:hover { background: var(--primary-dark); }
+  .new-conversation:active { transform: translateY(1px); }
+  .new-conversation svg { width: 16px; height: 16px; }
+
+  /* ─── Mode-scoped panels ────────────────────────────────── */
+
+  .mode-panel { display: none; }
+  .mode-panel.active { display: block; }
+
+  /* ─── Conversation list ─────────────────────────────────── */
+
+  .group-label {
+    color: var(--text-muted);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    font-weight: 600;
+    margin: 26px 4px 10px;
+  }
+  .group-label:first-child { margin-top: 0; }
+
+  .list { display: flex; flex-direction: column; gap: 4px; }
+
+  .item {
+    position: relative;
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 14px 16px;
+    padding-right: 48px;
+    border-radius: var(--radius-card);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background var(--t-med) var(--ease);
+  }
+  .item:hover { background: var(--surface-muted); }
+
+  .item-delete {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-muted);
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity var(--t-med) var(--ease), background var(--t-med) var(--ease), color var(--t-med) var(--ease);
+  }
+  .item:hover .item-delete,
+  .item-delete:focus-visible { opacity: 1; }
+  .item-delete:hover {
+    background: rgba(0,0,0,0.05);
+    color: var(--text-secondary);
+  }
+  .item-delete svg { width: 15px; height: 15px; }
+
+  /* gentle fade-out when removed */
+  .item.removing {
+    opacity: 0;
+    transform: translateY(-2px);
+    transition: opacity 260ms var(--ease), transform 260ms var(--ease);
+    pointer-events: none;
+  }
+
+  .item-title {
+    margin: 0;
+    font-size: 15.5px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .item-snippet {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+  .item-time {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ─── Empty state (content mode) ────────────────────────── */
+
+  .empty {
+    text-align: center;
+    padding: 32px 12px 8px;
+    color: var(--text-secondary);
+  }
+  .empty p { margin: 0 0 6px; font-size: 15px; }
+  .empty .hint { font-size: 13.5px; color: var(--text-muted); }
+
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="top">
+      <button class="profile" type="button">
+        <span class="avatar" aria-hidden="true">M</span>
+        <span class="profile-name">Maya</span>
+      </button>
+    </div>
+
+    <h1>Your conversations</h1>
+    <p class="greeting">Pick up where you left off, or start something new.</p>
+
+    <div class="mode-switch" role="tablist" aria-label="Mode">
+      <button class="mode-pill active" role="tab" data-mode="therapy" aria-selected="true">Therapy</button>
+      <button class="mode-pill" role="tab" data-mode="content" aria-selected="false">Content</button>
+    </div>
+
+    <button class="new-conversation" type="button" onclick="window.location.href='Conversation v2.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <path d="M12 5v14"/><path d="M5 12h14"/>
+      </svg>
+      New conversation
+    </button>
+
+    <!-- ── Therapy ──────────────────────────────────────────── -->
+    <section class="mode-panel active" id="therapy-panel">
+      <div class="group-label">Today</div>
+      <div class="list">
+        <a href="Conversation v2.html" class="item">
+          <p class="item-title">Feeling overwhelmed at work</p>
+          <p class="item-snippet">Want to start with that one minute of breathing, and then look at the doc one small piece at a time?</p>
+          <span class="item-time">A few minutes ago</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+      </div>
+
+      <div class="group-label">Earlier this week</div>
+      <div class="list">
+        <a href="#" class="item">
+          <p class="item-title">Sleep has been off again</p>
+          <p class="item-snippet">It makes sense that your body is taking longer to settle after the kind of weeks you've been having.</p>
+          <span class="item-time">Yesterday</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+        <a href="#" class="item">
+          <p class="item-title">Sunday afternoon check-in</p>
+          <p class="item-snippet">Letting Sunday be Sunday is harder than it sounds — what would help you protect a little of that?</p>
+          <span class="item-time">3 days ago</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+        <a href="#" class="item">
+          <p class="item-title">Talking to my sister again</p>
+          <p class="item-snippet">That conversation took something out of you, and you still showed up for the rest of your day.</p>
+          <span class="item-time">5 days ago</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+      </div>
+
+      <div class="group-label">Earlier</div>
+      <div class="list">
+        <a href="#" class="item">
+          <p class="item-title">Letting go of the deadline</p>
+          <p class="item-snippet">"Enough" is a moving target when everything else is moving too. Let's name what enough looks like today.</p>
+          <span class="item-time">Last week</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+        <a href="#" class="item">
+          <p class="item-title">Why mornings feel heavy</p>
+          <p class="item-snippet">The first hour after waking is asking for kindness, not productivity. What did you wish you'd done instead?</p>
+          <span class="item-time">2 weeks ago</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+        <a href="#" class="item">
+          <p class="item-title">Small wins this week</p>
+          <p class="item-snippet">You noticed three things on your own. That's not nothing — that's practice.</p>
+          <span class="item-time">3 weeks ago</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+      </div>
+    </section>
+
+    <!-- ── Content ──────────────────────────────────────────── -->
+    <section class="mode-panel" id="content-panel">
+      <div class="group-label">Recent drafts</div>
+      <div class="list">
+        <a href="#" class="item">
+          <p class="item-title">A piece on rest as a practice</p>
+          <p class="item-snippet">Outline for the newsletter — three sections, one personal anecdote, and a quiet closing.</p>
+          <span class="item-time">Yesterday</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+        <a href="#" class="item">
+          <p class="item-title">Explaining anxiety to a teenager</p>
+          <p class="item-snippet">Short script for the explainer video. Plain language, no clinical terms in the first paragraph.</p>
+          <span class="item-time">4 days ago</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+        <a href="#" class="item">
+          <p class="item-title">Workshop intro — grounding</p>
+          <p class="item-snippet">Two-minute opener. Aim for warmth, no jargon, a single invitation at the end.</p>
+          <span class="item-time">Last week</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+      </div>
+
+      <div class="group-label">Earlier</div>
+      <div class="list">
+        <a href="#" class="item">
+          <p class="item-title">Boundaries vs. walls — drafting</p>
+          <p class="item-snippet">Working title still rough. Lead with a story, then the distinction, then practice.</p>
+          <span class="item-time">2 weeks ago</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+        <a href="#" class="item">
+          <p class="item-title">Self-compassion in three lines</p>
+          <p class="item-snippet">Reframing the Kristin Neff prompt for a social post. Looking for warmer language.</p>
+          <span class="item-time">3 weeks ago</span>
+        <button class="item-delete" type="button" aria-label="Remove conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 7l1 12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l1-12"/></svg></button></a>
+      </div>
+    </section>
+
+  </div>
+
+<script>
+  // mode switcher
+  const pills = document.querySelectorAll('.mode-pill');
+  const panels = {
+    therapy: document.getElementById('therapy-panel'),
+    content: document.getElementById('content-panel'),
+  };
+  pills.forEach(p => {
+    p.addEventListener('click', () => {
+      pills.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
+      p.classList.add('active');
+      p.setAttribute('aria-selected', 'true');
+      const mode = p.dataset.mode;
+      Object.entries(panels).forEach(([k, el]) => el.classList.toggle('active', k === mode));
+    });
+  });
+
+  // gentle delete — don't navigate, fade the row out
+  document.querySelectorAll('.item-delete').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const item = btn.closest('.item');
+      if (!item) return;
+      item.classList.add('removing');
+      setTimeout(() => item.remove(), 280);
+    });
+  });
+</script>
+</body>
+</html>

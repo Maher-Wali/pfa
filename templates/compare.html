@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-header">
     <h1>Compare</h1>
-    <p class="muted">Bare LLM (same prompt, no retrieval) vs RAG + refinement pipeline</p>
+    <p class="muted">Bare LLM vs RAG + refinement vs Self-RAG + refinement</p>
 </div>
 
 <form class="compare-form" method="post" action="/compare">
@@ -57,6 +57,48 @@
         <details class="compare-details">
             <summary>Critique</summary>
             <div class="compare-passage">{{ result.critique }}</div>
+        </details>
+    </div>
+
+    <div class="compare-col">
+        <h2 class="compare-col-title">Self-RAG + Refinement</h2>
+        <p class="compare-col-subtitle muted">Self-RAG sufficiency check → retry if needed → draft → critique → revise</p>
+        <div class="compare-answer">{{ result.selfrag }}</div>
+
+        {% if result.selfrag_state %}
+        {% set state = result.selfrag_state %}
+        <div class="compare-passage" style="font-size:12px;color:#666;margin-top:8px;">
+            {% if state.retried %}
+            <strong style="color:#b45309;">Retry triggered</strong> — initial retrieval was insufficient.<br>
+            Reason: {{ state.initial.reason }}<br>
+            {% if state.initial.missing_concepts %}
+            Missing: {{ state.initial.missing_concepts | join(", ") }}<br>
+            {% endif %}
+            {% if state.refined_queries %}
+            Refined queries: {{ state.refined_queries | join(" · ") }}
+            {% endif %}
+            {% else %}
+            <strong style="color:#15803d;">No retry needed</strong> — initial retrieval was sufficient.<br>
+            Reason: {{ state.initial.reason }}
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if result.selfrag_passages %}
+        <details class="compare-details">
+            <summary>Retrieved passages ({{ result.selfrag_passages | length }})</summary>
+            {% for p in result.selfrag_passages %}
+            <div class="compare-passage">
+                <strong>{{ p.source }}</strong>
+                <p>{{ p.text }}</p>
+            </div>
+            {% endfor %}
+        </details>
+        {% endif %}
+
+        <details class="compare-details">
+            <summary>Critique</summary>
+            <div class="compare-passage">{{ result.selfrag_critique }}</div>
         </details>
     </div>
 </div>

@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Companion — Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F2;
+    --surface: #FFFFFF;
+    --surface-muted: #F0EDE8;
+    --border: #E2DDD7;
+
+    --primary: #7A9E87;
+    --primary-dark: #5C8270;
+    --primary-light: #EAF2ED;
+
+    --text-primary: #2D2926;
+    --text-secondary: #6B6560;
+    --text-muted: #9E9791;
+
+    --radius-input: 10px;
+    --shadow-soft: 0 2px 12px rgba(0,0,0,0.06);
+
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --t-med: 220ms;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: "Nunito", Inter, system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+
+  button, input { font-family: inherit; }
+
+  .stage {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .brand {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.2px;
+    color: var(--text-secondary);
+  }
+
+  .card {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px 28px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .welcome {
+    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.1px;
+  }
+  .sub {
+    margin: 0 0 22px;
+    font-size: 14.5px;
+    color: var(--text-secondary);
+  }
+
+  form { display: flex; flex-direction: column; gap: 14px; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding-left: 2px;
+  }
+
+  .input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-input);
+    padding: 11px 13px;
+    font-size: 15px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+  }
+  .input::placeholder { color: var(--text-muted); }
+  .input:focus {
+    border-color: #cfd9d2;
+    box-shadow: 0 0 0 3px rgba(122,158,135,0.14);
+  }
+
+  .row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -2px;
+  }
+  .quiet-link {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 13px;
+    padding: 2px 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color var(--t-med) var(--ease);
+  }
+  .quiet-link:hover { color: var(--primary-dark); }
+
+  .primary {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-input);
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background var(--t-med) var(--ease), transform var(--t-med) var(--ease);
+  }
+  .primary:hover { background: var(--primary-dark); }
+  .primary:active { transform: translateY(1px); }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin: 18px 0 14px;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .ghost {
+    width: 100%;
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-input);
+    padding: 11px 14px;
+    font-weight: 500;
+    font-size: 14.5px;
+    cursor: pointer;
+    transition: background var(--t-med) var(--ease), border-color var(--t-med) var(--ease);
+  }
+  .ghost:hover {
+    background: var(--surface-muted);
+    border-color: #d6cfc6;
+  }
+
+  .signup {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+  }
+  .signup a {
+    color: var(--primary-dark);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .signup a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  .footnote {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 320px;
+    line-height: 1.55;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="brand">Companion</div>
+
+    <div class="card">
+      <h1 class="welcome">Welcome back</h1>
+      <p class="sub">Sign in to continue your conversation.</p>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label class="label" for="email">Email</label>
+          <input class="input" id="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+        </div>
+
+        <div class="field">
+          <label class="label" for="password">Password</label>
+          <input class="input" id="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
+        </div>
+
+        <div class="row">
+          <a class="quiet-link" href="#">Forgot password?</a>
+        </div>
+
+        <button class="primary" type="submit">Sign in</button>
+      </form>
+
+      <div class="divider">or</div>
+
+      <button class="ghost" type="button">Continue with Google</button>
+
+      <p class="signup">New here? <a href="#">Create an account</a></p>
+    </div>
+
+    <p class="footnote">Your conversations are private. Only you see this.</p>
+  </div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    window.location.href = 'Conversation v2.html';
+  });
+</script>
+</body>
+</html>

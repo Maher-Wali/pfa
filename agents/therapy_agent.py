@@ -1,6 +1,40 @@
-from __future__ import annotations
+﻿from __future__ import annotations
+
+import re
 
 from agents.config import Settings, get_settings
+
+_CRITIQUE_MAX_TOKENS = 500
+_REVISE_MAX_TOKENS = 600
+
+
+def _strip_double_closing_question(text: str) -> str:
+    """Remove extra closing questions: line-level and same-paragraph sentence-level."""
+    lines = text.splitlines()
+    non_empty_indices = [i for i, l in enumerate(lines) if l.strip()]
+    # Line-level: last two non-empty lines both end with '?'
+    if len(non_empty_indices) >= 2:
+        last = lines[non_empty_indices[-1]].strip()
+        second_last = lines[non_empty_indices[-2]].strip()
+        if last.endswith("?") and second_last.endswith("?"):
+            lines.pop(non_empty_indices[-1])
+    text = "\n".join(lines).strip()
+    # Sentence-level: two or more '?' in the final paragraph — keep only the last sentence
+    paragraphs = [p for p in text.split("\n\n") if p.strip()]
+    if paragraphs:
+        last_para = paragraphs[-1]
+        if last_para.count("?") >= 2:
+            sentences = re.split(r"(?<=[.!?])\s+", last_para.strip())
+            question_sentences = [s for s in sentences if s.endswith("?")]
+            if len(question_sentences) >= 2:
+                # Keep only the last question sentence
+                non_question = [s for s in sentences if not s.endswith("?")]
+                paragraphs[-1] = " ".join(non_question + [question_sentences[-1]])
+                text = "\n\n".join(paragraphs).strip()
+    return text
+
+
+from agents.utils import strip_dashes
 from safety_classifier.classifier import SafetyClassifier
 from agents.database import ConversationDB
 from agents.llm import build_llm, invoke_text
@@ -10,31 +44,43 @@ from agents.prompts import (
     SAFE_MODE_SYSTEM,
     THERAPY_AGENT_SYSTEM,
 )
+from agents.profile_extractor import extract_profile
 from agents.rag import RAGStore, format_context, messages_to_history
+from chat_pipeline import _route_retrieval_mode
 from session.users import User, UserStore
+
+_EXTRACT_EVERY_INCOMPLETE = 2
+_EXTRACT_EVERY_COMPLETE = 4
+
+from agents.utils import (
+    _filter_hallucinated_must_fix,
+    _is_looping_bullet,
+    _quote_matches_draft,
+    _resolve_dual_verdict,
+)
 
 
 def _build_profile_block(user: User) -> str | None:
     if not user:
         return None
-    goals_str = ", ".join(user.goals) if user.goals else "not specified"
-    lines = [
-        "User profile (use this to personalise your responses — do not recite these facts back verbatim):",
-        f"- Mood baseline: {user.mood_baseline}/10",
-        f"- Goals: {goals_str}",
-    ]
+    lines = ["User profile (use this to personalise your responses — do not recite these facts back verbatim):"]
+    goals_str = ", ".join(user.goals) if user.goals else None
+    if goals_str:
+        lines.append(f"- Goals: {goals_str}")
     if user.age:
         lines.append(f"- Age: {user.age}")
-    if user.country:
-        lines.append(f"- Country: {user.country}")
     if user.job:
         lines.append(f"- Job: {user.job}")
     if user.relationship_status:
         lines.append(f"- Relationship status: {user.relationship_status}")
+    if len(lines) == 1:
+        return None
     return "\n".join(lines)
 
 
 class VirtualTherapyAgent:
+    INFORMATIONAL = False  # conversational queries suit dense-dominant retrieval
+
     def __init__(
         self,
         settings: Settings | None = None,
@@ -47,7 +93,8 @@ class VirtualTherapyAgent:
         self.llm = build_llm(self.settings, temperature=0.35)
 
         self.rag = RAGStore(
-            index_name=self.settings.db2_index_name,
+            index_name=self.settings.db1_index_name,
+            therapy_index_name=self.settings.db2_index_name,
             embedding_model_name=self.settings.embedding_model_name,
             reranker_model_name=self.settings.reranker_model_name,
             debug=debug,
@@ -119,10 +166,12 @@ class VirtualTherapyAgent:
         history = messages_to_history(recent_messages)
         llm_func = lambda prompt: invoke_text(self.llm, "", prompt)
 
+        retrieval_mode = _route_retrieval_mode(user_input)
         docs = self.rag.retrieve(
             query=user_input,
             top_k=self.settings.top_k_docs,
-            informational=False,
+            informational=self.INFORMATIONAL,
+            retrieval_mode=retrieval_mode,
             history=history,
             llm_func=llm_func,
         )
@@ -138,18 +187,37 @@ class VirtualTherapyAgent:
             profile_block=profile_block,
         )
 
+        last_assistant = next(
+            (m["content"] for m in reversed(recent_messages) if m["role"] == "assistant"),
+            None,
+        )
         critique = self._critique(
             user_input=user_input,
             context=context,
             draft=draft,
+            prev_assistant=last_assistant,
         )
 
-        final_answer = self._revise(
+        final_answer = strip_dashes(_strip_double_closing_question(self._revise(
             user_input=user_input,
             context=context,
             draft=draft,
             critique=critique,
-        )
+        )))
+
+        rag_docs = [
+            {
+                "source": (
+                    doc.metadata.get("technique_name")
+                    or doc.metadata.get("source")
+                    or doc.metadata.get("title")
+                    or doc.metadata.get("condition")
+                    or f"Doc {i}"
+                ),
+                "text": doc.page_content.replace("\n", " ").strip()[:400],
+            }
+            for i, doc in enumerate(docs, 1)
+        ]
 
         self.db.add_message(
             conversation_id=conversation_id,
@@ -157,10 +225,16 @@ class VirtualTherapyAgent:
             content=final_answer,
             metadata={
                 "safe_mode": False,
+                "retrieval_mode": retrieval_mode,
+                "therapy_plan": self.rag._rag._last_therapy_plan,
+                "self_rag": self.rag._rag._last_self_rag,
+                "draft": draft,
                 "critique": critique,
-                "rag_context": context,
+                "rag_docs": rag_docs,
             },
         )
+
+        self._maybe_extract_profile(user_id=user_id, conversation_id=conversation_id)
 
         return {
             "conversation_id": conversation_id,
@@ -176,19 +250,23 @@ class VirtualTherapyAgent:
         docs = self.rag.retrieve(
             query=user_input,
             top_k=self.settings.top_k_docs,
-            informational=False,
+            informational=self.INFORMATIONAL,
+            retrieval_mode=_route_retrieval_mode(user_input),
             history=[],
             llm_func=llm_func,
         )
         context = format_context(docs)
         draft = self._draft(user_input=user_input, context=context, recent_messages=[])
         critique = self._critique(user_input=user_input, context=context, draft=draft)
-        answer = self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+        answer = strip_dashes(_strip_double_closing_question(
+            self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+        ))
 
         passages = [
             {
                 "source": (
-                    doc.metadata.get("source")
+                    doc.metadata.get("technique_name")
+                    or doc.metadata.get("source")
                     or doc.metadata.get("title")
                     or doc.metadata.get("condition")
                     or f"Doc {i}"
@@ -199,6 +277,56 @@ class VirtualTherapyAgent:
         ]
 
         return {"answer": answer, "passages": passages, "critique": critique}
+
+    def compare_selfrag(self, user_input: str) -> dict:
+        """Same as compare() but retrieval uses the Self-RAG sufficiency-check loop."""
+        llm_func = lambda prompt: invoke_text(self.llm, "", prompt)
+        docs, selfrag_state = self.rag.retrieve_selfrag(
+            query=user_input,
+            top_k=self.settings.top_k_docs,
+            informational=self.INFORMATIONAL,
+            llm_func=llm_func,
+        )
+        context = format_context(docs)
+        draft = self._draft(user_input=user_input, context=context, recent_messages=[])
+        critique = self._critique(user_input=user_input, context=context, draft=draft)
+        answer = strip_dashes(_strip_double_closing_question(
+            self._revise(user_input=user_input, context=context, draft=draft, critique=critique)
+        ))
+
+        passages = [
+            {
+                "source": (
+                    doc.metadata.get("technique_name")
+                    or doc.metadata.get("source")
+                    or doc.metadata.get("title")
+                    or doc.metadata.get("condition")
+                    or f"Doc {i}"
+                ),
+                "text": doc.page_content.replace("\n", " ").strip()[:600],
+            }
+            for i, doc in enumerate(docs, 1)
+        ]
+
+        return {
+            "answer": answer,
+            "passages": passages,
+            "critique": critique,
+            "selfrag_state": selfrag_state,
+        }
+
+    def _maybe_extract_profile(self, user_id: str, conversation_id: str) -> None:
+        total = self.db.count_assistant_messages(conversation_id)
+        if total < _EXTRACT_EVERY_INCOMPLETE:
+            return
+        user = self.user_store.get_by_id(user_id)
+        interval = _EXTRACT_EVERY_COMPLETE if (user and user.profile_complete) else _EXTRACT_EVERY_INCOMPLETE
+        if total % interval != 0:
+            return
+        messages = self.db.get_recent_messages(conversation_id=conversation_id, limit=20)
+        extracted = extract_profile(self.llm, messages)
+        if extracted:
+            self.user_store.update_extracted_fields(user_id=user_id, **extracted)
 
     def _draft(
         self,
@@ -213,13 +341,41 @@ class VirtualTherapyAgent:
 
         profile_section = f"\n{profile_block}\n" if profile_block else ""
 
+        last_assistant = next(
+            (m["content"] for m in reversed(recent_messages) if m["role"] == "assistant"),
+            None,
+        )
+
+        asked_questions = [
+            sentence.strip()
+            for m in recent_messages if m["role"] == "assistant"
+            for sentence in re.split(r"(?<=[.?!])\s+", m["content"])
+            if sentence.strip().endswith("?")
+        ]
+
+        continuity_section = ""
+        if last_assistant:
+            questions_block = (
+                "\nQuestions already asked in this conversation (do NOT ask any of these again, "
+                "or anything semantically equivalent):\n"
+                + "\n".join(f"- {q}" for q in asked_questions)
+                if asked_questions else ""
+            )
+            continuity_section = (
+                f"\nPrevious assistant turn: {last_assistant}\n"
+                f"User's reply to that: {user_input}\n"
+                "You MUST directly acknowledge what the user just said before anything else. "
+                "Do not re-suggest anything they already answered or committed to.\n"
+                f"{questions_block}\n"
+            )
+
         prompt = f"""
 Recent conversation:
 {history}
 
 Retrieved context:
 {context}
-{profile_section}
+{profile_section}{continuity_section}
 User message:
 {user_input}
 
@@ -233,19 +389,23 @@ Respond supportively and practically.
         user_input: str,
         context: str,
         draft: str,
+        prev_assistant: str | None = None,
     ) -> str:
+        prev_section = f"\nPrevious assistant turn:\n{prev_assistant}\n" if prev_assistant else ""
         prompt = f"""
 User request:
 {user_input}
 
 Retrieved context:
 {context}
-
+{prev_section}
 Draft answer:
 {draft}
 """.strip()
 
-        return invoke_text(self.llm, CRITIC_SYSTEM, prompt)
+        raw = invoke_text(self.llm, CRITIC_SYSTEM, prompt, max_tokens=_CRITIQUE_MAX_TOKENS)
+        raw = _resolve_dual_verdict(raw)
+        return _filter_hallucinated_must_fix(raw, draft)
 
     def _revise(
         self,
@@ -268,7 +428,7 @@ Critique:
 {critique}
 """.strip()
 
-        return invoke_text(self.llm, REVISER_SYSTEM, prompt)
+        return invoke_text(self.llm, REVISER_SYSTEM, prompt, max_tokens=_REVISE_MAX_TOKENS)
 
     def _classify_recent_conversation(self, conversation_id: str) -> bool:
         recent_messages = self.db.get_recent_messages(
