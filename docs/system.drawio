@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-05-26T00:00:00.000Z" agent="Claude" version="21.0.0" type="device">
+  <diagram name="System Architecture" id="pfa-system-arch">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TITLE -->
+        <mxCell id="title" value="Mental Health Agent System — System Architecture"
+          style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="300" y="10" width="900" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ===== BOUNDARIES ===== -->
+
+        <mxCell id="boundary-local" value="Local machine"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#aaaaaa;dashed=1;strokeWidth=2;verticalAlign=top;fontSize=12;fontStyle=3;fontColor=#aaaaaa;"
+          vertex="1" parent="1">
+          <mxGeometry x="60" y="60" width="620" height="720" as="geometry" />
+        </mxCell>
+
+        <mxCell id="boundary-external" value="External services"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#aaaaaa;dashed=1;strokeWidth=2;verticalAlign=top;fontSize=12;fontStyle=3;fontColor=#aaaaaa;"
+          vertex="1" parent="1">
+          <mxGeometry x="720" y="60" width="900" height="720" as="geometry" />
+        </mxCell>
+
+        <!-- ===== LOCAL NODES ===== -->
+
+        <!-- Browser -->
+        <mxCell id="node-browser" value="Browser / Client"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=13;fontColor=#333333;"
+          vertex="1" parent="1">
+          <mxGeometry x="110" y="350" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- FastAPI -->
+        <mxCell id="node-fastapi" value="FastAPI&#xa;web_app.py  (uvicorn)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;"
+          vertex="1" parent="1">
+          <mxGeometry x="360" y="340" width="230" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- LM Studio -->
+        <mxCell id="node-lmstudio" value="LM Studio&#xa;(local LLM server)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;"
+          vertex="1" parent="1">
+          <mxGeometry x="370" y="530" width="210" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- BM25 cache -->
+        <mxCell id="node-bm25" value="BM25 index cache&#xa;data/cache/  (local disk)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;dashed=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="370" y="170" width="210" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ===== EXTERNAL NODES ===== -->
+
+        <!-- Supabase -->
+        <mxCell id="node-supabase" value="PostgreSQL&#xa;(Supabase)"
+          style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;"
+          vertex="1" parent="1">
+          <mxGeometry x="800" y="150" width="200" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Pinecone -->
+        <mxCell id="node-pinecone" value="Pinecone&#xa;(vector store)"
+          style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;"
+          vertex="1" parent="1">
+          <mxGeometry x="800" y="340" width="200" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- HuggingFace -->
+        <mxCell id="node-hf" value="HuggingFace&#xa;(Inference API)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;"
+          vertex="1" parent="1">
+          <mxGeometry x="800" y="530" width="200" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ===== EDGES ===== -->
+
+        <!-- Browser ↔ FastAPI -->
+        <mxCell id="edge-browser-fastapi" value="HTTP&#xa;(HTML forms / page loads)"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;"
+          edge="1" source="node-browser" target="node-fastapi" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- FastAPI ↔ Supabase -->
+        <mxCell id="edge-fastapi-supabase" value="conversations, users&#xa;psycopg2 / session pooler :6543"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="node-fastapi" target="node-supabase" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- FastAPI ↔ Pinecone -->
+        <mxCell id="edge-fastapi-pinecone" value="dense vector search&#xa;Pinecone SDK"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="node-fastapi" target="node-pinecone" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- FastAPI ↔ HuggingFace -->
+        <mxCell id="edge-fastapi-hf" value="safety classifier inference&#xa;FLUX.1-dev image generation"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="node-fastapi" target="node-hf" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- FastAPI ↔ LM Studio -->
+        <mxCell id="edge-fastapi-lmstudio" value="draft / critique / revise&#xa;query rewriting, profile extraction&#xa;OpenAI-compatible API"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;"
+          edge="1" source="node-fastapi" target="node-lmstudio" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Pinecone → BM25 cache (first load) -->
+        <mxCell id="edge-pinecone-bm25" value="first startup: fetch all vectors, build + cache BM25 index"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;dashed=1;strokeColor=#d6b656;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="node-pinecone" target="node-bm25" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== NOTES ===== -->
+
+        <!-- Supabase note -->
+        <mxCell id="note-supabase"
+          value="Tables:&#xa;  conversations, messages (ConversationDB)&#xa;  users (UserStore)&#xa;  sessions, turns, support_plans (SessionStore)&#xa;&#xa;Connection: session pooler URL port 6543&#xa;avoids IPv6-only direct connection."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1040" y="120" width="270" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-supabase" style="dashed=1;endArrow=none;strokeColor=#6c8ebf;rounded=0;"
+          edge="1" source="node-supabase" target="note-supabase" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Pinecone note -->
+        <mxCell id="note-pinecone"
+          value="Two indexes:&#xa;  mental-health-clinical  (active — both agents)&#xa;  mental-health-therapy   (built; not yet queried)&#xa;&#xa;Retrieval: hybrid BM25 + dense cosine.&#xa;BM25 weights differ per agent:&#xa;  content creation → BM25 ×0.70, dense ×0.30&#xa;  virtual therapy  → BM25 ×0.35, dense ×0.65&#xa;&#xa;BM25 index is cached to disk — Pinecone is only&#xa;queried on first startup or when vector count changes."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1040" y="300" width="270" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-pinecone" style="dashed=1;endArrow=none;strokeColor=#82b366;rounded=0;"
+          edge="1" source="node-pinecone" target="note-pinecone" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- HuggingFace note -->
+        <mxCell id="note-hf"
+          value="Two uses:&#xa;&#xa;Safety classifier&#xa;  Model: maherwali/mental-safety-classifier&#xa;  Sequence classification, P(crisis) ≥ 0.6 threshold.&#xa;  Therapy branch only, every N turns.&#xa;&#xa;Image generation&#xa;  Model: black-forest-labs/FLUX.1-dev&#xa;  Content creation branch only.&#xa;  Requires IMAGE_GENERATION_KEY env var."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1040" y="510" width="270" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-hf" style="dashed=1;endArrow=none;strokeColor=#9673a6;rounded=0;"
+          edge="1" source="node-hf" target="note-hf" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- LM Studio note -->
+        <mxCell id="note-lmstudio"
+          value="OpenAI-compatible API at http://localhost:1234/v1.&#xa;Handles: draft, critique, revise, query rewriting,&#xa;image prompt optimisation, profile extraction.&#xa;&#xa;Anthropic SDK (Claude) available as a&#xa;drop-in alternative via agents/llm.py."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#ffe6cc;strokeColor=#d6b656;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="110" y="640" width="270" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-lmstudio" style="dashed=1;endArrow=none;strokeColor=#d6b656;rounded=0;"
+          edge="1" source="node-lmstudio" target="note-lmstudio" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- BM25 cache note -->
+        <mxCell id="note-bm25"
+          value="Pickle files at data/cache/[index-name].pkl.&#xa;Invalidated when Pinecone vector count changes.&#xa;Avoids re-fetching all vectors from Pinecone&#xa;on every startup (can be 10k+ vectors)."
+          style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="110" y="150" width="240" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note-bm25" style="dashed=1;endArrow=none;strokeColor=#d6b656;rounded=0;"
+          edge="1" source="node-bm25" target="note-bm25" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

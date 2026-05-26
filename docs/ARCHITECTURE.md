@@ -58,9 +58,8 @@ pfa/
 │   ├── rag.py                       # RAGStore wrapper + context formatting
 │   ├── prompts.py                   # System prompts for all agent roles
 │   ├── llm.py                       # LLMClient (LM Studio / Anthropic)
-│   ├── database.py                  # ConversationDB (SQLite)
+│   ├── database.py                  # ConversationDB (PostgreSQL)
 │   ├── config.py                    # Settings (env vars / .env)
-│   ├── web_app.py                   # FastAPI web interface
 │   └── cli.py                       # Terminal interface
 │
 ├── safety_classifier/               # Safety classification model
@@ -68,8 +67,10 @@ pfa/
 │   └── train.py                     # Training script
 │
 ├── session/
-│   ├── users.py                     # UserStore — accounts, profiles (SQLite)
-│   └── store.py                     # SessionStore — sessions, turns (SQLite)
+│   ├── users.py                     # UserStore — accounts, profiles (PostgreSQL)
+│   └── store.py                     # SessionStore — sessions, turns (PostgreSQL)
+│
+├── web_app.py                       # FastAPI web interface (entry point)
 │
 ├── templates/                       # Jinja2 HTML templates
 ├── static/                          # CSS / JS assets
@@ -235,7 +236,7 @@ All settings are loaded from environment variables (or a `.env` file):
 | `classifier_model_name` | `maherwali/mental-safety-classifier` | Safety classifier |
 | `top_k_docs` | `5` | Retrieved passages per query |
 | `classify_every_n_turns` | `4` | Safety check frequency |
-| `sqlite_db_path` | `data/conversations.sqlite3` | Conversation storage |
+| `DATABASE_URL` | — | PostgreSQL connection string (Supabase session pooler) |
 | `IMAGE_GENERATION_KEY` | — | HuggingFace API token for FLUX.1-dev image generation |
 
 ---
@@ -345,7 +346,7 @@ When `is_crisis` returns `True`, the agent switches to `SAFE_MODE_SYSTEM` prompt
 
 ### Conversation Database (`agents/database.py`)
 
-`ConversationDB` — SQLite storage for multi-turn conversations.
+`ConversationDB` — PostgreSQL storage for multi-turn conversations. Connects via `DATABASE_URL` (psycopg2).
 
 **Schema:**
 
@@ -374,7 +375,7 @@ messages(id, conversation_id, role, content, metadata, created_at)
 
 ### User Accounts (`session/users.py`)
 
-`UserStore` — SQLite-backed user account and profile store.
+`UserStore` — PostgreSQL-backed user account and profile store. Connects via `DATABASE_URL` (psycopg2).
 
 **User fields:** `user_id`, `email`, `age`, `goals` (list), `job`, `relationship_status`
 
@@ -399,7 +400,7 @@ Uses the last 20 messages as input. Results are merged into the user record via 
 
 ---
 
-## Web Interface (`agents/web_app.py`)
+## Web Interface (`web_app.py`)
 
 FastAPI application with Jinja2 templates and session-based auth.
 
@@ -456,7 +457,7 @@ Menu-driven terminal interface. Supports multi-turn conversation with `/back` (r
 | Safety metadata stored per message | Stores `safe_mode`, `critique`, and retrieved `context` in `metadata` (JSON) so the full decision trace is queryable for debugging and audit |
 | BM25 index cached to disk | Fetching all Pinecone vectors at startup is slow; pickling to `data/cache/` means the BM25 index is rebuilt only when the Pinecone data changes |
 | Local LLM via LM Studio | No inference cost, no data leaving the machine, Anthropic SDK wired as a drop-in alternative in `agents/llm.py` |
-| SQLite for conversations | Zero-infrastructure persistence; sufficient for single-instance deployment |
+| PostgreSQL (Supabase) for conversations | Hosted persistence; session pooler URL (port 6543) used to work around IPv6-only direct connections on home networks |
 | Two separate Pinecone indexes | Clinical facts and therapy techniques have different retrieval profiles; separation enables targeted routing when DB2 is activated |
 | Context prefix on chunks | Without it, identical sentences from different conditions get the same vector; the prefix shifts embeddings into the correct clinical neighbourhood |
 | CrossEncoder runs after RRF, not on full corpus | CrossEncoder is accurate but slow; running it only on top RRF candidates gives quality without cost |
@@ -476,7 +477,9 @@ pip install -r scraping/requirements.txt
 
 ```bash
 export PINECONE_API_KEY="your-key"
+export DATABASE_URL="postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres"
 # Optional: export ANTHROPIC_API_KEY if using Claude as LLM backend
+# Optional: export IMAGE_GENERATION_KEY for FLUX.1-dev image generation
 ```
 
 ### 3 — Scrape + preprocess + index (one-time)
@@ -491,7 +494,7 @@ python pipeline/build_vectors.py --db db1
 
 ```bash
 # Web interface
-uvicorn agents.web_app:app --reload
+uvicorn web_app:app --reload
 
 # CLI
 python -m agents.cli

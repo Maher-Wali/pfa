@@ -1,127 +1,82 @@
-import sqlite3
+import os
 import time
 import uuid
+from contextlib import contextmanager
 from pathlib import Path
 from typing import List, Tuple
 
-_DB_PATH = Path(__file__).parent.parent / "data" / "sessions.db"
+import psycopg2
+import psycopg2.extras
 
-# Sessions inactive longer than this are excluded from history loads.
+
 SESSION_TTL_SECONDS = 60 * 60 * 24 * 7  # 7 days
 
 
-def _connect() -> sqlite3.Connection:
-    _DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(_DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-def _bootstrap(conn: sqlite3.Connection) -> None:
-    conn.executescript("""
-        CREATE TABLE IF NOT EXISTS users (
-            user_id             TEXT PRIMARY KEY,
-            email               TEXT NOT NULL UNIQUE,
-            password_hash       TEXT NOT NULL,
-            age                 INTEGER,
-            goals               TEXT NOT NULL DEFAULT '[]',
-            job                 TEXT,
-            relationship_status TEXT,
-            phone_number        TEXT,
-            whatsapp_opt_in     INTEGER NOT NULL DEFAULT 0,
-            created_at          REAL NOT NULL,
-            updated_at          REAL NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS sessions (
-            session_id                 TEXT PRIMARY KEY,
-            user_id                    TEXT,
-            created_at                 REAL NOT NULL,
-            last_active                REAL NOT NULL,
-            consecutive_crisis_count   INTEGER NOT NULL DEFAULT 0,
-            last_crisis_detected_at    REAL,
-            FOREIGN KEY (user_id) REFERENCES users(user_id)
-        );
-
-        CREATE TABLE IF NOT EXISTS turns (
-            id                 INTEGER PRIMARY KEY AUTOINCREMENT,
-            session_id         TEXT    NOT NULL,
-            user_message       TEXT    NOT NULL,
-            assistant_message  TEXT    NOT NULL,
-            timestamp          REAL    NOT NULL,
-            FOREIGN KEY (session_id) REFERENCES sessions(session_id)
-        );
-
-        CREATE INDEX IF NOT EXISTS idx_turns_session ON turns(session_id);
-        CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
-    """)
-    _ensure_column(conn, "users", "phone_number", "TEXT")
-    _ensure_column(
-        conn,
-        "users",
-        "whatsapp_opt_in",
-        "INTEGER NOT NULL DEFAULT 0",
-    )
-    _ensure_column(
-        conn,
-        "sessions",
-        "consecutive_crisis_count",
-        "INTEGER NOT NULL DEFAULT 0",
-    )
-    _ensure_column(conn, "sessions", "last_crisis_detected_at", "REAL")
-    conn.executescript("""
-        CREATE TABLE IF NOT EXISTS support_plans (
-            plan_id              TEXT PRIMARY KEY,
-            user_id              TEXT NOT NULL,
-            active               INTEGER NOT NULL DEFAULT 1,
-            current_day          INTEGER NOT NULL DEFAULT 0,
-            total_days           INTEGER NOT NULL DEFAULT 30,
-            mode                 TEXT NOT NULL,
-            started_at           REAL NOT NULL,
-            last_sent_at         REAL,
-            completed_at         REAL,
-            provider_message_ids TEXT NOT NULL DEFAULT '[]',
-            created_at           REAL NOT NULL,
-            updated_at           REAL NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(user_id)
-        );
-
-        CREATE INDEX IF NOT EXISTS idx_support_plans_user
-            ON support_plans(user_id);
-        CREATE UNIQUE INDEX IF NOT EXISTS idx_support_plans_active_user
-            ON support_plans(user_id)
-            WHERE active = 1;
-    """)
-    conn.commit()
-
-
-def _ensure_column(
-    conn: sqlite3.Connection,
-    table: str,
-    column: str,
-    definition: str,
-) -> None:
-    existing = {
-        row["name"]
-        for row in conn.execute(f"PRAGMA table_info({table})").fetchall()
-    }
-    if column not in existing:
-        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
+@contextmanager
+def _connect():
+    conn = psycopg2.connect(os.environ["DATABASE_URL"])
+    try:
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
 
 class SessionStore:
-    """SQLite-backed store for conversation sessions."""
+    def __init__(self):
+        self._init_db()
 
-    def __init__(self, db_path: Path | None = None):
-        self._db_path = db_path or _DB_PATH
-        with self._open() as conn:
-            _bootstrap(conn)
-
-    def _open(self) -> sqlite3.Connection:
-        self._db_path.parent.mkdir(parents=True, exist_ok=True)
-        conn = sqlite3.connect(self._db_path)
-        conn.row_factory = sqlite3.Row
-        return conn
+    def _init_db(self) -> None:
+        with _connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS sessions (
+                        session_id               TEXT PRIMARY KEY,
+                        user_id                  TEXT,
+                        created_at               REAL NOT NULL,
+                        last_active              REAL NOT NULL,
+                        consecutive_crisis_count INTEGER NOT NULL DEFAULT 0,
+                        last_crisis_detected_at  REAL
+                    )
+                """)
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS turns (
+                        id                SERIAL PRIMARY KEY,
+                        session_id        TEXT NOT NULL,
+                        user_message      TEXT NOT NULL,
+                        assistant_message TEXT NOT NULL,
+                        timestamp         REAL NOT NULL,
+                        FOREIGN KEY (session_id) REFERENCES sessions(session_id)
+                    )
+                """)
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS support_plans (
+                        plan_id              TEXT PRIMARY KEY,
+                        user_id              TEXT NOT NULL,
+                        active               INTEGER NOT NULL DEFAULT 1,
+                        current_day          INTEGER NOT NULL DEFAULT 0,
+                        total_days           INTEGER NOT NULL DEFAULT 30,
+                        mode                 TEXT NOT NULL,
+                        started_at           REAL NOT NULL,
+                        last_sent_at         REAL,
+                        completed_at         REAL,
+                        provider_message_ids TEXT NOT NULL DEFAULT '[]',
+                        created_at           REAL NOT NULL,
+                        updated_at           REAL NOT NULL
+                    )
+                """)
+                cur.execute("""
+                    CREATE INDEX IF NOT EXISTS idx_turns_session ON turns(session_id)
+                """)
+                cur.execute("""
+                    CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id)
+                """)
+                cur.execute("""
+                    CREATE INDEX IF NOT EXISTS idx_support_plans_user ON support_plans(user_id)
+                """)
 
     # ------------------------------------------------------------------
     # Session lifecycle
@@ -130,24 +85,23 @@ class SessionStore:
     def create_session(self, user_id: str | None = None) -> str:
         session_id = str(uuid.uuid4())
         now = time.time()
-        with self._open() as conn:
-            conn.execute(
-                "INSERT INTO sessions (session_id, user_id, created_at, last_active) VALUES (?, ?, ?, ?)",
-                (session_id, user_id, now, now),
-            )
-            conn.commit()
+        with _connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO sessions (session_id, user_id, created_at, last_active) VALUES (%s, %s, %s, %s)",
+                    (session_id, user_id, now, now),
+                )
         return session_id
 
     def session_exists(self, session_id: str) -> bool:
-        with self._open() as conn:
-            row = conn.execute(
-                "SELECT 1 FROM sessions WHERE session_id = ?", (session_id,)
-            ).fetchone()
-        return row is not None
+        with _connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1 FROM sessions WHERE session_id = %s", (session_id,))
+                return cur.fetchone() is not None
 
-    def _touch(self, conn: sqlite3.Connection, session_id: str) -> None:
-        conn.execute(
-            "UPDATE sessions SET last_active = ? WHERE session_id = ?",
+    def _touch(self, cur, session_id: str) -> None:
+        cur.execute(
+            "UPDATE sessions SET last_active = %s WHERE session_id = %s",
             (time.time(), session_id),
         )
 
@@ -155,53 +109,47 @@ class SessionStore:
     # History access
     # ------------------------------------------------------------------
 
-    def load_history(
-        self, session_id: str, limit: int | None = None
-    ) -> List[Tuple[str, str]]:
-        """Return turns for *session_id* in chronological order, newest *limit* turns if given."""
-        with self._open() as conn:
-            if limit is not None:
-                rows = conn.execute(
+    def load_history(self, session_id: str, limit: int | None = None) -> List[Tuple[str, str]]:
+        with _connect() as conn:
+            with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                if limit is not None:
+                    cur.execute(
+                        "SELECT user_message, assistant_message FROM turns "
+                        "WHERE session_id = %s ORDER BY id DESC LIMIT %s",
+                        (session_id, limit),
+                    )
+                    rows = cur.fetchall()
+                    return [(r["user_message"], r["assistant_message"]) for r in reversed(rows)]
+                cur.execute(
                     "SELECT user_message, assistant_message FROM turns "
-                    "WHERE session_id = ? ORDER BY id DESC LIMIT ?",
-                    (session_id, limit),
-                ).fetchall()
-                return [(r["user_message"], r["assistant_message"]) for r in reversed(rows)]
-            rows = conn.execute(
-                "SELECT user_message, assistant_message FROM turns "
-                "WHERE session_id = ? ORDER BY id ASC",
-                (session_id,),
-            ).fetchall()
+                    "WHERE session_id = %s ORDER BY id ASC",
+                    (session_id,),
+                )
+                rows = cur.fetchall()
         return [(r["user_message"], r["assistant_message"]) for r in rows]
 
     def count_turns(self, session_id: str) -> int:
-        """Return the total number of completed turns for *session_id*."""
-        with self._open() as conn:
-            row = conn.execute(
-                "SELECT COUNT(*) as count FROM turns WHERE session_id = ?",
-                (session_id,),
-            ).fetchone()
-        return int(row["count"])
+        with _connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT COUNT(*) FROM turns WHERE session_id = %s", (session_id,))
+                return cur.fetchone()[0]
 
-    def append_turn(
-        self, session_id: str, user_message: str, assistant_message: str
-    ) -> None:
-        """Persist a single exchange and update the session's last_active timestamp."""
+    def append_turn(self, session_id: str, user_message: str, assistant_message: str) -> None:
         now = time.time()
-        with self._open() as conn:
-            conn.execute(
-                "INSERT INTO turns (session_id, user_message, assistant_message, timestamp) "
-                "VALUES (?, ?, ?, ?)",
-                (session_id, user_message, assistant_message, now),
-            )
-            self._touch(conn, session_id)
-            conn.commit()
+        with _connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO turns (session_id, user_message, assistant_message, timestamp) "
+                    "VALUES (%s, %s, %s, %s)",
+                    (session_id, user_message, assistant_message, now),
+                )
+                self._touch(cur, session_id)
 
     def get_user_id(self, session_id: str) -> str | None:
-        with self._open() as conn:
-            row = conn.execute(
-                "SELECT user_id FROM sessions WHERE session_id = ?", (session_id,)
-            ).fetchone()
+        with _connect() as conn:
+            with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                cur.execute("SELECT user_id FROM sessions WHERE session_id = %s", (session_id,))
+                row = cur.fetchone()
         return row["user_id"] if row else None
 
     # ------------------------------------------------------------------
@@ -210,62 +158,65 @@ class SessionStore:
 
     def increment_crisis_count(self, session_id: str) -> int:
         now = time.time()
-        with self._open() as conn:
-            conn.execute(
-                "UPDATE sessions "
-                "SET consecutive_crisis_count = consecutive_crisis_count + 1, "
-                "last_crisis_detected_at = ?, last_active = ? "
-                "WHERE session_id = ?",
-                (now, now, session_id),
-            )
-            row = conn.execute(
-                "SELECT consecutive_crisis_count FROM sessions WHERE session_id = ?",
-                (session_id,),
-            ).fetchone()
-            conn.commit()
-        return int(row["consecutive_crisis_count"]) if row else 0
+        with _connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "UPDATE sessions "
+                    "SET consecutive_crisis_count = consecutive_crisis_count + 1, "
+                    "last_crisis_detected_at = %s, last_active = %s "
+                    "WHERE session_id = %s",
+                    (now, now, session_id),
+                )
+                cur.execute(
+                    "SELECT consecutive_crisis_count FROM sessions WHERE session_id = %s",
+                    (session_id,),
+                )
+                row = cur.fetchone()
+        return int(row[0]) if row else 0
 
     def reset_crisis_count(self, session_id: str) -> None:
-        with self._open() as conn:
-            conn.execute(
-                "UPDATE sessions "
-                "SET consecutive_crisis_count = 0, last_crisis_detected_at = NULL, "
-                "last_active = ? "
-                "WHERE session_id = ?",
-                (time.time(), session_id),
-            )
-            conn.commit()
+        with _connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "UPDATE sessions "
+                    "SET consecutive_crisis_count = 0, last_crisis_detected_at = NULL, "
+                    "last_active = %s WHERE session_id = %s",
+                    (time.time(), session_id),
+                )
 
     def get_crisis_count(self, session_id: str) -> int:
-        with self._open() as conn:
-            row = conn.execute(
-                "SELECT consecutive_crisis_count FROM sessions WHERE session_id = ?",
-                (session_id,),
-            ).fetchone()
-        return int(row["consecutive_crisis_count"]) if row else 0
+        with _connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT consecutive_crisis_count FROM sessions WHERE session_id = %s",
+                    (session_id,),
+                )
+                row = cur.fetchone()
+        return int(row[0]) if row else 0
 
     def delete_session(self, session_id: str) -> None:
-        with self._open() as conn:
-            conn.execute("DELETE FROM turns WHERE session_id = ?", (session_id,))
-            conn.execute("DELETE FROM sessions WHERE session_id = ?", (session_id,))
-            conn.commit()
+        with _connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM turns WHERE session_id = %s", (session_id,))
+                cur.execute("DELETE FROM sessions WHERE session_id = %s", (session_id,))
 
     # ------------------------------------------------------------------
     # Maintenance
     # ------------------------------------------------------------------
 
     def purge_expired(self, ttl_seconds: int = SESSION_TTL_SECONDS) -> int:
-        """Delete sessions (and their turns) inactive for longer than *ttl_seconds*.
-        Returns the number of sessions removed."""
         cutoff = time.time() - ttl_seconds
-        with self._open() as conn:
-            expired = conn.execute(
-                "SELECT session_id FROM sessions WHERE last_active < ?", (cutoff,)
-            ).fetchall()
-            ids = [r["session_id"] for r in expired]
-            if ids:
-                placeholders = ",".join("?" * len(ids))
-                conn.execute(f"DELETE FROM turns WHERE session_id IN ({placeholders})", ids)
-                conn.execute(f"DELETE FROM sessions WHERE session_id IN ({placeholders})", ids)
-                conn.commit()
+        with _connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT session_id FROM sessions WHERE last_active < %s", (cutoff,)
+                )
+                ids = [r[0] for r in cur.fetchall()]
+                if ids:
+                    cur.execute(
+                        "DELETE FROM turns WHERE session_id = ANY(%s)", (ids,)
+                    )
+                    cur.execute(
+                        "DELETE FROM sessions WHERE session_id = ANY(%s)", (ids,)
+                    )
         return len(ids)

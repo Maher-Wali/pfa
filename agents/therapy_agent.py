@@ -46,7 +46,7 @@ from agents.prompts import (
 )
 from agents.profile_extractor import extract_profile
 from agents.rag import RAGStore, format_context, messages_to_history
-from chat_pipeline import _route_retrieval_mode
+from agents.utils import _route_retrieval_mode
 from session.users import User, UserStore
 
 _EXTRACT_EVERY_INCOMPLETE = 2

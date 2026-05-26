@@ -82,7 +82,7 @@ _install_dependency_stubs()
 
 from langchain_core.documents import Document
 
-import chat_pipeline
+from agents.utils import _route_retrieval_mode
 from retrieval.rag_pipeline import MentalHealthRAG, _THERAPY_INDEX
 
 
@@ -207,27 +207,10 @@ class ExplodingRAG:
 
 
 def assert_routes() -> None:
-    assert chat_pipeline._route_retrieval_mode("what is anxiety disorder") == "clinical"
-    assert chat_pipeline._route_retrieval_mode("symptoms of depression") == "clinical"
-    assert chat_pipeline._route_retrieval_mode("how do I calm down") == "therapy"
-    assert chat_pipeline._route_retrieval_mode("CBT exercise for intrusive thoughts") == "therapy"
-
-
-def assert_crisis_bypass() -> None:
-    old_classifier = chat_pipeline._classifier
-    old_store = chat_pipeline._session_store
-    old_rag = chat_pipeline._rag
-    try:
-        chat_pipeline._classifier = FakeClassifier()
-        chat_pipeline._session_store = FakeStore()
-        chat_pipeline._rag = ExplodingRAG()
-        result = chat_pipeline.run("I want to die", "session-1")
-        assert result.is_crisis is True
-        assert "crisis support line" in result.text
-    finally:
-        chat_pipeline._classifier = old_classifier
-        chat_pipeline._session_store = old_store
-        chat_pipeline._rag = old_rag
+    assert _route_retrieval_mode("what is anxiety disorder") == "clinical"
+    assert _route_retrieval_mode("symptoms of depression") == "clinical"
+    assert _route_retrieval_mode("how do I calm down") == "therapy"
+    assert _route_retrieval_mode("CBT exercise for intrusive thoughts") == "therapy"
 
 
 def assert_clinical_selfrag() -> None:
@@ -263,15 +246,13 @@ def assert_therapy_mgprag_selfrag() -> None:
 
 
 def assert_app_compiles() -> None:
-    py_compile.compile(str(ROOT / "app.py"), doraise=True)
-    py_compile.compile(str(ROOT / "chat_pipeline.py"), doraise=True)
+    py_compile.compile(str(ROOT / "web_app.py"), doraise=True)
     py_compile.compile(str(ROOT / "retrieval" / "rag_pipeline.py"), doraise=True)
 
 
 def main() -> None:
     checks = [
         assert_routes,
-        assert_crisis_bypass,
         assert_clinical_selfrag,
         assert_therapy_mgprag_selfrag,
         assert_app_compiles,

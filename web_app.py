@@ -24,7 +24,7 @@ from session.users import User, UserStore
 
 
 settings = get_settings()
-db = ConversationDB(settings.sqlite_db_path)
+db = ConversationDB()
 user_store = UserStore()
 
 content_agent = ContentCreationAgent(settings=settings, db=db)

@@ -94,6 +94,61 @@ def _quote_matches_draft(quote: str, draft: str) -> bool:
     return bool(fragments) and all(f in draft for f in fragments)
 
 
+# ---------------------------------------------------------------------------
+# Retrieval routing
+# ---------------------------------------------------------------------------
+
+_INFORMATIONAL_STARTERS = {
+    "what", "why", "when", "who", "which", "where",
+    "explain", "describe", "define", "list", "tell", "what's",
+}
+
+_CLINICAL_FACTUAL_PATTERNS = (
+    "what is", "what are", "what causes", "what can cause",
+    "symptoms of", "signs of", "difference between",
+    "how does", "how do you diagnose", "diagnostic criteria",
+    "explain", "define",
+)
+
+_THERAPY_ACTION_PATTERNS = (
+    "what can i do", "what should i do", "how do i calm", "how can i calm",
+    "calm down", "help me", "coping", "cope with", "grounding", "breathing",
+    "breath", "exercise", "technique", "strategy", "skill", "self-help",
+    "self help", "mindfulness", "meditation", "cbt exercise", "dbt",
+    "distress tolerance", "thought challenging", "cognitive restructuring",
+    "defusion", "overthinking", "rumination", "racing thoughts", "spiral",
+    "panic right now",
+)
+
+_PERSONAL_DISTRESS_PATTERNS = (
+    "i feel", "i am feeling", "i'm feeling", "i keep",
+    "i can't stop", "i cannot stop", "i am overwhelmed", "i'm overwhelmed",
+    "my anxiety", "my thoughts",
+)
+
+
+def _contains_any(text: str, patterns: tuple) -> bool:
+    return any(pattern in text for pattern in patterns)
+
+
+def _route_retrieval_mode(message: str) -> str:
+    """Route to 'therapy' or 'clinical' retrieval based on message content."""
+    text = " ".join(message.strip().lower().split())
+    if not text:
+        return "clinical"
+    if _contains_any(text, _THERAPY_ACTION_PATTERNS):
+        return "therapy"
+    if _contains_any(text, _PERSONAL_DISTRESS_PATTERNS):
+        return "therapy"
+    if _contains_any(text, _CLINICAL_FACTUAL_PATTERNS):
+        return "clinical"
+    first = text.split()[0]
+    if first in _INFORMATIONAL_STARTERS:
+        return "clinical"
+    padded = f" {text} "
+    return "therapy" if any(token in padded for token in (" i ", " me ", " my ")) else "clinical"
+
+
 def _filter_hallucinated_must_fix(critique: str, draft: str) -> str:
     """Drop MUST_FIX items whose quoted phrase cannot be found verbatim in the draft,
     and drop items that are reasoning loops."""

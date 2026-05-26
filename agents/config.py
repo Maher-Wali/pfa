@@ -30,8 +30,6 @@ class Settings:
     top_k_docs: int = 5
     classify_every_n_turns: int = 4
 
-    sqlite_db_path: str = "data/conversations.sqlite3"
-
 
 def get_settings() -> Settings:
     return Settings(
@@ -63,9 +61,4 @@ def get_settings() -> Settings:
 
         top_k_docs=int(os.getenv("TOP_K_DOCS", "5")),
         classify_every_n_turns=int(os.getenv("CLASSIFY_EVERY_N_TURNS", "4")),
-
-        sqlite_db_path=os.getenv(
-            "SQLITE_DB_PATH",
-            "data/conversations.sqlite3",
-        ),
     )
